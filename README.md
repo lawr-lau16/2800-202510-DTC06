@@ -1,1 +1,10 @@
-# 2800-202510-DTC06
+## About Us
+Team Name: DTC-06
+Team Members: 
+- Lawrence Lau
+- Tiffany Wong
+- Gurpreet Singh
+- Tin Trinh
+- Alexander Ingles
+## More details to come
+TBA
