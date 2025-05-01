@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta tags for proper rendering and responsiveness -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Add Expense/Income</title>
+
+    <!-- Import Tailwind CSS from CDN for utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <!-- Container for the form -->
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+      <h1 class="text-blue-600 text-2xl font-bold mb-6 text-center">
+        Add Expense / Income
+      </h1>
+
+      <!-- Form to submit a transaction (expense or income) -->
+      <form action="/add-expense" method="POST" class="space-y-4">
+        <!-- Toggle Buttons: Expense or Income -->
+        <div>
+          <!-- Button group for selecting the type of transaction -->
+          <div class="flex justify-center">
+            <!-- Expense button (active by default) -->
+            <button
+              type="button"
+              id="expenseBtn"
+              class="toggle-btn bg-black text-white px-4 py-2 rounded border border-gray-300"
+              data-type="expense"
+            >
+              Expense
+            </button>
+
+            <!-- Income button -->
+            <button
+              type="button"
+              id="incomeBtn"
+              class="toggle-btn bg-white text-black px-4 py-2 rounded border border-gray-300"
+              data-type="income"
+            >
+              Income
+            </button>
+          </div>
+
+          <!-- Hidden input to store the actual value (submitted with the form) -->
+          <input type="hidden" name="type" id="typeInput" value="expense" />
+        </div>
+
+        <!-- Input: Transaction name -->
+        <div>
+          <label class="block font-semibold mb-1">Name:</label>
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="e.g., Grocery, Rent"
+            class="w-full border p-2 rounded"
+          />
+        </div>
+
+        <!-- Input: Amount in dollars -->
+        <div>
+          <label class="block font-semibold mb-1">Amount ($):</label>
+          <input
+            type="number"
+            name="amount"
+            step="0.01"
+            required
+            placeholder="e.g., 100"
+            class="w-full border p-2 rounded"
+          />
+        </div>
+
+        <!-- Input: Date of transaction -->
+        <div>
+          <label class="block font-semibold mb-1">Date:</label>
+          <input
+            type="date"
+            name="date"
+            required
+            class="w-full border p-2 rounded"
+          />
+        </div>
+
+        <!-- Dropdown: Category of transaction -->
+        <div>
+          <label class="block font-semibold mb-1">Category:</label>
+          <select name="category" required class="w-full border p-2 rounded">
+            <option value="">Select category</option>
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Rent</option>
+            <option>Entertainment</option>
+            <option>Utilities</option>
+            <option>Bills</option>
+            <option>Pet</option>
+            <option>Car</option>
+            <option>Clothes</option>
+            <option>Gifts</option>
+            <option>Communication</option>
+          </select>
+        </div>
+
+        <!-- Submit button -->
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
+        >
+          Save
+        </button>
+      </form>
+    </div>
+
+    <!-- Script for toggling type buttons (Expense vs Income) -->
+    <script>
+      // Get the DOM elements
+      const expenseBtn = document.getElementById("expenseBtn");
+      const incomeBtn = document.getElementById("incomeBtn");
+      const typeInput = document.getElementById("typeInput");
+
+      // Helper function to toggle styles and update the hidden input value
+      function activate(button, otherButton, typeValue) {
+        // Set selected button to black background and white text
+        button.classList.remove("bg-white", "text-black");
+        button.classList.add("bg-black", "text-white");
+
+        // Set unselected button to white background and black text
+        otherButton.classList.remove("bg-black", "text-white");
+        otherButton.classList.add("bg-white", "text-black");
+
+        // Update hidden input value so the correct type is submitted
+        typeInput.value = typeValue;
+      }
+
+      // Event listeners for toggling the selected button
+      expenseBtn.addEventListener("click", () => {
+        activate(expenseBtn, incomeBtn, "expense");
+      });
+
+      incomeBtn.addEventListener("click", () => {
+        activate(incomeBtn, expenseBtn, "income");
+      });
+    </script>
+  </body>
+</html>
