@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Expense/Income</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gray-100 p-6">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-md">
+      <a
+        href="/dashboard"
+        class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white"
+        >← Back</a
+      >
+      <h1 class="text-blue-600 text-2xl font-bold mt-6 mb-6 text-center">
+        Add Expense / Income
+      </h1>
+
+      <form action="/add-expense" method="POST" class="space-y-4">
+        <!-- Toggle -->
+        <div class="flex justify-center gap-2 mb-2">
+          <button
+            type="button"
+            id="expenseBtn"
+            class="bg-black text-white px-4 py-2 rounded"
+          >
+            Expense
+          </button>
+          <button
+            type="button"
+            id="incomeBtn"
+            class="bg-white text-black px-4 py-2 rounded border"
+          >
+            Income
+          </button>
+        </div>
+        <input type="hidden" name="type" id="typeInput" value="expense" />
+
+        <input
+          name="name"
+          required
+          placeholder="Name"
+          class="w-full border p-2 rounded"
+        />
+        <input
+          name="amount"
+          type="number"
+          required
+          placeholder="Amount"
+          step="0.01"
+          class="w-full border p-2 rounded"
+        />
+        <input
+          name="date"
+          type="date"
+          required
+          class="w-full border p-2 rounded"
+        />
+        <select name="category" required class="w-full border p-2 rounded">
+          <option value="">Category</option>
+          <option>Salary</option>
+          <option>Food</option>
+          <option>Transport</option>
+          <option>Rent</option>
+          <option>Entertainment</option>
+          <option>Utilities</option>
+          <option>Bills</option>
+          <option>Pet</option>
+          <option>Car</option>
+          <option>Clothes</option>
+          <option>Gifts</option>
+          <option>Communication</option>
+        </select>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
+        >
+          Save
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const expenseBtn = document.getElementById("expenseBtn");
+      const incomeBtn = document.getElementById("incomeBtn");
+      const typeInput = document.getElementById("typeInput");
+
+      expenseBtn.addEventListener("click", () => {
+        typeInput.value = "expense";
+        expenseBtn.classList.add("bg-black", "text-white");
+        expenseBtn.classList.remove("bg-white", "text-black");
+        incomeBtn.classList.add("bg-white", "text-black");
+        incomeBtn.classList.remove("bg-black", "text-white");
+      });
+
+      incomeBtn.addEventListener("click", () => {
+        typeInput.value = "income";
+        incomeBtn.classList.add("bg-black", "text-white");
+        incomeBtn.classList.remove("bg-white", "text-black");
+        expenseBtn.classList.add("bg-white", "text-black");
+        expenseBtn.classList.remove("bg-black", "text-white");
+      });
+    </script>
+  </body>
+</html>
