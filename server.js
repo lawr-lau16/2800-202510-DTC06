@@ -54,7 +54,7 @@ mongoose.connect('mongodb://localhost:27017', {
 });
 
 /** This is the schema for users, it acts as a template for models to use when creating new documents in the database.
- *  Transactions are included in the user schema.
+ *  Transaction ID's are included in the user schema.
  *  Pets are included in the user schema.
  */
 const userSchema = new mongoose.Schema({
@@ -67,8 +67,24 @@ const userSchema = new mongoose.Schema({
     date: Date
 });
 
+/**
+ * This is the schema for transactions, it acts as a template for models to use when creating new documents in the database.
+ * Transactions are tied to users in there user schema by thier model ID.
+ * The server automatically adds the transaction ID to the user schema when a new transaction is created.
+ */
+const transactionSchema = new mongoose.Schema({
+    name: String,
+    category: String,
+    date: Date,
+    amount: Number,
+    comments: String
+});
+
 // Here we create a model for the user schema, this will be used to make our collection in the database.
 const users = mongoose.model('users', userSchema);
+
+// Here we create a model for the transaction schema, this will be used to make our collection in the database.
+const transactions = mongoose.model('transactions', transactionSchema);
 
 // Redirect / to /login, in the event that only the base URL is entered in the browser.
 // This redirects the user to the home page if they are logged in.
