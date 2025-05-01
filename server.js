@@ -200,6 +200,38 @@ app.post('/auth/logout', (request, result) => {
     });
 });
 
+/**
+ * Add's a new transaction.
+ * The transaction is created from the mongoDB transactions model.
+ * The transaction is saved to the database and the user's transactions array is updated automatically with the models ID.
+ */
+app.post('/transaction/add', (request, result) => {
+    const name = request.body.name;
+    const category = request.body.category;
+    const date = request.body.date;
+    const amount = request.body.amount;
+    const comments = request.body.comments; 
+    const newTransaction = new transactions({
+        name,
+        category,
+        date,
+        amount,
+        comments
+    });
+    newTransaction.save()
+        .then(() => {
+            return users.findByIdAndUpdate(request.session.uid, { $push: { transactions: newTransaction._id } });
+        })
+        .then(() => {
+            console.log('Transaction added successfully to: ', request.session.uid, '! Details: ', newTransaction);
+            result.redirect('/home');
+        })
+        .catch(err => {
+            console.log('Error adding transaction:', err.message);
+            result.status(500).json({ error: 'Internal server error' });
+        });
+});
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {

@@ -11,13 +11,13 @@
     <h1>Login Page</h1>
     <form action="/auth/login" method="POST">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" required> # When making these forms you MUST use the same id values. The server finds the input for those id values.
         <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         <br>
         <button type="submit">Login</button>
-        <button type="submit" formaction="/auth/register">Sign Up</button>
+        <button type="submit" formaction="/auth/register">Sign Up</button> # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form.
     </form>
 </body>
 
