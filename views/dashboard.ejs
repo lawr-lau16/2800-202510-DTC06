@@ -35,13 +35,13 @@
       <h2 class="text-xl font-semibold mb-2">Your Transactions</h2>
       <ul>
         <% expenses.forEach(e => { %>
-        <li class="border-b py-2 flex justify-between items-center">
+        <li class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center">
           <div>
             <strong><%= e.name %></strong> - $<%= e.amount %> (<%= e.category
             %>)
           </div>
           <form action="/delete-expense/<%= e._id %>" method="POST">
-            <button class="text-red-600 hover:underline">Delete</button>
+            <button class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2  hover:text-white hover:bg-red-300 hover:font-semibold ">X</button>
           </form>
         </li>
         <% }) %>
