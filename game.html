@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="h-dvh flex flex-col">
+
+    <!-- Top Navigation -->
+    <div class="p-4">TOP NAV PLACEHOLDER</div>
+
+    <section class="bg-slate-100 h-full relative">
+        <!-- Game UI, this will always be on top -->
+
+        <div class="flex justify-between">
+            <!-- Buttons -->
+            <div class="z-10">
+                <button class="p-8 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4">
+                </button>
+                <button class="p-8 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4">
+                </button>
+            </div>
+            <!-- Stats -->
+            <div class="z-10">
+                <div class="m-4 px-2 bg-blue-300 border-4 border-blue-400 rounded-lg text-center">100</div>
+                <div class="m-4 px-2 bg-blue-300 border-4 border-blue-400 rounded-lg text-center">Happiness</div>
+            </div>
+        </div>
+
+        <div class="bottom-0 absolute z-0 w-full">
+            <!-- Ami div -->
+            <div class="relative">
+                <!-- Item Overlay -->
+                <img class="w-36 mx-auto translate-y-2 absolute left-0 right-0 z-10" src="/images/Items/i-Heart.png"
+                    alt="">
+                <!-- Ami Base -->
+                <img class="w-36 mx-auto translate-y-2" src="/images/Ami_Base/Ami.png" alt="">
+            </div>
+            <!-- Ground -->
+            <div class="bg-blue-900 py-16"></div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <div class="p-4">BOTTOM NAV PLACEHOLDER</div>
+</body>
+
+</html>
