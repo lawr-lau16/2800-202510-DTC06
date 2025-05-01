@@ -94,7 +94,7 @@ app.get('/home', (request, result) => {
     if (!request.session.uid) {
         return result.redirect('/login');
     }
-    result.render('home');
+    result.render('home', { username: request.session.username });
 });
 
 /**
@@ -124,6 +124,7 @@ app.post('/auth/register', async (request, result) => {
         });
         await newUser.save();
         request.session.uid = newUser._id;
+        request.session.username = newUser.username;
         result.redirect('/home');
     } catch (err) {
         console.log('Error during registration:', err.message);
@@ -151,11 +152,27 @@ app.post('/auth/login', async (request, result) => {
             return result.status(401).json({ error: 'Invalid username or password' });
         }
         request.session.uid = user._id;
+        request.session.username = user.username;
         result.redirect('/home');
     } catch (err) {
         console.log('Error during login:', err.message);
         result.status(500).json({ error: err.message });
     }
+});
+
+/*
+ * Log's out a user.
+ * The session is destroyed and the user is redirected to the login page.
+ * If there is an error during logout, an error message is returned.
+ * The user is redirected to the login page upon successful logout.
+ */
+app.post('/auth/logout', (request, result) => {
+    request.session.destroy(err => {
+        if (err) {
+            return result.status(500).json({ error: 'Failed to log out:' + err.message });
+        }
+        result.redirect('/login');
+    });
 });
 
 // Start's the server and listens on the specified port.

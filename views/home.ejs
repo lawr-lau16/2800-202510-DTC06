@@ -9,6 +9,11 @@
 
 <body>
     <h1>Home Page!</h1>
+    <h2>Welcome, <%= username %>
+    </h2>
+    <form action="/auth/logout" method="POST">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 
 </html>
