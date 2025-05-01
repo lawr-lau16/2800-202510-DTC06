@@ -76,10 +76,10 @@ app.get('/', (request, result) => {
     if (request.session.uid) {
         return result.redirect('/home');
     }
-    result.redirect('/login');
+    result.redirect('/index');
 });
 
-// Here the server will recognise that the server is requested with the /login URL and will render the login.ejs file.
+// Here the server will recognise that the server is requested with the /login URL and will render the login file.
 // If the user is already logged in, they will be redirected to the home page.
 app.get('/login', (request, result) => {
     if (request.session.uid) {
@@ -95,6 +95,15 @@ app.get('/home', (request, result) => {
         return result.redirect('/login');
     }
     result.render('home', { username: request.session.username });
+});
+
+// Here the server will recognise that the server is requested with the /index URL and will render the index file.
+// If the user is already logged in, they will be redirected to the home page.
+app.get('/index', (request, result) => {
+    if (request.session.uid) {
+        return result.redirect('/home');
+    }
+    result.render('index');
 });
 
 /**
