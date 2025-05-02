@@ -104,6 +104,20 @@ app.get('/login', (request, result) => {
     result.render('login');
 });
 
+app.get('/game', (request, result) => {
+    if (!request.session.uid) {
+        return result.redirect('/home');
+    }
+    result.render('game');
+});
+
+app.get('/profile', (request, result) => {
+    if (!request.session.uid) {
+        return result.redirect('/login');
+    }
+    result.render('profile');
+});
+
 // Here the server will recognise that the server is requested with the /home URL and will render the home file.
 // If the user is not logged in, they will be redirected to the login page.
 app.get('/home', (request, result) => {
