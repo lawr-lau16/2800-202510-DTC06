@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Your Transactions</h1>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% transactions.forEach(transaction=> { %>
+                <tr>
+                    <td>
+                        <%= transaction.name %>
+                    </td>
+                    <td>
+                        <%= transaction.category %>
+                    </td>
+                    <td>
+                        <%= transaction.date.toDateString() %>
+                    </td>
+                    <td>$<%= transaction.amount %>
+                    </td>
+                    <td>
+                        <%= transaction.comments || 'N/A' %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+    <a href="/home">Back</a>
+</body>
+
+</html>
