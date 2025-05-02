@@ -14,39 +14,20 @@
 </head>
 
 <body>
-
     <!-- TOP NAV -->
-    <nav class="sticky top-0 md:justify-between flex bg-blue-300 p-4">
-        <a href="#" class="font-[DynaPuff] font-semibold text-3xl">EconAmi</a>
-        <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
-    </nav>
+    <div id="nav_top"></div>
 
+    <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
+    <!-- There to show that bottom is sticky to the bottom -->
     <section class="h-dvh">CONTENT GOES HERE</section>
 
-
-
-
     <!-- BOTTOM NAV -->
-    <nav class="sticky bottom-0 justify-around flex bg-blue-300 md:hidden">
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-house fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-face-smile-beam fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-table-list fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-star fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-circle-user fa-lg"></i>
-        </a>
-    </nav>
+    <nav id="nav_bottom"></nav>
 
     <!-- Footer if we want would go here -->
 
+    <!-- Scripts -->
+    <script src="scripts/skeleton.js"></script>
 </body>
 
 </html>
