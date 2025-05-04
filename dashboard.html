@@ -21,15 +21,21 @@
         <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
     </nav>
 
+    <!-- PAGE CONTENT -->
+
     <section class="h-dvh">
 
+
         <!-- speech bubble -->
+
         <div style="background-color: #c6c6c6; max-width: 60%; margin: auto; border-radius: 50px;">
             <p style="text-align: center;">Insert some dialogue.</p>
         </div>
         <br>
 
+
         <!-- budget donut -->
+
         <div style="display: flex; justify-content: center;">
             <canvas id="canvas" width=325 height=325></canvas>
         </div>
@@ -38,9 +44,9 @@
               const canvas = document.getElementById("canvas");
                 const ctx = canvas.getContext("2d");
 
-                // Only two values: red (25%), green (75%)
+                // e66f6f = red, 8ce66f = green
                 const colors = ['#e66f6f', '#8ce66f'];
-                const values = [25, 75]; // Proportional values; ADJUSTABLE
+                const values = [25, 75]; // proportional values; ADJUSTABLE
                 const labels = ['Red', 'Green'];
 
                 const img = new Image();
@@ -53,7 +59,7 @@
                 function dmbChart(cx, cy, radius, arcwidth, values, colors, labels, img) {
                     const PI = Math.PI;
                     const PI2 = 2 * PI;
-                    const offset = PI / 2; // Start at bottom
+                    const offset = PI / 2; // red starts from the bottom
 
                     ctx.lineWidth = arcwidth;
 
@@ -72,56 +78,114 @@
                         accum += values[i];
                     }
 
-                    // Draw inner white circle to create "cutout"
+                    // Inner "cutout"
                     const innerRadius = radius - arcwidth - 3;
                     ctx.beginPath();
                     ctx.arc(cx, cy, innerRadius, 0, PI2);
                     ctx.fillStyle = 'white';
                     ctx.fill();
 
-                    // Draw image at center
+                    // Ami in the center
                     const imageSize = innerRadius * 1.5;
                     ctx.drawImage(img, cx - imageSize / 2, cy - imageSize / 2, imageSize, imageSize);
                 }
         </script>
 
+
         <!-- amount spent / budget -->
+
         <div style="text-align: center;">$25/$100</div>
         <br>
 
+
         <!-- daily weekly monthly buttons -->
+
         <div class="flex justify-center space-x-2">
-            <button class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition" type="button">daily</button>
-            <button class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition" type="button">weekly</button>
-            <button class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition" type="button">monthly</button>
+            <button class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition" type="button">daily</button>
+            <button class="weekly bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition" type="button">weekly</button>
+            <button class="monthly bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition" type="button">monthly</button>
         </div>
+
+        <script>
+            document.querySelector('.daily').addEventListener('click')
+        </script>
+
 
         <!-- add expense/income toggle -->
-        <div>
-            <!-- nonfunctioning collapsible button for now -->
-            <button type="button" class="collapsible">Add expense/income</button>
-            <form>
-                <input type="button" value="income">
-                <input type="button" value="expense">
-                <br>
+         
+        <div class="flex justify-center">
+            <div style="margin: 10px;">
 
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name">
-                <br>
-                <label for="type">Type</label>
-                <input type="text" id="type" name="type">
-                <br>
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date">
-                <br>
-                <label for="amount">Amount</label>
-                <input type="text" id="amount" name="amount">
-                <br>
+            <button type="button" class="collapsible flex items-center bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">
+                
+                <!-- closed arrow -->
+                <svg class="closed-arrow w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16.881V7.119a1 1 0 0 1 1.636-.772l5.927 4.881a1 1 0 0 1 0 1.544l-5.927 4.88A1 1 0 0 1 8 16.882Z" />
+                </svg>
+                
+                <!-- opened arrow -->
+                <svg class="opened-arrow w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" fill="none" viewBox="0 0 24 24" style="display: none;">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z" />
+                </svg>
+                
+                Add expense/income
 
-                <input type="button" value="Expand Form">
-                <input type="button" value="Submit">
-            </form>
+            </button>
+
+            <div class="content" style="display: none;">
+                <form class="space-y-2">
+                <input type="button" value="income" class="bg-green-200 px-2 py-1 rounded hover:bg-green-300 transition">
+                <input type="button" value="expense" class="bg-red-200 px-2 py-1 rounded hover:bg-red-300 transition">
+                    <br>
+    
+                    <label for="name">Name: </label>
+                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <br>
+
+                    <label for="type">Category: </label>
+                    <input type="text" id="category" name="category" class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <br>
+
+                    <label for="date">Date: </label>
+                    <input type="date" id="date" name="date">
+                    <br>
+
+                    <label for="amount">Amount: </label>
+                    <input type="text" id="amount" name="amount" class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <br>
+    
+                    <input type="button" value="Expand Form" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
+                    <input type="button" value="Submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
+                </form>
+            </div>
+            </div>
+
         </div>
+
+
+        <script>
+            const collapsible = document.querySelector('.collapsible');
+            const content = collapsible.nextElementSibling;
+            const closedArrow = document.querySelector('.closed-arrow');
+            const openedArrow = document.querySelector('.opened-arrow');
+
+            collapsible.addEventListener('click', function () {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                    closedArrow.style.display = "none"
+                    openedArrow.style.display = "block"
+                }
+                else {
+                    content.style.display = "none";
+                    closedArrow.style.display = "block"
+                    openedArrow.style.display = "none"
+                }
+            })
+        </script>
 
     </section>
 
