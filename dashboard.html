@@ -47,16 +47,15 @@
                 // e66f6f = red, 8ce66f = green
                 const colors = ['#e66f6f', '#8ce66f'];
                 const values = [25, 75]; // proportional values; ADJUSTABLE
-                const labels = ['Red', 'Green'];
 
                 const img = new Image();
                 img.src = 'https://pethelpful.com/.image/w_3840,q_auto:good,c_fill,ar_4:3/MTk3MDM5MzE5MTM3OTIwMzE5/bunny-care-guide-how-to-discipline-your-rabbit-2.jpg'; // Replace with your image if needed
 
                 img.onload = function () {
-                    dmbChart(150, 150, 125, 25, values, colors, labels, img);
+                    dmbChart(150, 150, 125, 25, values, colors, img);
                 };
 
-                function dmbChart(cx, cy, radius, arcwidth, values, colors, labels, img) {
+                function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
                     const PI = Math.PI;
                     const PI2 = 2 * PI;
                     const offset = PI / 2; // red starts from the bottom
