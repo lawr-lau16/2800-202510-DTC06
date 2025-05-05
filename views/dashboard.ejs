@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-gray-100 p-6">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
+      <h1 class="text-2xl text-blue-800 text-center font-bold mb-4">
+        Budget Overview
+      </h1>
+      <a
+        href="/add-expense"
+        class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white"
+        >Add New Transaction</a
+      >
+
+      <div class="grid grid-cols-2 gap-4 my-4">
+        <div class="bg-green-100 p-4 rounded">
+          <p class="font-semibold">Total Income:</p>
+          <p>$<%= totalIncome %></p>
+        </div>
+        <div class="bg-red-100 p-4 rounded">
+          <p class="font-semibold">Total Expenses:</p>
+          <p>$<%= totalSpent %></p>
+        </div>
+        <div class="bg-blue-100 p-4 rounded col-span-2">
+          <p class="font-semibold">Balance:</p>
+          <p>$<%= balance %></p>
+        </div>
+      </div>
+
+      <h2 class="text-xl font-semibold mb-2">Your Transactions</h2>
+      <ul>
+        <% expenses.forEach(e => { %>
+        <li class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center">
+          <div>
+            <strong><%= e.name %></strong> - $<%= e.amount %> (<%= e.category
+            %>)
+          </div>
+          <form action="/delete-expense/<%= e._id %>" method="POST">
+            <button class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2  hover:text-white hover:bg-red-300 hover:font-semibold ">X</button>
+          </form>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
