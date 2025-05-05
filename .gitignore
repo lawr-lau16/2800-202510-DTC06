@@ -1,2 +1,4 @@
 node_modules/
-ignore.js/
+ignore.js
+package-lock.json
+package.json
