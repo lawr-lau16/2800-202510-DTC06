@@ -132,12 +132,24 @@ app.get('/game', (request, result) => {
     result.render('game');
 });
 
-app.get('/profile', (request, result) => {
-    if (!request.session.uid) {
-        return result.redirect('/login');
+// Fetch user info from mongoDB
+app.use('/scripts', express.static(__dirname + '/scripts'));
+app.get('/profile', async (req, res) => {
+    if (!req.session.uid) {
+        return res.redirect('/login');
     }
-    result.render('profile');
+
+    try {
+        const user = await users.findById(req.session.uid).lean();
+        if (!user) return res.status(404).send('User not found');
+        res.render('profile', { user });
+    } catch (err) {
+        console.error('Error fetching user:', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
+
+
 
 // Here the server will recognise that the server is requested with the /home URL and will render the home file.
 // If the user is not logged in, they will be redirected to the login page.

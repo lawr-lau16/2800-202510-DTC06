@@ -89,7 +89,7 @@
                             placeholder="Your monthlyBudget here" />
                     </div>
                     <!-- Customize Categories Dropdown - Add or remove categories-->
-                     <div></div>
+                    <div></div>
                 </div>
 
             </div>
@@ -102,7 +102,12 @@
     <!-- Footer if we want would go here -->
 
     <!-- Scripts -->
-    <script src="scripts/skeleton.js"></script>
+    <script src="/scripts/skeleton.js"></script>
+    <script>
+        const user = <%- JSON.stringify(user) %>;
+    </script>
+    <script src="/scripts/profile.js"></script>
+
 </body>
 
 </html>
