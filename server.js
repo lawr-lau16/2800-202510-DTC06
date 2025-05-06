@@ -44,7 +44,7 @@ app.set('views', __dirname + '/views'); // Set the views directory
 app.use(express.json());
 
 // Middleware to serve static files (CSS, JS, images)
-app.use(express.static('images'));
+app.use(express.static('public'));
 
 // Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
