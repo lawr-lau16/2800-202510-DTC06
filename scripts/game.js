@@ -40,7 +40,6 @@ function gameButtonItems() {
 
     itemsButton.addEventListener("click", clickItemButton)
     itemsCloseMenu.addEventListener("click", clickItemCloseButton)
-
 }
 
 function clickItemButton() {
