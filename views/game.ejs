@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EconAmi | Game</title>
-    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png">
     <!-- Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- External libraries -->
@@ -47,14 +48,7 @@
             <div class="bg-red-400 rounded-b-lg border-4 border-x-0 border-t-red-400">
                 <h1 class="m-4 text-2xl font-bold">Items</h1>
                 <hr class="m-4 border-2">
-                <div class="flex-wrap flex m-4 justify-center md:justify-start">
-                    <!-- Placeholder -->
-                    <div class="bg-white size-18 m-4 border-4 rounded-lg"></div>
-                    <div class="bg-white size-18 m-4 border-4 rounded-lg"></div>
-                    <div class="bg-white size-18 m-4 border-4 rounded-lg"></div>
-                    <div class="bg-white size-18 m-4 border-4 rounded-lg"></div>
-                    <div class="bg-white size-18 m-4 border-4 rounded-lg"></div>
-                    <div class="bg-white size-18 m-4 border-4 rounded-lg"></div>
+                <div id="items" class="flex-wrap flex m-4 justify-center md:justify-start">
                 </div>
             </div>
             <div id="close-menu"
@@ -73,7 +67,7 @@
                 <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
                     src="/images/game/Ami-Expressions/default.png" alt="">
                 <!-- Ami Base -->
-                <img class="select-none pointer-events-none" src="../images/game/Ami-Base/white.png" alt="">
+                <img class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png" alt="">
 
             </div>
             <!-- Ground -->
@@ -85,6 +79,7 @@
 
 
     <!-- Scripts -->
-    <script type="text/js" src="./scripts/game.js"></script>
+    <script src="scripts/game.js"></script>
 </body>
+
 </html>

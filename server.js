@@ -46,6 +46,9 @@ app.use(express.json());
 // Middleware to serve static files (CSS, JS, images)
 app.use(express.static('public'));
 
+// Middleware to user favicon
+app.use(express.favicon(__dirname + '/public/images/favicon.png'));
+
 // Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
