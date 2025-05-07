@@ -169,11 +169,18 @@ app.get('/game', (request, result) => {
 });
 
 // ACHIEVEMENTS PAGE
+/**
+ * Here the server will recognise that the server is requested with the /achievements URL and will render the achievements file.
+ * The server will also serve the user's acheivements to the page in json format.
+ * If the user is not logged in, they will be redirected to the login page.
+ */
 app.get('/achievements', (request, result) => {
     if (!request.session.uid) {
         return result.redirect('/login');
     }
-    result.render('achievements');
+    const user = users.findById(request.session.uid);
+    const userAchievements = acheivements.find({ _id: { $in: user.acheivements } });
+    result.render('achievements', { user: user, achievements: userAchievements });
 });
 
 // PROFILE PAGE
