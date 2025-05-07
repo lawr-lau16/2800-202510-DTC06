@@ -85,7 +85,12 @@ const userSchema = new mongoose.Schema({
     transactions: Array,
     owned: Array,
     pet: String,
-    date: Date
+    date: Date,
+    Budget: {
+        daily: Number,
+        weekly: Number,
+        monthly: Number
+    }
 });
 
 /**
@@ -132,6 +137,9 @@ app.get('/game', (request, result) => {
     result.render('game');
 });
 
+
+
+// PROFILE PAGE
 // Fetch user info from mongoDB
 app.use('/scripts', express.static(__dirname + '/scripts'));
 app.get('/profile', async (req, res) => {
@@ -146,6 +154,36 @@ app.get('/profile', async (req, res) => {
     } catch (err) {
         console.error('Error fetching user:', err);
         res.status(500).send('Internal Server Error');
+    }
+});
+
+// Post changes to mongoDB
+app.post('/profile/update', async (req, res) => {
+    if (!req.session.uid) return res.status(401).json({ error: 'Unauthorized' });
+
+    const { username, password, daily, weekly, monthly } = req.body;
+
+    try {
+        const update = {
+            username,
+            Budget: {
+                daily: Number(daily),
+                weekly: Number(weekly),
+                monthly: Number(monthly)
+            }
+        };
+
+        // Only hash password if it's provided and not blank
+        if (password && password.trim() !== '') {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            update.password = hashedPassword;
+        }
+
+        await users.findByIdAndUpdate(req.session.uid, update);
+        res.status(200).json({ message: 'Profile updated' });
+    } catch (err) {
+        console.error('Update error:', err.message);
+        res.status(500).json({ error: 'Database update failed' });
     }
 });
 
