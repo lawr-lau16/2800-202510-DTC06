@@ -248,6 +248,7 @@ app.get('/index', (request, result) => {
  * Sign's up a new user.
  * If the user already exists, an error message is returned.
  * Uses bcrypt to hash the password before saving it to the database.
+ * Add's five default acheivements to the user, storing the id's in an array in user and adding the acheivements to the database directly.
  * The new user is saved to the database and their uid is stored in the session.
  * The user is created from the mongoDB users model.
  */
@@ -258,6 +259,19 @@ app.post('/auth/register', async (request, result) => {
         const existingUser = await users.findOne({ username });
         if (existingUser) {
             return result.status(400).json({ error: 'Username already exists' });
+        }
+        const defaultAcheivements = [
+            { type: 'Daily', description: 'Dont go over the days budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false },
+            { type: 'Weekly', description: 'Dont go over the weeks budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false },
+            { type: 'Monthly', description: 'Dont go over the months budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false },
+            { type: 'Drink', description: 'Dont buy any drinks for five days! (Dont add water to your transactions!)', progress: 0, target: 5, date: new Date(), previousDate: new Date(), completed: false },
+            { type: 'Login', description: 'Your daily login reward!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false }
+        ];
+        const acheiveArray = [];
+        for (let i = 0; i < defaultAcheivements.length; i++) {
+            const newAcheivement = new acheivements(defaultAcheivements[i]);
+            await newAcheivement.save();
+            acheiveArray.push(newAcheivement._id);
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new users({
@@ -277,6 +291,7 @@ app.post('/auth/register', async (request, result) => {
             ],
             balance: 0,
             transactions: [],
+            acheivements: acheiveArray,
             owned: [],
             pet: null,
             date: new Date()
