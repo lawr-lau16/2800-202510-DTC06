@@ -63,7 +63,7 @@ const pets = mongoose.model("pets", petSchema);
 
 // Serve expense logging HTML form
 app.get("/add-expense", (req, res) => {
-  res.sendFile(path.join(__dirname, "expense_log.html"));
+  res.render("partials/expense_log");
 });
 
 // Handle form submission and save to MongoDB

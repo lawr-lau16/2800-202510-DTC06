@@ -75,11 +75,17 @@ const userSchema = new mongoose.Schema({
  * The server automatically adds the transaction ID to the user schema when a new transaction is created.
  */
 const transactionSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "users",
+  },
   name: String,
   category: String,
   date: Date,
   amount: Number,
   comments: String,
+  type: String,
 });
 
 // Here we create a model for the user schema, this will be used to make our collection in the database.
@@ -294,21 +300,26 @@ app.get("/transactions", async (request, result) => {
 
 const Transaction = require("./models/Transaction");
 app.get("/add-expense", (req, res) => {
-  res.sendFile(path.join(__dirname, "expense_log.html"));
+  res.render("partials/expense_log");
 });
+
 
 // Handle form submission and save to MongoDB
 app.post("/add-expense", async (req, res) => {
+  if (!req.session.uid) {
+    return res.status(401).send("Unauthorized: user not logged in");
+  }
+
   const { type, name, amount, category, date } = req.body;
 
   try {
     const newTransaction = new Transaction({
+      userId: req.session.uid, // must be defined!
       type,
       name,
       amount,
       category,
       date: new Date(date),
-      userId: req.session.user._id,
     });
 
     await newTransaction.save();
@@ -326,7 +337,7 @@ app.post("/delete-expense/:id", async (req, res) => {
   try {
     await Transaction.deleteOne({
       _id: req.params.id,
-      userId: req.session.user._id,
+      userId: req.session.uid,
     });
     res.redirect("/dashboard");
   } catch (error) {
@@ -336,9 +347,6 @@ app.post("/delete-expense/:id", async (req, res) => {
 });
 
 // Redirect base URL to dashboard
-app.get("/", (req, res) => {
-  res.redirect("/dashboard");
-});
 
 app.get("/dashboard", async (req, res) => {
   try {
