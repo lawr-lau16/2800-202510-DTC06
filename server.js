@@ -374,6 +374,26 @@ app.get('/transactions', async (request, result) => {
 });
 
 /**
+ * Fetches all transactions for the logged-in user. Dose not render a page.
+ * Uses the user's ID stored in the session to find the user in the database where the transaction id's are stored.
+ * Transactions are sent to the client as JSON.
+ */
+app.post('/transactions/fetch', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const user = await users.findById(request.session.uid);
+        const transactionsList = await transactions.find({ _id: { $in: user.transactions } });
+        console.log('Fetched Transactions:', transactionsList);
+        result.json({ transactions: transactionsList });
+    } catch (err) {
+        console.log('Error fetching transactions:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
  * Fetches all categories for the logged-in user.
  * Uses the user's ID stored in the session to find the user in the database where the categories are stored.
  * Since all categories are already listed in one place we just return the users categories array.
