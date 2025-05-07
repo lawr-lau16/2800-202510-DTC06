@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const session = require('express-session');
+const favicon = require('serve-favicon');
+const path = require('path');
 
 /**
  * Require dotenv to load environment variables from a .env file for security.
@@ -45,6 +47,10 @@ app.use(express.json());
 
 // Middleware to serve static files (CSS, JS, images)
 app.use(express.static('public'));
+
+// Middleware to use favicon
+// app.use(express.favicon(__dirname + '/public/images/favicon.png'));
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.png')));
 
 // Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
