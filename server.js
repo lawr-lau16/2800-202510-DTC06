@@ -151,6 +151,17 @@ app.get('/game', (request, result) => {
 
 
 
+
+// ACHIEVEMENTS PAGE
+app.get('/achievements', (request, result) => {
+    if (!request.session.uid) {
+        return result.redirect('/achievements');
+    }
+    result.render('achievements');
+});
+
+
+
 // PROFILE PAGE
 // Fetch user info from mongoDB
 // app.use('/scripts', express.static(__dirname + '/scripts'));

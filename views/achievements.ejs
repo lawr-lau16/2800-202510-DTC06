@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EconAmi | Achievements</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png">
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- TOP NAV -->
+    <%- include('./components/nav_top') %>
+
+        <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
+        <!-- There to show that bottom is sticky to the bottom -->
+        <section class="h-dvh">
+
+            <section class="p-6 space-y-4 max-w-md mx-auto mt-6">
+                <h2 class="text-2xl font-semibold text-center">Achievements</h2>
+                <!-- Placeholder for dynamic counter for user's coins -->
+                <div class="text-center text-4xl font-bold">105</div>
+                <p class="text-center text-sm mb-4">coins</p>
+
+                <!-- Achievement Card -->
+                <div class="space-y-4">
+                    <!-- Example Achievement Item -->
+                    <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <!-- Icon -->
+                            <img src="https://via.placeholder.com/40" alt="Icon" class="w-10 h-10">
+                            <!-- Text and Progress -->
+                            <div>
+                                <p class="font-medium">Cook 5 meals at home</p>
+                                <div class="w-40 bg-gray-300 h-2 rounded mt-1">
+                                    <div class="bg-green-600 h-2 rounded" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Coin Reward -->
+                        <div class="flex items-center space-x-1">
+                            <span class="text-lg font-semibold">10</span>
+                            <img src="/path/to/coin.png" alt="Coin" class="w-6 h-6">
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </section>
+
+        <!-- Bottom Navigation -->
+        <%- include('./components/nav_bottom') %>
+
+
+        <!-- Scripts -->
+        <script src="scripts/game.js"></script>
+</body>
+
+</html>
