@@ -178,10 +178,13 @@
                             const transactionsData = await transactionsResponse.json();
                             const transactions = transactionsData.transactions;
 
-                            const budgetResponse = await fetch('/budget');
+                            const budgetResponse = await fetch('/budget', {
+                                method: 'POST'
+                            });
                             const budgetData = await budgetResponse.json();
                             const budget = budgetData.budget;
                             const selectedBudget = budget[timeframe];
+
 
                             let total = 0;
 
@@ -197,7 +200,7 @@
                                 total = sumAmounts(transactions, monthlyTransactions);
                             }
 
-                            document.getElementById("spentVsBudget").innerHTML = `$${total} / $BUDGET`;
+                            document.getElementById("spentVsBudget").innerHTML = `$${total} / $${selectedBudget}`;
                         }
                         catch (err) {
                             console.error("Error:", err)
