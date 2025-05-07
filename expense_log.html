@@ -57,20 +57,13 @@
           required
           class="w-full border p-2 rounded"
         />
-        <select name="category" required class="w-full border p-2 rounded">
-          <option value="">Category</option>
-          <option>Salary</option>
-          <option>Food</option>
-          <option>Transport</option>
-          <option>Rent</option>
-          <option>Entertainment</option>
-          <option>Utilities</option>
-          <option>Bills</option>
-          <option>Pet</option>
-          <option>Car</option>
-          <option>Shopping</option>
-          <option>Gifts</option>
-          <option>Communication</option>
+        <select
+          id="categorySelect"
+          name="category"
+          required
+          class="w-full border p-2 rounded"
+        >
+          <option value="">Select a category</option>
         </select>
 
         <button
@@ -86,6 +79,42 @@
       const expenseBtn = document.getElementById("expenseBtn");
       const incomeBtn = document.getElementById("incomeBtn");
       const typeInput = document.getElementById("typeInput");
+      const categorySelect = document.getElementById("categorySelect");
+
+      const expenseCategories = [
+        "Food & Dining",
+        "Transportation",
+        "Home & Utilities",
+        "Entertainment & Lifestyle",
+        "Personal & Health",
+        "Bills & Fees",
+        "Pet",
+        "Car",
+        "Shopping & Gifts",
+        "Work & Education",
+        "Travel",
+        "Other",
+      ];
+
+      const incomeCategories = [
+        "Salary",
+        "Freelance",
+        "Bonus",
+        "Interest/Dividends",
+        "Refunds/Reimbursements",
+        "Other Income",
+      ];
+
+      function populateCategories(categories) {
+        categorySelect.innerHTML =
+          '<option value="">Select a category</option>';
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          categorySelect.appendChild(option);
+        });
+      }
 
       expenseBtn.addEventListener("click", () => {
         typeInput.value = "expense";
@@ -93,6 +122,7 @@
         expenseBtn.classList.remove("bg-white", "text-black");
         incomeBtn.classList.add("bg-white", "text-black");
         incomeBtn.classList.remove("bg-black", "text-white");
+        populateCategories(expenseCategories);
       });
 
       incomeBtn.addEventListener("click", () => {
@@ -101,7 +131,11 @@
         incomeBtn.classList.remove("bg-white", "text-black");
         expenseBtn.classList.add("bg-white", "text-black");
         expenseBtn.classList.remove("bg-black", "text-white");
+        populateCategories(incomeCategories);
       });
+
+      // Set initial state (expense is default)
+      populateCategories(expenseCategories);
     </script>
   </body>
 </html>
