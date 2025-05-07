@@ -33,11 +33,11 @@
 
     <section class="h-dvh">
 
-
+<div class="bg-slate-200 max-w-[60%] mx-auto rounded-xl">
     <!-- speech bubble -->
     <div class="mx-auto max-w-[80%]">
         <!-- bubble with text -->
-        <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-xl">Insert dialogue.</div>
+        <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">Insert dialogue.</div>
         <!-- bubble tail -->
         <div class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
         </div>
@@ -49,6 +49,8 @@
         <div style="display: flex; justify-content: center;">
             <canvas id="canvas" width=325 height=325></canvas>
         </div>
+
+
 
         <script>
               const canvas = document.getElementById("canvas");
@@ -91,7 +93,7 @@
                     const innerRadius = radius - arcwidth - 3;
                     ctx.beginPath();
                     ctx.arc(cx, cy, innerRadius, 0, PI2);
-                    ctx.fillStyle = 'white';
+                    ctx.fillStyle = 'transparent';
                     ctx.fill();
 
                     // Ami in the center
@@ -174,7 +176,7 @@
             </div>
 
         </div>
-
+</div>
 
         <script>
             const collapsible = document.querySelector('.collapsible');
