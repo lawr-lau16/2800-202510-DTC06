@@ -4,22 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="icon" href="/images/favicon.png" type="image/png">
+    <title>EconAmi | [index]</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
 </head>
 
+<style>
+    body {
+        background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+</style>
+
 <body>
-    <h1>Login Page</h1>
-    <form action="/auth/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required> # When making these forms you MUST use the same id values. The server finds the input for those id values.
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Login</button>
-        <button type="submit" formaction="/auth/register">Sign Up</button> # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form.
-    </form>
+
+    <!-- TOP NAV -->
+    <nav class="sticky top-0 md:justify-between flex bg-blue-300 p-4">
+        <a href="#" class="font-[DynaPuff] font-semibold text-3xl">EconAmi</a>
+        <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
+    </nav>
+
+
+    <!-- PAGE CONTENT -->
+
+    <section class="h-dvh">
+
+        <!-- speech bubble -->
+        <div class="mx-auto max-w-[80%]">
+            <!-- bubble with text -->
+            <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
+
+                <p style="text-align: center;">Sign up or log in to play!</p>
+
+            </div>
+            <!-- bubble tail -->
+            <div
+                class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+            </div>
+        </div>
+
+        <!-- login and Ami -->
+
+        <div style="display: flex; justify-content: center; margin: 20px;">
+            <div style="display: flex; flex-direction: column; margin: 10px;">
+
+                <form action="/auth/login" method="POST">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required>
+                    <!-- # When making these forms you MUST use the same id values. The server finds the input for those id values. -->
+                    <br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required>
+                    <br>
+                    <button type="submit" class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Login</button>
+                    <button type="submit" formaction="/auth/register" class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Sign Up</button>
+                    <!-- # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form. -->
+                </form>
+
+            </div>
+            <div>
+                <img style="height: 200px;" src="https://pethelpful.com/.image/w_3840,q_auto:good,c_fill,ar_4:3/MTk3MDM5MzE5MTM3OTIwMzE5/bunny-care-guide-how-to-discipline-your-rabbit-2.jpg">
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+    <!-- BOTTOM NAV -->
+    <nav class="sticky bottom-0 justify-around flex bg-blue-300 md:hidden">
+        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
+            <i class="fa-solid fa-house fa-lg"></i>
+        </a>
+        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
+            <i class="fa-solid fa-face-smile-beam fa-lg"></i>
+        </a>
+        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
+            <i class="fa-solid fa-table-list fa-lg"></i>
+        </a>
+        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
+            <i class="fa-solid fa-star fa-lg"></i>
+        </a>
+        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
+            <i class="fa-solid fa-circle-user fa-lg"></i>
+        </a>
+    </nav>
+
+    <!-- Footer if we want would go here -->
+
 </body>
 
 </html>
+
+
+

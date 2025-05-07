@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Econami | [home]</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- External libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,14 @@
     <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
 </head>
+
+<style>
+    body {
+  background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
+    background-repeat: no-repeat;
+  background-size: 100%;
+}
+</style>
 
 <body>
 
@@ -25,13 +33,15 @@
 
     <section class="h-dvh">
 
-
-        <!-- speech bubble -->
-
-        <div style="background-color: #c6c6c6; max-width: 60%; margin: auto; border-radius: 50px;">
-            <p style="text-align: center;">Insert some dialogue.</p>
+<div class="bg-slate-200 max-w-[60%] mx-auto rounded-xl">
+    <!-- speech bubble -->
+    <div class="mx-auto max-w-[80%]">
+        <!-- bubble with text -->
+        <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">Hello <%= username %> !</div>
+        <!-- bubble tail -->
+        <div class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
         </div>
-        <br>
+    </div>
 
 
         <!-- budget donut -->
@@ -39,6 +49,8 @@
         <div style="display: flex; justify-content: center;">
             <canvas id="canvas" width=325 height=325></canvas>
         </div>
+
+
 
         <script>
               const canvas = document.getElementById("canvas");
@@ -49,7 +61,7 @@
                 const values = [25, 75]; // proportional values; ADJUSTABLE
 
                 const img = new Image();
-                img.src = 'https://pethelpful.com/.image/w_3840,q_auto:good,c_fill,ar_4:3/MTk3MDM5MzE5MTM3OTIwMzE5/bunny-care-guide-how-to-discipline-your-rabbit-2.jpg'; // Replace with your image if needed
+                img.src = "/images/game/Ami-Base/white.png";
 
                 img.onload = function () {
                     dmbChart(150, 150, 125, 25, values, colors, img);
@@ -81,7 +93,7 @@
                     const innerRadius = radius - arcwidth - 3;
                     ctx.beginPath();
                     ctx.arc(cx, cy, innerRadius, 0, PI2);
-                    ctx.fillStyle = 'white';
+                    ctx.fillStyle = 'transparent';
                     ctx.fill();
 
                     // Ami in the center
@@ -164,7 +176,7 @@
             </div>
 
         </div>
-
+</div>
 
         <script>
             const collapsible = document.querySelector('.collapsible');
