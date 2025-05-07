@@ -20,7 +20,7 @@
 <body class="h-dvh flex flex-col">
 
     <!-- Top Navigation -->
-    <div id="nav_top"></div>
+    <%- include('./components/nav_top') %>
 
     <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
     <!-- There to show that bottom is sticky to the bottom -->
@@ -106,15 +106,14 @@
         </div>
     </section>
 
-    <!-- BOTTOM NAV -->
-    <nav id="nav_bottom"></nav>
+    <!-- Bottom Navigation -->
+    <%- include('./components/nav_bottom') %>
 
     <!-- Footer if we want would go here -->
 
     <!-- Scripts -->
-    <script src="/scripts/skeleton.js"></script>
     <script>
-        const user = <%- JSON.stringify(user) %>;
+        const user = <% - JSON.stringify(user) %>;
     </script>
     <script src="/scripts/profile.js"></script>
 
