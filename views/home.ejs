@@ -27,275 +27,244 @@
     <%- include('./components/nav_top') %>
 
 
-        <section class="h-dvh">
+    <section class="min-h-dvh">
 
-            <div class="bg-slate-200 max-w-[60%] mx-auto rounded-xl">
+        <div class="bg-slate-200 max-w-[60%] mx-auto rounded-xl">
 
-                <!-- speech bubble -->
-                <div class="mx-auto max-w-[80%]">
-                    <!-- bubble with text -->
-                    <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
-                        Hello <%= username %>!
-                    </div>
-                    <!-- bubble tail -->
-                    <div
-                        class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
-                    </div>
+            <!-- speech bubble -->
+            <div class="mx-auto max-w-[80%]">
+                <!-- bubble with text -->
+                <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
+                    Hello <%= username %>!
                 </div>
-
-
-                <!-- budget donut -->
-
-                <div style="display: flex; justify-content: center;">
-                    <canvas id="canvas" width=325 height=325></canvas>
+                <!-- bubble tail -->
+                <div
+                    class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
                 </div>
+            </div>
+
+
+            <!-- budget donut -->
+
+            <div style="display: flex; justify-content: center;">
+                <canvas id="canvas" width=325 height=325></canvas>
+            </div>
 
 
 
-                <script>
-                    const canvas = document.getElementById("canvas");
-                    const ctx = canvas.getContext("2d");
+            <script>
+                const canvas = document.getElementById("canvas");
+                const ctx = canvas.getContext("2d");
 
-                    // e66f6f = red, 8ce66f = green
-                    const colors = ['#e66f6f', '#8ce66f'];
-                    const values = [25, 75]; // proportional values; ADJUSTABLE
+                // e66f6f = red, 8ce66f = green
+                const colors = ['#e66f6f', '#8ce66f'];
+                const values = [25, 75]; // proportional values; ADJUSTABLE
 
-                    const img = new Image();
-                    img.src = "/images/game/Ami-Base/white.png";
+                const img = new Image();
+                img.src = "/images/game/Ami-Base/white.png";
 
-                    img.onload = function () {
-                        dmbChart(150, 150, 125, 25, values, colors, img);
-                    };
+                img.onload = function () {
+                    dmbChart(150, 150, 125, 25, values, colors, img);
+                };
 
-                    function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
-                        const PI = Math.PI;
-                        const PI2 = 2 * PI;
-                        const offset = PI / 2; // red starts from the bottom
+                function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
+                    const PI = Math.PI;
+                    const PI2 = 2 * PI;
+                    const offset = PI / 2; // red starts from the bottom
 
-                        ctx.lineWidth = arcwidth;
+                    ctx.lineWidth = arcwidth;
 
-                        const total = values.reduce((a, b) => a + b, 0);
-                        let accum = 0;
+                    const total = values.reduce((a, b) => a + b, 0);
+                    let accum = 0;
 
-                        for (let i = 0; i < values.length; i++) {
-                            ctx.beginPath();
-                            ctx.arc(
-                                cx, cy, radius,
-                                offset + PI2 * (accum / total),
-                                offset + PI2 * ((accum + values[i]) / total)
-                            );
-                            ctx.strokeStyle = colors[i];
-                            ctx.stroke();
-                            accum += values[i];
-                        }
-
-                        // Inner "cutout"
-                        const innerRadius = radius - arcwidth - 3;
+                    for (let i = 0; i < values.length; i++) {
                         ctx.beginPath();
-                        ctx.arc(cx, cy, innerRadius, 0, PI2);
-                        ctx.fillStyle = 'transparent';
-                        ctx.fill();
-
-                        // Ami in the center
-                        const imageSize = innerRadius * 1.5;
-                        ctx.drawImage(img, cx - imageSize / 2, cy - imageSize / 2, imageSize, imageSize);
+                        ctx.arc(
+                            cx, cy, radius,
+                            offset + PI2 * (accum / total),
+                            offset + PI2 * ((accum + values[i]) / total)
+                        );
+                        ctx.strokeStyle = colors[i];
+                        ctx.stroke();
+                        accum += values[i];
                     }
-                </script>
+
+                    // Inner "cutout"
+                    const innerRadius = radius - arcwidth - 3;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, innerRadius, 0, PI2);
+                    ctx.fillStyle = 'transparent';
+                    ctx.fill();
+
+                    // Ami in the center
+                    const imageSize = innerRadius * 1.5;
+                    ctx.drawImage(img, cx - imageSize / 2, cy - imageSize / 2, imageSize, imageSize);
+                }
+            </script>
 
 
-                <!-- amount spent / budget -->
+            <!-- amount spent / budget -->
 
-                <div id="spentVsBudget" style="text-align: center;">$25/$100</div>
-                <br>
-
-
-                <!-- daily weekly monthly buttons -->
-
-                <div class="flex justify-center space-x-2">
-                    <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">daily</button>
-                    <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">weekly</button>
-                    <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">monthly</button>
-                </div>
-
-                <script>
-
-                    function dailyTransactions(itemDateString) {
-                            const itemDate = new Date(
-                                // TRANSACTIONS DATES
-                            );
-                            const today = new Date();
-
-                            return (
-                                itemDate.getUTCFullYear() === today.getUTCFullYear() &&
-                                itemDate.getUTCMonth() === today.getUTCMonth() &&
-                                itemDate.getUTCDate() === today.getUTCDate()
-                            );
-                        }
+            <div id="spentVsBudget" style="text-align: center;">$25/$100</div>
+            <br>
 
 
-                    function sumAmounts(items) {
-                            return items
-                                .filter(item => dailyTransactions(item.date))
-                                .reduce((total, item) => total + item.amount, 0);
-                        }
+            <!-- daily weekly monthly buttons -->
+
+            <div class="flex justify-center space-x-2">
+                <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                    type="button">daily</button>
+                <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                    type="button">weekly</button>
+                <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                    type="button">monthly</button>
+            </div>
+
+            <script>
+
+                function dailyTransactions(itemDateString) {
+                    const itemDate = new Date(
+                        // TRANSACTIONS DATES
+                    );
+                    const today = new Date();
+
+                    return (
+                        itemDate.getUTCFullYear() === today.getUTCFullYear() &&
+                        itemDate.getUTCMonth() === today.getUTCMonth() &&
+                        itemDate.getUTCDate() === today.getUTCDate()
+                    );
+                }
 
 
-                    document.getElementById("dailyButton").addEventListener('click', function () {
-                        document.getElementById("spentVsBudget").innerHTML = dailySum
-                    })
-
-                    document.getElementById("weeklyButton").addEventListener('click', function () {
-                        document.getElementById("spentVsBudget").innerHTML = weeklySum
-                    })
-
-                    document.getElementById("monthlyButton").addEventListener('click', function () {
-                        document.getElementById("spentVsBudget").innerHTML = monthlySum
-                    })
-                </script>
+                function sumAmounts(items) {
+                    return items
+                        .filter(item => dailyTransactions(item.date))
+                        .reduce((total, item) => total + item.amount, 0);
+                }
 
 
-                <!-- add expense/income toggle. GURPREET PLEASE REPLACE THIS WITH YOUR EXPENSE/INCOME TOGGLE -->
+                document.getElementById("dailyButton").addEventListener('click', function () {
+                    document.getElementById("spentVsBudget").innerHTML = dailySum
+                })
 
-                <div class="flex justify-center">
-                    <div style="margin: 10px;">
+                document.getElementById("weeklyButton").addEventListener('click', function () {
+                    document.getElementById("spentVsBudget").innerHTML = weeklySum
+                })
 
-                        <button type="button"
-                            class="collapsible flex items-center bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">
+                document.getElementById("monthlyButton").addEventListener('click', function () {
+                    document.getElementById("spentVsBudget").innerHTML = monthlySum
+                })
+            </script>
 
-                            <!-- closed arrow -->
-                            <svg class="closed-arrow w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 16.881V7.119a1 1 0 0 1 1.636-.772l5.927 4.881a1 1 0 0 1 0 1.544l-5.927 4.88A1 1 0 0 1 8 16.882Z" />
-                            </svg>
 
-                            <!-- opened arrow -->
-                            <svg class="opened-arrow w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                viewBox="0 0 24 24" style="display: none;">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z" />
-                            </svg>
+            <!-- add expense/income toggle. GURPREET PLEASE REPLACE THIS WITH YOUR EXPENSE/INCOME TOGGLE -->
 
-                            Add expense/income
+            <div class="flex justify-center">
+                <div style="margin: 10px;">
 
-                        </button>
+                    <button type="button"
+                        class="collapsible flex items-center bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">
 
-                        <div class="content" style="display: none;">
-                            <form class="space-y-2">
-                                <input type="button" value="income"
-                                    class="bg-green-200 px-2 py-1 rounded hover:bg-green-300 transition">
-                                <input type="button" value="expense"
-                                    class="bg-red-200 px-2 py-1 rounded hover:bg-red-300 transition">
-                                <br>
+                        <!-- closed arrow -->
+                        <svg class="closed-arrow w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 16.881V7.119a1 1 0 0 1 1.636-.772l5.927 4.881a1 1 0 0 1 0 1.544l-5.927 4.88A1 1 0 0 1 8 16.882Z" />
+                        </svg>
 
-                                <label for="name">Name: </label>
-                                <input type="text" id="name" name="name"
-                                    class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                <br>
+                        <!-- opened arrow -->
+                        <svg class="opened-arrow w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"
+                            style="display: none;">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z" />
+                        </svg>
 
-                                <label for="type">Category: </label>
-                                <input type="text" id="category" name="category"
-                                    class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                <br>
+                        Add expense/income
 
-                                <label for="date">Date: </label>
-                                <input type="date" id="date" name="date">
-                                <br>
+                    </button>
 
-                                <label for="amount">Amount: </label>
-                                <input type="text" id="amount" name="amount"
-                                    class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                <br>
+                    <div class="content" style="display: none;">
+                        <form class="space-y-2">
+                            <input type="button" value="income"
+                                class="bg-green-200 px-2 py-1 rounded hover:bg-green-300 transition">
+                            <input type="button" value="expense"
+                                class="bg-red-200 px-2 py-1 rounded hover:bg-red-300 transition">
+                            <br>
 
-                                <input type="button" value="Expand Form"
-                                    class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
-                                <input type="button" value="Submit"
-                                    class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
-                            </form>
-                        </div>
+                            <label for="name">Name: </label>
+                            <input type="text" id="name" name="name"
+                                class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <br>
+
+                            <label for="type">Category: </label>
+                            <input type="text" id="category" name="category"
+                                class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <br>
+
+                            <label for="date">Date: </label>
+                            <input type="date" id="date" name="date">
+                            <br>
+
+                            <label for="amount">Amount: </label>
+                            <input type="text" id="amount" name="amount"
+                                class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <br>
+
+                            <input type="button" value="Expand Form"
+                                class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
+                            <input type="button" value="Submit"
+                                class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
+                        </form>
                     </div>
-
                 </div>
-
-                <script>
-                    const collapsible = document.querySelector('.collapsible');
-                    const content = collapsible.nextElementSibling;
-                    const closedArrow = document.querySelector('.closed-arrow');
-                    const openedArrow = document.querySelector('.opened-arrow');
-
-                    collapsible.addEventListener('click', function () {
-                        if (content.style.display === "none") {
-                            content.style.display = "block";
-                            closedArrow.style.display = "none"
-                            openedArrow.style.display = "block"
-                        }
-                        else {
-                            content.style.display = "none";
-                            closedArrow.style.display = "block"
-                            openedArrow.style.display = "none"
-                        }
-                    })
-                </script>
-
-
-                <!-- these should probably be in bottom nav (except logout, probably going into profile) but i'll keep them here for now in case we need them -->
-                <form action="/auth/logout" method="POST">
-                    <button type="submit"
-                        class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Logout</button>
-                </form>
-                <form action="/game" method="GET">
-                    <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition py-1">Go to
-                        game!</button>
-                </form>
-                <form action="/profile" method="GET">
-                    <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition py-1">Go to
-                        profile!</button>
-                </form>
-                <form action="/transactions" method="GET">
-                    <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition py-1">View
-                        Transactions</button>
-                </form>
 
             </div>
 
-        </section>
+            <script>
+                const collapsible = document.querySelector('.collapsible');
+                const content = collapsible.nextElementSibling;
+                const closedArrow = document.querySelector('.closed-arrow');
+                const openedArrow = document.querySelector('.opened-arrow');
+
+                collapsible.addEventListener('click', function () {
+                    if (content.style.display === "none") {
+                        content.style.display = "block";
+                        closedArrow.style.display = "none"
+                        openedArrow.style.display = "block"
+                    }
+                    else {
+                        content.style.display = "none";
+                        closedArrow.style.display = "block"
+                        openedArrow.style.display = "none"
+                    }
+                })
+            </script>
 
 
+            <!-- these should probably be in bottom nav (except logout, probably going into profile) but i'll keep them here for now in case we need them -->
+            <form action="/auth/logout" method="POST">
+                <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Logout</button>
+            </form>
+            <form action="/game" method="GET">
+                <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition py-1">Go to
+                    game!</button>
+            </form>
+            <form action="/profile" method="GET">
+                <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition py-1">Go to
+                    profile!</button>
+            </form>
+            <form action="/transactions" method="GET">
+                <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition py-1">View
+                    Transactions</button>
+            </form>
 
+        </div>
 
+    </section>
 
-
-        <!-- BOTTOM NAV -->
-        <nav class="sticky bottom-0 justify-around flex bg-blue-300 md:hidden">
-            <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-                <i class="fa-solid fa-house fa-lg"></i>
-            </a>
-            <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-                <i class="fa-solid fa-face-smile-beam fa-lg"></i>
-            </a>
-            <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-                <i class="fa-solid fa-table-list fa-lg"></i>
-            </a>
-            <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-                <i class="fa-solid fa-star fa-lg"></i>
-            </a>
-            <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-                <i class="fa-solid fa-circle-user fa-lg"></i>
-            </a>
-        </nav>
-
-
-
-
-        <!-- Bottom Navigation -->
-        <%- include('./components/nav_bottom') %>
+    <!-- Bottom Navigation -->
+    <%- include('./components/nav_bottom') %>
 </body>
 
 </html>

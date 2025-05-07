@@ -4,24 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>EconAmi | Game</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.png">
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
     <link rel="icon" href="/images/favicon.png" type="image/png">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <h1>Your Transactions</h1>
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Comments</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% transactions.forEach(transaction=> { %>
+    <!-- Top Navigation -->
+    <%- include('./components/nav_top') %>
+    <!-- Put your things in the section please -->
+    <section>
+        <h1>Your Transactions</h1>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% transactions.forEach(transaction=> { %>
                 <tr>
                     <td>
                         <%= transaction.name %>
@@ -39,9 +53,12 @@
                     </td>
                 </tr>
                 <% }) %>
-        </tbody>
-    </table>
-    <a href="/home">Back</a>
+            </tbody>
+        </table>
+        <a href="/home">Back</a>
+    </section>
+    <!-- Bottom Navigation -->
+    <%- include('./components/nav_bottom') %>
 </body>
 
 </html>
