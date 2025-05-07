@@ -94,6 +94,7 @@ mongoose.connect(process.env.MONGO_STRING, {
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
+    categories: Array,
     balance: Number,
     transactions: Array,
     owned: Array,
@@ -149,7 +150,7 @@ app.get('/login', (request, result) => {
 
 app.get('/game', (request, result) => {
     if (!request.session.uid) {
-        return result.redirect('/home');
+        return result.redirect('/login');
     }
     result.render('game');
 });
@@ -253,6 +254,18 @@ app.post('/auth/register', async (request, result) => {
         const newUser = new users({
             username,
             password: hashedPassword,
+            categories: [
+                "Income",
+                "Rent",
+                "Groceries",
+                "Transportation",
+                "Dining Out",
+                "Entertainment",
+                "Health",
+                "Insurance",
+                "Education",
+                "Pets"
+            ],
             balance: 0,
             transactions: [],
             owned: [],
@@ -331,7 +344,7 @@ app.post('/transaction/add', (request, result) => {
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     const amount = request.body.amount;
-    const comments = request.body.comments; 
+    const comments = request.body.comments;
     const newTransaction = new transactions({
         name,
         category,
@@ -372,6 +385,73 @@ app.get('/transactions', async (request, result) => {
         result.render('transactions', { transactions: transactionsList });
     } catch (err) {
         console.log('Error fetching transactions:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Fetches all categories for the logged-in user.
+ * Uses the user's ID stored in the session to find the user in the database where the categories are stored.
+ * Since all categories are already listed in one place we just return the users categories array.
+ */
+app.post('/categories', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const user = await users.findById(request.session.uid);
+        if (!user) {
+            return result.status(404).json({ error: 'User not found' });
+        }
+        console.log('Fetched Categories:', user.categories);
+        result.json({ categories: user.categories });
+    } catch (err) {
+        console.log('Error fetching categories:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Add's a new category to the user's categories array.
+ * First checks if the user is logged in by checking the session.
+ * Sends the new array of categories back to the view.
+ */
+app.post('/categories/add', async (request, result) => {
+    try {
+        const category = request.body.category;
+        if (!request.session.uid) {
+            return result.status(404).json({ error: 'User not found' });
+        }
+        const user = await users.findById(request.session.uid);
+        user.categories.push(category);
+        await user.save();
+        console.log('Category ', category, ' added successfully to user:', request.session.uid);
+        result.json({ categories: user.categories });
+    } catch (err) {
+        console.log('Error adding category:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Delete's a category from the user's categories array.
+ * Filters through and allows all categories that are not equal to the one being deleted.
+ * First checks if the user is logged in by checking the session.
+ * Sends the new array of categories back to the view.
+ */
+app.post('/categories/remove', async (request, result) => {
+    try {
+        const category = request.body.category;
+        if (!request.session.uid) {
+            return result.status(404).json({ error: 'User not found' });
+        }
+        const user = await users.findById(request.session.uid);
+        user.categories = user.categories.filter(cat => cat !== category);
+        await user.save();
+        console.log('Category ', category, ' deleted successfully from user:', request.session.uid);
+        result.json({ categories: user.categories });
+    } catch (err) {
+        console.log('Error deleting category:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
