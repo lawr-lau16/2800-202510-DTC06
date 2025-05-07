@@ -1,31 +1,44 @@
 <nav class="sticky bottom-0 justify-around flex bg-blue-300 md:hidden">
     <form action="/home" method="get">
-        <button type="submit" class="hover:bg-blue-400 hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
             <i class="fa-solid fa-house fa-lg"></i>
         </button>
     </form>
 
     <form action="/game" method="get">
-        <button type="submit" class="hover:bg-blue-400 hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
             <i class="fa-solid fa-face-smile-beam fa-lg"></i>
         </button>
     </form>
 
     <form action="/transactions" method="get">
-        <button type="submit" class="hover:bg-blue-400 hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
             <i class="fa-solid fa-table-list fa-lg"></i>
         </button>
     </form>
 
     <form action="/achievements" method="get">
-        <button type="submit" class="hover:bg-blue-400 hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
             <i class="fa-solid fa-star fa-lg"></i>
         </button>
     </form>
 
     <form action="/profile" method="get">
-        <button type="submit" class="hover:bg-blue-400 hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
             <i class="fa-solid fa-circle-user fa-lg"></i>
         </button>
     </form>
 </nav>
+
+
+<script>
+    let current = window.location.pathname;
+    document.querySelectorAll("nav form").forEach(function (elem) {
+        if (elem.action.includes(current)) {
+            elem.classList.add("bg-blue-400", "hover:bg-blue-500", "text-white");
+        } else {
+            elem.classList = `hover:bg-blue-400`
+        }
+
+    });
+</script>
