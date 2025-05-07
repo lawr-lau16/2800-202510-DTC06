@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const session = require('express-session');
+const favicon = require('serve-favicon');
+const path = require('path');
 
 /**
  * Require dotenv to load environment variables from a .env file for security.
@@ -47,7 +49,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // Middleware to use favicon
-app.use(express.favicon(__dirname + '/public/images/favicon.png'));
+// app.use(express.favicon(__dirname + '/public/images/favicon.png'));
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.png')));
 
 // Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
@@ -95,7 +98,7 @@ const userSchema = new mongoose.Schema({
     owned: Array,
     pet: String,
     date: Date,
-    Budget: {
+    budget: {
         daily: Number,
         weekly: Number,
         monthly: Number
@@ -150,7 +153,7 @@ app.get('/game', (request, result) => {
 
 // PROFILE PAGE
 // Fetch user info from mongoDB
-app.use('/scripts', express.static(__dirname + '/scripts'));
+// app.use('/scripts', express.static(__dirname + '/scripts'));
 app.get('/profile', async (req, res) => {
     if (!req.session.uid) {
         return res.redirect('/login');
@@ -175,7 +178,7 @@ app.post('/profile/update', async (req, res) => {
     try {
         const update = {
             username,
-            Budget: {
+            budget: {
                 daily: Number(daily),
                 weekly: Number(weekly),
                 monthly: Number(monthly)
@@ -433,6 +436,25 @@ app.post('/categories/remove', async (request, result) => {
         result.json({ categories: user.categories });
     } catch (err) {
         console.log('Error deleting category:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Fetches the user's budget's from the database.
+ * Uses the user's ID stored in the session to find the user in the database where the budget's are stored.
+ * The budget's are identified and populated in a new temporary object to deliver to the view.
+ */
+app.post('/budget', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const user = await users.findById(request.session.uid);
+        console.log('Fetched Budget:', user.budget);
+        result.json({ budget: user.budget });
+    } catch (err) {
+        console.log('Error fetching budget:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
