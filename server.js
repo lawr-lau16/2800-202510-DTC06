@@ -339,6 +339,28 @@ app.post('/categories', async (request, result) => {
     }
 });
 
+/**
+ * Add's a new category to the user's categories array.
+ * First checks if the user is logged in by checking the session.
+ * Sends the new array of categories back to the view.
+ */
+app.post('/categories/add', async (request, result) => {
+    try {
+        const category = request.body.category;
+        if (!request.session.uid) {
+            return result.status(404).json({ error: 'User not found' });
+        }
+        const user = await users.findById(request.session.uid);
+        user.categories.push(category);
+        await user.save();
+        console.log('Category ', category, ' added successfully to user:', request.session.uid);
+        result.json({categories: user.categories});
+    } catch (err) {
+        console.log('Error adding category:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
