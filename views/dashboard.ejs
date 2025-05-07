@@ -11,6 +11,7 @@
       <h1 class="text-2xl text-blue-800 text-center font-bold mb-4">
         Budget Overview
       </h1>
+
       <a
         href="/add-expense"
         class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white"
@@ -31,17 +32,116 @@
           <p>$<%= balance %></p>
         </div>
       </div>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === '' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            All
+          </button>
+        </form>
+
+        <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Salary" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Salary' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Salary
+          </button>
+        </form>
+
+        <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Transport" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Transport' ? 'bg-blue-400 text-white' : '' %>"
+          >
+             Transport
+          </button>
+        </form>
+        <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Food" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Food' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Food
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Rent" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Rent' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Rent
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Entertainment" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Entertainment' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Entertainment
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Utilities" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Utilities' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Utilities
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Bills" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Bills' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Bills
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Pet" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Pet' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Pet
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Car" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Car' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Car 
+          </button>
+        </form>
+                <form action="/dashboard" method="GET">
+          <input type="hidden" name="category" value="Shopping" />
+          <button
+            class="px-4 py-1 rounded-full bg-gray-200 <%= category === 'Shopping' ? 'bg-blue-400 text-white' : '' %>"
+          >
+            Shopping
+          </button>
+        </form>
+
+      </div>
 
       <h2 class="text-xl font-semibold mb-2">Your Transactions</h2>
       <ul>
         <% expenses.forEach(e => { %>
-        <li class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center">
+        <li
+          class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center"
+        >
           <div>
             <strong><%= e.name %></strong> - $<%= e.amount %> (<%= e.category
             %>)
           </div>
           <form action="/delete-expense/<%= e._id %>" method="POST">
-            <button class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2  hover:text-white hover:bg-red-300 hover:font-semibold ">X</button>
+            <button
+              class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2 hover:text-white hover:bg-red-300 hover:font-semibold"
+            >
+              X
+            </button>
           </form>
         </li>
         <% }) %>

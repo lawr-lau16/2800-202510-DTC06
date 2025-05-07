@@ -89,35 +89,6 @@ app.post("/add-expense", async (req, res) => {
 });
 
 // Dashboard to display entries and totals
-app.get("/dashboard", async (req, res) => {
-  try {
-    if (!req.session.user || !req.session.user._id) {
-      return res.status(401).send("Unauthorized");
-    }
-
-    const expenses = await Transaction.find({ userId: req.session.user._id });
-
-    const totalBudget = 2000; // Static placeholder
-    const totalSpent = expenses
-      .filter((e) => e.type === "expense")
-      .reduce((sum, e) => sum + e.amount, 0);
-    const totalIncome = expenses
-      .filter((e) => e.type === "income")
-      .reduce((sum, e) => sum + e.amount, 0);
-    const balance = totalIncome - totalSpent;
-
-    res.render("dashboard", {
-      expenses,
-      totalBudget,
-      totalSpent,
-      totalIncome,
-      balance,
-    });
-  } catch (error) {
-    console.error("❌ Error loading dashboard:", error);
-    res.status(500).send("Error loading dashboard");
-  }
-});
 
 // Delete a transaction
 app.post("/delete-expense/:id", async (req, res) => {
@@ -136,6 +107,43 @@ app.post("/delete-expense/:id", async (req, res) => {
 // Redirect base URL to dashboard
 app.get("/", (req, res) => {
   res.redirect("/dashboard");
+});
+
+app.get("/dashboard", async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const category = req.query.category || "";
+
+    let query = { userId };
+    if (category) {
+      query.category = category;
+    }
+
+    const expenses = await Transaction.find(query);
+
+    const allUserTransactions = await Transaction.find({ userId });
+
+    const totalIncome = allUserTransactions
+      .filter((t) => t.type === "income")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const totalSpent = allUserTransactions
+      .filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const balance = totalIncome - totalSpent;
+
+    res.render("dashboard", {
+      expenses,
+      totalIncome,
+      totalSpent,
+      balance,
+      category,
+    });
+  } catch (error) {
+    console.error("❌ Error loading dashboard:", error);
+    res.status(500).send("Error loading dashboard");
+  }
 });
 
 // ------------------ Start Server ------------------ //
