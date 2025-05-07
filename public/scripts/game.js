@@ -72,25 +72,43 @@ function dynamicallyDisplayItems() {
     // Array must contain items by exact name of the images for items
     // May be replaced by db future on
     const itemsAvailable = ["heart", "sprout", "star"];
-    const itemsOwned = ["heart"];
+    const itemsOwned = ["heart", "sprout"];
     amiItem = document.getElementById("ami-item");
 
     itemsAvailable.forEach(item => {
         eachItem = document.createElement("div");
         eachItem.id = item;
-        eachItem.classList = "bg-white size-18 m-4 border-4 rounded-lg hover:cursor-pointer";
-        eachItem.innerHTML = `<img src="images/game/Items/${item}.png" class="">`;
+        // Sets class list for each new div
+        eachItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
+        // Goes through which items the user owns
+        // If they don't have the item, it will be locked in the menu
+        if (itemsOwned.includes(item)) {
+            eachItem.innerHTML = `<div class="relative flex size-full">
+            <img src="images/game/Items/${item}.png" class="absolute"></div>`
+        } else {
+            eachItem.innerHTML = `<div class="relative flex size-full"><i class="mx-auto my-auto fa-solid fa-lock fa-xl"></i>
+            <img src="images/game/Items/${item}.png" class="absolute"></div>
+            `;
+            eachItem.classList.add("locked")
+        }
         itemsDiv.append(eachItem);
     });
 
     itemsAvailable.forEach(item => {
         eachItem = document.getElementById(item);
-        // console.log(itemsDiv.children[i])
-        eachItem.addEventListener("click", () => {
-            // document.getElementById(item).classList.toggle("border-blue-400")
-            userItem = item
-            amiItem.src = `images/game/Items/${item}.png`;
-        })
+
+        if (eachItem.classList.contains("locked")) {
+            eachItem.addEventListener("click", () => {
+                console.log("locked")
+            })
+        } else {
+            eachItem.addEventListener("click", () => {
+                // update db DO LATER
+                userItem = item
+                // changes Ami's Item
+                amiItem.src = `images/game/Items/${item}.png`;
+            })
+        }
     });
 
 }
