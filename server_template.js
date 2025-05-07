@@ -113,8 +113,12 @@ app.get("/dashboard", async (req, res) => {
   try {
     const userId = req.session.user._id;
     const category = req.query.category || "";
+    const type = req.query.type || "";
 
     let query = { userId };
+    if (type) {
+      query.type = type;
+    }
     if (category) {
       query.category = category;
     }

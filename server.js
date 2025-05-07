@@ -303,7 +303,6 @@ app.get("/add-expense", (req, res) => {
   res.render("partials/expense_log");
 });
 
-
 // Handle form submission and save to MongoDB
 app.post("/add-expense", async (req, res) => {
   if (!req.session.uid) {
@@ -350,13 +349,17 @@ app.post("/delete-expense/:id", async (req, res) => {
 
 app.get("/dashboard", async (req, res) => {
   try {
-    const userId = req.session.uid; // FIXED: use session.uid
+    const userId = req.session.user._id;
     const category = req.query.category || "";
     const type = req.query.type || "";
 
     let query = { userId };
-    if (type) query.type = type;
-    if (category) query.category = category;
+    if (type) {
+      query.type = type;
+    }
+    if (category) {
+      query.category = category;
+    }
 
     const expenses = await Transaction.find(query);
 
@@ -378,7 +381,6 @@ app.get("/dashboard", async (req, res) => {
       totalSpent,
       balance,
       category,
-      type,
     });
   } catch (error) {
     console.error("❌ Error loading dashboard:", error);
