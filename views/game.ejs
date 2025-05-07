@@ -44,19 +44,32 @@
         </div>
 
         <!-- Items menu (Default hidden) -->
-        <div id="items-menu" class="hidden absolute top-0 z-100 w-full">
-            <div class="bg-red-400 rounded-b-lg border-4 border-x-0 border-t-red-400">
-                <h1 class="m-4 text-2xl font-bold">Items</h1>
-                <hr class="m-4 border-2">
+        <div id="items-menu" class=" absolute top-0 z-100 w-full">
+            <div class="bg-red-400 rounded-b-lg border-4 border-x-0 border-t-red-400 px-4">
+                <!-- This is the header part -->
+                <div class="flex justify-between m-4">
+                    <h1 class="text-2xl font-bold my-auto">Items</h1>
+                    <!-- Buttons for categories *** REMEMBER TO CHANGE WHAT IT LOOKS LIKE -->
+                    <div>
+                        <button id="items-menu-base"
+                            class="border-4 rounded-lg px-2 py-1 bg-green-600 hover:cursor-pointer">Colour</button>
+                        <button id="items-menu-item"
+                            class="border-4 rounded-lg px-2 py-1 bg-green-600 hover:cursor-pointer">Item</button>
+                    </div>
+                </div>
+                <hr class="border-2">
+                <!-- Dynamically changing items -->
                 <div id="items" class="flex-wrap flex m-4 justify-center md:justify-start">
                 </div>
             </div>
+            <!-- Close button -->
             <div id="close-menu"
                 class="bg-red-400 mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1">
                 <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
             </div>
         </div>
 
+        <!-- This is to keep everything stuck to the bottom -->
         <div class="bottom-0 absolute z-0 w-full">
             <!-- Ami div -->
             <div id="ami" class="relative translate-y-4 w-36 mx-auto">
