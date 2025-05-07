@@ -4,15 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game</title>
+    <title>EconAmi | Game</title>
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
     <!-- Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="h-dvh flex flex-col">
+<body class="h-dvh flex flex-col font-[Quicksand]">
 
     <!-- Top Navigation -->
-    <div class="p-4">TOP NAV PLACEHOLDER</div>
+    <nav id="nav_top"></nav>
 
     <section class="bg-slate-100 h-full relative">
         <!-- Game UI, this will always be on top -->
@@ -20,10 +28,13 @@
         <div class="flex justify-between">
             <!-- Buttons -->
             <div class="z-10">
-                <button class="p-8 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                </button>
-                <button class="p-8 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                </button>
+                <button id="game-pet"
+                    class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
+                    <i class="fa-regular fa-hand fa-2xl"></i>
+                    <button id="game-items"
+                        class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
+                        <!-- Placeholder for items -->
+                        <i class="fa-solid fa-coins fa-2xl"></i>
             </div>
             <!-- Stats -->
             <div class="z-10 select-none">
@@ -32,25 +43,41 @@
             </div>
         </div>
 
+        <!-- Items menu (Default hidden) -->
+        <div id="items-menu" class="hidden absolute top-0 z-100 w-full">
+            <div class="bg-red-400 rounded-b-lg border-4 border-x-0 border-t-red-400">
+                <h1 class="m-4 text-2xl font-bold">Items</h1>
+                <hr class="m-4 border-2">
+                <div id="items" class="flex-wrap flex m-4 justify-center md:justify-start">
+                </div>
+            </div>
+            <div id="close-menu"
+                class="bg-red-400 mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1">
+                <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
+            </div>
+        </div>
+
         <div class="bottom-0 absolute z-0 w-full">
             <!-- Ami div -->
-            <div class="relative translate-y-4 w-36 mx-auto">
+            <div id="ami" class="relative translate-y-4 w-36 mx-auto">
                 <!-- Item Overlay -->
-                <img class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10"
                     src="/images/game/Items/heart.png" alt="">
                 <!-- Expression Overlay -->
-                <img class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
                     src="/images/game/Ami-Expressions/default.png" alt="">
                 <!-- Ami Base -->
                 <img class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png" alt="">
             </div>
             <!-- Ground -->
             <div class="bg-blue-900 py-16"></div>
-        </div>
     </section>
 
     <!-- Bottom Navigation -->
-    <div class="p-4">BOTTOM NAV PLACEHOLDER</div>
+    <nav id="nav_bottom"></nav>
+    <!-- Scripts -->
+    <script src="scripts/skeleton.js"></script>
+    <script src="scripts/game.js"></script>
 </body>
 
 </html>
