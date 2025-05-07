@@ -86,6 +86,7 @@ mongoose.connect(process.env.MONGO_STRING, {
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
+    categories: Array,
     balance: Number,
     transactions: Array,
     owned: Array,
@@ -181,6 +182,18 @@ app.post('/auth/register', async (request, result) => {
         const newUser = new users({
             username,
             password: hashedPassword,
+            categories: [
+                "Income",
+                "Rent",
+                "Groceries",
+                "Transportation",
+                "Dining Out",
+                "Entertainment",
+                "Health",
+                "Insurance",
+                "Education",
+                "Pets"
+            ],
             balance: 0,
             transactions: [],
             owned: [],
@@ -259,7 +272,7 @@ app.post('/transaction/add', (request, result) => {
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     const amount = request.body.amount;
-    const comments = request.body.comments; 
+    const comments = request.body.comments;
     const newTransaction = new transactions({
         name,
         category,
