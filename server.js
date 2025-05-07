@@ -95,6 +95,7 @@ const userSchema = new mongoose.Schema({
     categories: Array,
     balance: Number,
     transactions: Array,
+    acheivements: Array,
     owned: Array,
     pet: String,
     date: Date,
@@ -117,6 +118,24 @@ const transactionSchema = new mongoose.Schema({
     amount: Number,
     comments: String
 });
+
+/**
+ * This is the schema for acheivements, it acts as a template for models to use when creating new documents in the database.
+ * Acheivements are tied to users in there user schema by thier model ID.
+ * The server automatically adds the acheivement ID to the user schema when a new acheivement is created.
+ */
+const acheivementSchema = new mongoose.Schema({
+    type: String,
+    description: String,
+    progress: Number,
+    target: Number,
+    date: Date,
+    previousDate: Date,
+    completed: Boolean
+});
+
+// Here we create a model for the acheivement schema, this will be used to make our collection in the database.
+const acheivements = mongoose.model('acheivements', acheivementSchema);
 
 // Here we create a model for the user schema, this will be used to make our collection in the database.
 const users = mongoose.model('users', userSchema);
@@ -152,23 +171,10 @@ app.get('/game', (request, result) => {
 // ACHIEVEMENTS PAGE
 app.get('/achievements', (request, result) => {
     if (!request.session.uid) {
-        return result.redirect('/achievements');
+        return result.redirect('/login');
     }
     result.render('achievements');
 });
-
-
-
-
-// ACHIEVEMENTS PAGE
-app.get('/achievements', (request, result) => {
-    if (!request.session.uid) {
-        return result.redirect('/achievements');
-    }
-    result.render('achievements');
-});
-
-
 
 // PROFILE PAGE
 // Fetch user info from mongoDB
