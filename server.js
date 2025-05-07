@@ -526,6 +526,29 @@ app.post('/budget', async (request, result) => {
     }
 });
 
+/**
+ * Fetches the users achievements from the database, along with their user information.
+ * Uses the user's ID stored in the session to find the user in the database where the achievements are stored.
+ * The achievements are identified and delivered to the view.
+ * The user information is also delivered to the view.
+ */
+app.post('/achievements', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const user = await users.findById(request.session.uid);
+        const userAchievements = await acheivements.find({ _id: { $in: user.acheivements } });
+        console.log('Fetched Achievements:', userAchievements);
+        result.json({ achievements: userAchievements, user: user });
+    } catch (err) {
+        console.log('Error fetching achievements:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
