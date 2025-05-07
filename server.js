@@ -98,7 +98,7 @@ const userSchema = new mongoose.Schema({
     owned: Array,
     pet: String,
     date: Date,
-    Budget: {
+    budget: {
         daily: Number,
         weekly: Number,
         monthly: Number
@@ -178,7 +178,7 @@ app.post('/profile/update', async (req, res) => {
     try {
         const update = {
             username,
-            Budget: {
+            budget: {
                 daily: Number(daily),
                 weekly: Number(weekly),
                 monthly: Number(monthly)
@@ -436,6 +436,25 @@ app.post('/categories/remove', async (request, result) => {
         result.json({ categories: user.categories });
     } catch (err) {
         console.log('Error deleting category:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Fetches the user's budget's from the database.
+ * Uses the user's ID stored in the session to find the user in the database where the budget's are stored.
+ * The budget's are identified and populated in a new temporary object to deliver to the view.
+ */
+app.post('/budget', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const user = await users.findById(request.session.uid);
+        console.log('Fetched Budget:', user.budget);
+        result.json({ budget: user.budget });
+    } catch (err) {
+        console.log('Error fetching budget:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
