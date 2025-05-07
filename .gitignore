@@ -1,3 +1,4 @@
 node_modules/
 ignore.js
+package-lock.json
 .env
