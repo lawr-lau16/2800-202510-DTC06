@@ -133,7 +133,7 @@ app.get('/login', (request, result) => {
 
 app.get('/game', (request, result) => {
     if (!request.session.uid) {
-        return result.redirect('/home');
+        return result.redirect('/login');
     }
     result.render('game');
 });
@@ -313,6 +313,28 @@ app.get('/transactions', async (request, result) => {
         result.render('transactions', { transactions: transactionsList });
     } catch (err) {
         console.log('Error fetching transactions:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Fetches all categories for the logged-in user.
+ * Uses the user's ID stored in the session to find the user in the database where the categories are stored.
+ * Since all categories are already listed in one place we just return the users categories array.
+ */
+app.post('/categories', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const user = await users.findById(request.session.uid);
+        if (!user) {
+            return result.status(404).json({ error: 'User not found' });
+        }
+        console.log('Fetched Categories:', user.categories);
+        result.json({ categories: user.categories });
+    } catch (err) {
+        console.log('Error fetching categories:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
