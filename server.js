@@ -354,9 +354,32 @@ app.post('/categories/add', async (request, result) => {
         user.categories.push(category);
         await user.save();
         console.log('Category ', category, ' added successfully to user:', request.session.uid);
-        result.json({categories: user.categories});
+        result.json({ categories: user.categories });
     } catch (err) {
         console.log('Error adding category:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * Delete's a category from the user's categories array.
+ * Filters through and allows all categories that are not equal to the one being deleted.
+ * First checks if the user is logged in by checking the session.
+ * Sends the new array of categories back to the view.
+ */
+app.post('/categories/remove', async (request, result) => {
+    try {
+        const category = request.body.category;
+        if (!request.session.uid) {
+            return result.status(404).json({ error: 'User not found' });
+        }
+        const user = await users.findById(request.session.uid);
+        user.categories = user.categories.filter(cat => cat !== category);
+        await user.save();
+        console.log('Category ', category, ' deleted successfully from user:', request.session.uid);
+        result.json({ categories: user.categories });
+    } catch (err) {
+        console.log('Error deleting category:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
