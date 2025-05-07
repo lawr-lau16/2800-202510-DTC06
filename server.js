@@ -149,6 +149,14 @@ app.get('/game', (request, result) => {
     result.render('game');
 });
 
+// ACHIEVEMENTS PAGE
+app.get('/achievements', (request, result) => {
+    if (!request.session.uid) {
+        return result.redirect('/achievements');
+    }
+    result.render('achievements');
+});
+
 
 
 
