@@ -41,17 +41,49 @@ function gameButtonItems() {
     itemsButton.addEventListener("click", clickItemButton)
     itemsCloseMenu.addEventListener("click", clickItemCloseButton)
 }
-
+// Open Items menu
 function clickItemButton() {
     itemsButton.classList.toggle("border-blue-400")
     itemsMenu.classList.toggle("hidden")
 }
 
+// Close Items menu
 function clickItemCloseButton() {
     itemsButton.classList.toggle("border-blue-400")
     itemsMenu.classList.toggle("hidden")
 }
 
+// Populates Items menu with available items 
+function dynamicallyDisplayItems() {
+    itemsDiv = document.getElementById("items")
+    itemsDiv.innerHTML = ""
+    // Array must contain items by exact name of the images for items
+    // May be replaced by db future on
+    const itemsAvailable = ["heart", "sprout", "star"]
+    amiItem = document.getElementById("ami-item")
+
+    itemsResult = ""
+    itemsAvailable.forEach(item => {
+        eachItem = document.createElement("div")
+        eachItem.id = item
+        eachItem.classList = "bg-white size-18 m-4 border-4 rounded-lg hover:cursor-pointer"
+        eachItem.innerHTML = `<img src="images/game/Items/${item}.png" class=""></img>`
+        itemsDiv.append(eachItem)
+    });
+
+    // itemsAvailable.forEach(item => {
+    //     eachItem = document.getElementById(item)
+    //     // console.log(itemsDiv.children[i])
+    //     eachItem.addEventListener("click", () => {
+    //         document.getElementById(item).classList.toggle("border-blue-400")
+    //         // amiItem = none
+    //     })
+    // });
+
+}
+
+
 // execute functions
 gameButtonPet()
+dynamicallyDisplayItems()
 gameButtonItems()
