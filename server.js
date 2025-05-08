@@ -372,11 +372,11 @@ app.post("/auth/register", async (request, result) => {
       );
     }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    const acheiveArray = [];
+    const achieveArray = [];
     for (let i = 0; i < defaultAchievements.length; i++) {
       const newAchievement = new achievements(defaultAchievements[i]);
       await newAchievement.save();
-      acheiveArray.push(newAchievement._id);
+      achieveArray.push(newAchievement._id);
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new users({
@@ -396,7 +396,7 @@ app.post("/auth/register", async (request, result) => {
       ],
       balance: 0,
       transactions: [],
-      achievements: acheiveArray,
+      achievements: achieveArray,
       owned: [],
       pet: null,
       date: new Date(),
@@ -788,16 +788,16 @@ app.post("/achievements/replace", async (request, result) => {
 });
 
 app.get("/weather", async (req, res) => {
-    const {lat, lon} = req.query;
-    const apiKey = process.env.WEATHER_API_KEY
+  const { lat, lon } = req.query;
+  const apiKey = process.env.WEATHER_API_KEY
 
-    try {
-        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
-        res.json(response.data);
-    }
-    catch (error) {
-        res.status(500).json({error: "Failed to fetch weather data"})
-    }
+  try {
+    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+    res.json(response.data);
+  }
+  catch (error) {
+    res.status(500).json({ error: "Failed to fetch weather data" })
+  }
 })
 
 // Start's the server and listens on the specified port.
