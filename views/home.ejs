@@ -6,23 +6,18 @@
     <title>EconAmi | [home]</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- External libraries -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      src="https://kit.fontawesome.com/f0fa2c9149.js"
-      crossorigin="anonymous"
-    ></script>
-  </head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
 
   <style>
     body {
-      background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
-      background-repeat: no-repeat;
-      background-size: 100%;
+        background-repeat: no-repeat;
+        background-size: 100%;
     }
   </style>
 
@@ -48,24 +43,46 @@
 
         <!-- budget donut -->
 
-        <div style="display: flex; justify-content: center">
-          <canvas id="canvas" width="325" height="325"></canvas>
-        </div>
+                <div style="display: flex; justify-content: center;">
+                    <canvas id="canvas" width=325 height=325></canvas>
+                </div>
 
-        <script>
-          const canvas = document.getElementById("canvas");
-          const ctx = canvas.getContext("2d");
 
-          // e66f6f = red, 8ce66f = green
-          const colors = ["#e66f6f", "#8ce66f"];
-          const values = [25, 75]; // proportional values; ADJUSTABLE
+                <!-- amount spent / budget -->
 
-          const img = new Image();
-          img.src = "/images/game/Ami-Base/white.png";
+                <div id="spentVsBudget" style="text-align: center;"></div>
+                <br>
 
-          img.onload = function () {
-            dmbChart(150, 150, 125, 25, values, colors, img);
-          };
+
+                <!-- daily weekly monthly buttons -->
+
+                <div class="flex justify-center space-x-2">
+                    <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">daily</button>
+                    <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">weekly</button>
+                    <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">monthly</button>
+                </div>
+
+                <script>
+
+                    // budget donut
+                    const canvas = document.getElementById("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    function drawChart(values) {
+                        // e66f6f = red, 8ce66f = green
+                        const colors = ['#e66f6f', '#8ce66f'];
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                        const img = new Image();
+                        img.src = "/images/game/Ami-Base/white.png";
+
+                        img.onload = function () {
+                            dmbChart(150, 150, 125, 25, values, colors, img);
+                        };
+                    }
 
           function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
             const PI = Math.PI;
@@ -98,86 +115,179 @@
             ctx.fillStyle = "transparent";
             ctx.fill();
 
-            // Ami in the center
-            const imageSize = innerRadius * 1.5;
-            ctx.drawImage(
-              img,
-              cx - imageSize / 2,
-              cy - imageSize / 2,
-              imageSize,
-              imageSize
-            );
-          }
-        </script>
+                        // Ami in the center
+                        const imageSize = innerRadius * 1.5;
+                        ctx.drawImage(img, cx - imageSize / 2, cy - imageSize / 2, imageSize, imageSize);
+                    }
 
-        <!-- amount spent / budget -->
 
-        <div id="spentVsBudget" style="text-align: center">$25/$100</div>
-        <br />
+                    function dailyTransactions(transactionDate) {
+                        const itemDate = new Date(transactionDate);
+                        const today = new Date();
 
-        <!-- daily weekly monthly buttons -->
+                        return (
+                            itemDate.getUTCFullYear() === today.getUTCFullYear()
+                            &&
+                            itemDate.getUTCMonth() === today.getUTCMonth()
+                            &&
+                            itemDate.getUTCDate() === today.getUTCDate()
+                        );
+                    }
 
-        <div class="flex justify-center space-x-2">
-          <button
-            id="dailyButton"
-            class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-            type="button"
-          >
-            daily
-          </button>
-          <button
-            id="weeklyButton"
-            class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-            type="button"
-          >
-            weekly
-          </button>
-          <button
-            id="monthlyButton"
-            class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-            type="button"
-          >
-            monthly
-          </button>
-        </div>
 
-        <script>
-          function dailyTransactions(itemDateString) {
-            const itemDate = new Date();
-            // TRANSACTIONS DATES
-            const today = new Date();
+                    function weeklyTransactions(transactionDate) {
+                        const itemDate = new Date(transactionDate);
+                        const today = new Date();
+                        // set start of week to sunday
+                        const startOfWeek = new Date(today);
+                        startOfWeek.setUTCDate(today.getUTCDate() - today.getUTCDate());
+                        startOfWeek.setUTCHours(0, 0, 0, 0);
+                        // set end of week to saturday
+                        const endOfWeek = new Date(startOfWeek);
+                        endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6);
+                        endOfWeek.setUTCHours(23, 59, 59, 990);
 
-            return (
-              itemDate.getUTCFullYear() === today.getUTCFullYear() &&
-              itemDate.getUTCMonth() === today.getUTCMonth() &&
-              itemDate.getUTCDate() === today.getUTCDate()
-            );
-          }
+                        return itemDate >= startOfWeek && itemDate <= endOfWeek;
+                    }
 
-          function sumAmounts(items) {
-            return items
-              .filter((item) => dailyTransactions(item.date))
-              .reduce((total, item) => total + item.amount, 0);
-          }
 
-          document
-            .getElementById("dailyButton")
-            .addEventListener("click", function () {
-              document.getElementById("spentVsBudget").innerHTML = dailySum;
-            });
+                    function monthlyTransactions(transactionDate) {
+                        const itemDate = new Date(transactionDate);
+                        const today = new Date();
+                        return (
+                            itemDate.getUTCFullYear() === today.getUTCFullYear()
+                            &&
+                            itemDate.getUTCMonth() === today.getUTCMonth()
+                        );
+                    }
 
-          document
-            .getElementById("weeklyButton")
-            .addEventListener("click", function () {
-              document.getElementById("spentVsBudget").innerHTML = weeklySum;
-            });
+                    // sum transaction amounts depending on daily/weekly/monthly
+                    function sumAmounts(items, filterFunction) {
+                        return items
+                            .filter(item => filterFunction(item.date))
+                            .reduce((total, item) => total + item.amount, 0);
+                    }
 
-          document
-            .getElementById("monthlyButton")
-            .addEventListener("click", function () {
-              document.getElementById("spentVsBudget").innerHTML = monthlySum;
-            });
-        </script>
+
+                    async function updateSpending(timeframe) {
+                        try {
+                            const transactionsResponse = await fetch('/transactions/fetch', {
+                                method: 'POST'
+                            });
+                            const transactionsData = await transactionsResponse.json();
+                            const transactions = transactionsData.transactions;
+
+                            const budgetResponse = await fetch('/budget', {
+                                method: 'POST'
+                            });
+                            const budgetData = await budgetResponse.json();
+                            const budget = budgetData.budget;
+                            const selectedBudget = budget[timeframe];
+                            console.log(budget)
+
+
+                            let total = 0;
+
+                            if (timeframe === "daily") {
+                                total = sumAmounts(transactions, dailyTransactions);
+                            }
+
+                            if (timeframe === "weekly") {
+                                total = sumAmounts(transactions, weeklyTransactions);
+                            }
+
+                            if (timeframe === "monthly") {
+                                total = sumAmounts(transactions, monthlyTransactions);
+                            }
+
+                            document.getElementById("spentVsBudget").innerHTML = `$${total} / $${selectedBudget}`;
+
+                            const values = [(total / selectedBudget) * 100, ((selectedBudget - total) / selectedBudget) * 100]
+                            drawChart(values);
+                        }
+                        catch (err) {
+                            console.error("Error:", err)
+                            document.getElementById("spentVsBudget").innerHTML = "Error loading data."
+                        }
+                    }
+
+
+                    const buttons = {
+                        daily: document.getElementById("dailyButton"),
+                        weekly: document.getElementById("weeklyButton"),
+                        monthly: document.getElementById("monthlyButton"),
+                        
+                    }
+                    buttons.daily.addEventListener('click', () => {
+                        updateSpending("daily");
+                        selectedButton("daily");
+                    })
+
+                    buttons.weekly.addEventListener('click', () => {
+                        updateSpending("weekly");
+                        selectedButton("weekly");
+                    })
+
+                    buttons.monthly.addEventListener('click', () => {
+                        updateSpending("monthly");
+                        selectedButton("monthly");
+                    })
+
+                    function selectedButton(selected) {
+                        for (const key in buttons) {
+                            if (key === selected) {
+                                buttons[key].classList.add("border-solid", "border-black", "border-2")
+                            }
+                            else {
+                                buttons[key].classList.remove("border-solid", "border-black", "border-2")
+                            }
+                        }
+                    }
+
+
+                    window.addEventListener('load', () => {
+                        updateSpending("daily");
+                        selectedButton("daily");
+                    });
+
+
+                    // GEOLOCATION
+
+                        function getLocation() {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(success, fail);
+                            } else {
+                                console.log("Geolocation is not supported by this browser.");
+                            }
+                        }
+
+                        async function success(position) {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            
+                            try{
+                                const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
+                                const weatherData = response.data.weather[0].main;
+                                if (weatherData === "Clear" || weatherData === "Clouds") {
+                                    document.body.style.backgroundImage = "url('https://d7hftxdivxxvm.cloudfront.net/?quality=80&resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=910')"
+                                }
+                                else {
+                                    document.body.style.backgroundImage = "url('https://thumbs.dreamstime.com/b/silhouetted-figure-umbrella-walking-neon-lit-rainy-city-street-night-evoking-moody-atmospheric-cyberpunk-324115145.jpg')"
+                                }
+                            }
+                            catch (error) {
+                                console.log("Error fetching weather data:", error)
+                            }
+                        }
+
+                        function fail() {
+                            alert("Weather for your location not available at this time.")
+                        }
+
+                        window.addEventListener("load", getLocation);
+
+                </script>
+
 
         <!-- add expense/income toggle. GURPREET PLEASE REPLACE THIS WITH YOUR EXPENSE/INCOME TOGGLE -->
         <button

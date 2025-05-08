@@ -1,6 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const session = require('express-session');
+const favicon = require('serve-favicon');
+const path = require('path');
+const axios = require('axios');
+
 const session = require("express-session");
 const favicon = require("serve-favicon");
 const path = require("path");
@@ -781,6 +786,19 @@ app.post("/achievements/replace", async (request, result) => {
     result.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.get("/weather", async (req, res) => {
+    const {lat, lon} = req.query;
+    const apiKey = process.env.WEATHER_API_KEY
+
+    try {
+        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+        res.json(response.data);
+    }
+    catch (error) {
+        res.status(500).json({error: "Failed to fetch weather data"})
+    }
+})
 
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
