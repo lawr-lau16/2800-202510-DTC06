@@ -547,7 +547,29 @@ app.post('/achievements', async (request, result) => {
     }
 });
 
-
+/**
+ * Updates the acheivement that is passed by the script in the view.
+ * The acheivement is identified by its ID and the new data is passed to the database.
+ * The acheivement is updated in the database, with the new progress, completed and date and previousDate values.
+ */
+app.post('/achievements/update', async (request, result) => {
+    try {
+        if (!request.session.uid) {
+            return result.redirect('/login');
+        }
+        const acheivementId = request.body.acheivementId;
+        const progress = request.body.progress;
+        const completed = request.body.completed;
+        const date = new Date(request.body.date);
+        const previousDate = new Date(request.body.previousDate);
+        await acheivements.findByIdAndUpdate(acheivementId, { progress, completed, date, previousDate });
+        console.log('Updated Achievement:', acheivementId);
+        result.json({ message: 'Achievement updated successfully' });
+    } catch (err) {
+        console.log('Error updating achievement:', err.message);
+        result.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
