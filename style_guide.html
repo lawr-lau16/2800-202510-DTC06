@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+
+    <nav class="sticky top-0 md:justify-between flex bg-[#3EC3DE] text-white p-4 z-999">
+        <form action="/home" method="get">
+            <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer">EconAmi</button>
+        </form>
+        <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
+    </nav>
+
+    <section
+        class="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl m-4 p-6 drop-shadow-sm">
+        <div>
+            <p>You are free to change things around for your pages, this is just a base.</p>
+            <p>Also let me know if you need anything else o7</p>
+            <hr class="m-4">
+            <h1 class="font-[DynaPuff] font-semibold text-6xl tracking-tight text-[#3EC3DE]">Econ<span
+                    class="text-[#089ddd]">Ami</span></h1>
+            <div class="border-2 p-4 rounded-lg my-4">
+                <p class="text-sm text-[#089ddd]">Logo text (if needed?) You can change the "text-6xl" to the size you
+                    need</p>
+                <p> &lt;h1 class="font-[DynaPuff] font-semibold text-6xl tracking-tight text-[#3EC3DE]">Econ&lt;span
+                    class="text-[#089ddd]"&gt;Ami&lt;/span&gt;&lt;/h1&gt;</p>
+            </div>
+            <div class="text-left my-8">
+                <hr class="m-4">
+                <h2 class="text-3xl font-medium font-[Quicksand] my-4">Using m-# (margin) and p-# (padding)</h2>
+                <p>Try to keep everything multiples of 4 (because that's 1rem), but even numbers in general are okay.
+                    use odd numbers if you REALLY need to I guess?<br>
+                    Sometimes you will need more spacing on the bottom and that's okay. (mb-#)
+                <p class="mb-2">Use m-# when you need space around the element, and p-# when you need space within it.
+                </p>
+                <div class="border-4 border-dashed w-36">
+                    <div class="bg-blue-200 border">No padding, no margin</div>
+                    <div class="bg-blue-200 m-4 border">No padding, m-4</div>
+                    <div class="bg-blue-200 m-4 p-4 border">p-4, m-4</div>
+                </div>
+                <hr class="m-4">
+                <h2 class="text-3xl font-medium my-4">Please do this specific one for the body</h2>
+                <div class="border-2 outline-2 outline-offset-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Sets font/bg colour/text colour for the whole page</p>
+                    <p>&lt;body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]"&gt;</p>
+                </div>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Card styling, like this one that's containing everything</p>
+                    <p> &lt;section
+                        class="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl
+                        m-4 p-6 drop-shadow-sm"&gt;</p>
+                </div>
+                <h2 class="text-3xl font-medium my-4">Title Text Light</h2>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Title text light; you can change the h1 to anything containing
+                        text, add "text-center" for centred</p>
+                    <p> &lt;h1 class="text-3xl font-medium my-4"&gt;</p>
+                </div>
+                <h2 class="text-3xl font-bold my-4">Bold Title Text</h2>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Title text bold; you can change the h1 to anything containing
+                        text, add "text-center" for centred</p>
+                    <p> &lt;h1 class="text-3xl font-bold my-4"&gt;</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section
+        class="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl m-4 p-6 drop-shadow-sm">
+
+        <div class="m-4">
+            <h2 class="text-3xl font-medium my-4">Standard buttons</h2>
+            <div>
+                <button
+                    class="bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition">Button
+                </button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Primary button</p>
+                    <p> &lt;button
+                        class="bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold
+                        hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff]
+                        transition"&gt;</p>
+                </div>
+                <button class="bg-[#de5158] border-[#a01242] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#ff6e75] hover:border-[#bb315f]
+                    active:bg-[#ffa4a4] transition">Button
+                    #2</button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Secondary button</p>
+                    <p> &lt;button class="bg-[#de5158] border-[#a01242] text-white px-4 py-2 rounded-xl border-4
+                        font-semibold hover:cursor-pointer m-2 hover:bg-[#ff6e75] hover:border-[#bb315f]
+                        active:bg-[#ffa4a4] transition"&gt;</p>
+                </div>
+            </div>
+            <div>
+                <button
+                    class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Button
+                </button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Primary button outline</p>
+                    <p> &lt;button
+                        class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 font-bold
+                        hover:cursor-pointer m-2 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white
+                        active:bg-[#5edfff] transition"&gt;</p>
+                </div>
+                <button
+                    class="border-[#de5158] text-[#de5158] bg-white px-4 py-2 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#de5158] active:border-[#ffa4a4] hover:text-white active:bg-[#ffa4a4] transition">Button
+                    #2</button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Secondary button outline</p>
+                    <p> &lt;button
+                        class="border-[#de5158] text-[#de5158] bg-white px-4 py-2 rounded-xl border-4 font-bold
+                        hover:cursor-pointer m-2 hover:bg-[#de5158] active:border-[#ffa4a4] hover:text-white
+                        active:bg-[#ffa4a4] transition"&gt;</p>
+                </div>
+            </div>
+        </div>
+        <div class="m-4">
+            <h2 class="text-3xl font-medium my-4">Small buttons</h2>
+            <div>
+                <button
+                    class="bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition">Button
+                </button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Primary button small</p>
+                    <p> &lt;button
+                        class="bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4
+                        font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf]
+                        active:bg-[#5edfff] transition"&gt;</p>
+                </div>
+                <button class="bg-[#de5158] border-[#a01242] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#ff6e75] hover:border-[#bb315f]
+                    active:bg-[#ffa4a4] transition">Button
+                    #2</button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Secondary button small</p>
+                    <p> &lt;button class="bg-[#de5158] border-[#a01242] text-white text-sm px-2 py-1 rounded-xl border-4
+                        font-semibold hover:cursor-pointer m-2 hover:bg-[#ff6e75] hover:border-[#bb315f]
+                        active:bg-[#ffa4a4] transition"&gt;</p>
+                </div>
+            </div>
+            <div>
+                <button
+                    class="border-[#089ddd] text-[#089ddd] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Button
+                </button>
+                <button
+                    class="border-[#089ddd] text-[#089ddd] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Button
+                </button>
+                <button
+                    class="border-[#089ddd] text-[#089ddd] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Button
+                </button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Primary button outline small; I have it at m-1, but if it's a
+                        single small button change it back to m-2 mabe</p>
+                    <p> &lt;button
+                        class="border-[#089ddd] text-[#089ddd] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold
+                        hover:cursor-pointer m-1 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white
+                        active:bg-[#5edfff] transition"&gt;</p>
+                </div>
+                <button
+                    class="border-[#de5158] text-[#de5158] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#de5158] active:border-[#ffa4a4] hover:text-white active:bg-[#ffa4a4] transition">Button
+                    #2</button>
+                <div class="border-2 p-4 rounded-lg my-4">
+                    <p class="text-sm text-[#089ddd]">Primary button outline small</p>
+                    <p> &lt;button
+                        class="border-[#de5158] text-[#de5158] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold
+                        hover:cursor-pointer m-1 hover:bg-[#de5158] active:border-[#ffa4a4] hover:text-white
+                        active:bg-[#ffa4a4] transition"&gt;</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="bg-blue-300 my-20 hidden">
+
+        <div class="py-20 px-4 flex">
+            <!-- speech bubble -->
+            <div class="mx-auto">
+                <!-- bubble with text -->
+                <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-xl">Hello, I'm Ami!</div>
+                <!-- bubble tail -->
+                <div
+                    class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <nav id="nav_bottom" class="sticky bottom-0 justify-around flex bg-[#3EC3DE] text-white md:hidden">
+        <form action="/home" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 px-6 transition drop-shadow-md">
+                <i class="fa-solid fa-house fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/game" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 px-6 transition drop-shadow-md">
+                <i class="fa-solid fa-face-smile-beam fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/transactions" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 px-6 transition drop-shadow-md">
+                <i class="fa-solid fa-table-list fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/achievements" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 px-6 transition drop-shadow-md">
+                <i class="fa-solid fa-star fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/profile" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 px-6 transition drop-shadow-md">
+                <i class="fa-solid fa-circle-user fa-lg"></i>
+            </button>
+        </form>
+    </nav>
+
+</body>
+
+</html>
