@@ -93,7 +93,6 @@ mongoose
  *  Pets are included in the user schema.
  */
 const userSchema = new mongoose.Schema({
-<<<<<<< HEAD
   username: String,
   password: String,
   categories: Array,
@@ -112,23 +111,7 @@ const userSchema = new mongoose.Schema({
     weekly: Number,
     monthly: Number,
   },
-=======
-    username: String,
-    password: String,
-    categories: Array,
-    balance: Number,
-    transactions: Array,
-    achievements: Array,
-    owned: Array,
-    pet: String,
-    date: Date,
-    budget: {
-        daily: Number,
-        weekly: Number,
-        monthly: Number
-    },
-    coins: Number
->>>>>>> achievements_progress_bar
+  coins: Number
 });
 
 /**
@@ -146,7 +129,6 @@ const transactionSchema = new mongoose.Schema({
 
 /**
  * This is the schema for achievements, it acts as a template for models to use when creating new documents in the database.
-<<<<<<< HEAD
  * Achievements are tied to users in there user schema by thier model ID.
  * The server automatically adds the achievement ID to the user schema when a new achievement is created.
  */
@@ -163,24 +145,6 @@ const achievementSchema = new mongoose.Schema({
 
 // Here we create a model for the achievement schema, this will be used to make our collection in the database.
 const achievements = mongoose.model("achievements", achievementSchema);
-=======
- * achievements are tied to users in there user schema by thier model ID.
- * The server automatically adds the achievement ID to the user schema when a new achievement is created.
- */
-const achievementSchema = new mongoose.Schema({
-    type: String,
-    description: String,
-    progress: Number,
-    target: Number,
-    date: Date,
-    previousDate: Date,
-    completed: Boolean,
-    reward: Number
-});
-
-// Here we create a model for the achievement schema, this will be used to make our collection in the database.
-const achievements = mongoose.model('achievements', achievementSchema);
->>>>>>> achievements_progress_bar
 
 // Here we create a model for the user schema, this will be used to make our collection in the database.
 const users = mongoose.model("users", userSchema);
@@ -219,17 +183,6 @@ app.get("/game", (request, result) => {
  * The server will also serve the user's achievements to the page in json format.
  * If the user is not logged in, they will be redirected to the login page.
  */
-<<<<<<< HEAD
-app.get("/achievements", (request, result) => {
-  if (!request.session.uid) {
-    return result.redirect("/login");
-  }
-  const user = users.findById(request.session.uid);
-  const userAchievements = achievements.find({
-    _id: { $in: user.achievements },
-  });
-  result.render("achievements", { user: user, achievements: userAchievements });
-=======
 app.get('/achievements', async (req, res) => {
     if (!req.session.uid) {
         return res.redirect('/login');
@@ -255,7 +208,6 @@ app.get('/achievements-data', async (req, res) => {
     const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
 
     res.json({ achievements: userAchievements });
->>>>>>> achievements_progress_bar
 });
 
 // PROFILE PAGE
@@ -358,7 +310,6 @@ app.get("/index", (request, result) => {
  * The new user is saved to the database and their uid is stored in the session.
  * The user is created from the mongoDB users model.
  */
-<<<<<<< HEAD
 app.post("/auth/register", async (request, result) => {
   try {
     const username = request.body.username;
@@ -366,72 +317,6 @@ app.post("/auth/register", async (request, result) => {
     const existingUser = await users.findOne({ username });
     if (existingUser) {
       return result.status(400).json({ error: "Username already exists" });
-=======
-app.post('/auth/register', async (request, result) => {
-    try {
-        const username = request.body.username;
-        const password = request.body.password;
-        const existingUser = await users.findOne({ username });
-        if (existingUser) {
-            return result.status(400).json({ error: 'Username already exists' });
-        }
-        const defaultachievements = [
-            { type: 'Daily', description: 'Dont go over the days budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 20 },
-            { type: 'Weekly', description: 'Dont go over the weeks budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 60 },
-            { type: 'Monthly', description: 'Dont go over the months budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 200 },
-            { type: 'Drink', description: 'Dont buy any drinks for five days! (Dont add water to your transactions!)', progress: 0, target: 5, date: new Date(), previousDate: new Date(), completed: false, reward: 50 },
-            { type: 'Login', description: 'Your daily login reward!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 10 }
-        ];
-        /**
-         * This is used to set the date to the correct timezone.
-         * Without this, the date will be set to UTC time.
-         * Generated by ChatGPT -4o
-         *
-         * @author https://chat.openai.com/
-         */
-        for (let i = 0; i < defaultachievements.length; i++) {
-            defaultachievements[i].date.setMinutes(defaultachievements[i].date.getMinutes() + defaultachievements[i].date.getTimezoneOffset());
-            defaultachievements[i].previousDate.setMinutes(defaultachievements[i].previousDate.getMinutes() + defaultachievements[i].previousDate.getTimezoneOffset());
-        }
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        const achieveArray = [];
-        for (let i = 0; i < defaultachievements.length; i++) {
-            const newachievement = new achievements(defaultachievements[i]);
-            await newachievement.save();
-            achieveArray.push(newachievement._id);
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new users({
-            username,
-            password: hashedPassword,
-            categories: [
-                "Income",
-                "Rent",
-                "Groceries",
-                "Transportation",
-                "Dining Out",
-                "Entertainment",
-                "Health",
-                "Insurance",
-                "Education",
-                "Pets"
-            ],
-            balance: 0,
-            transactions: [],
-            achievements: achieveArray,
-            owned: [],
-            pet: null,
-            date: new Date(),
-            coins: 0    // Start at 0 coins
-        });
-        await newUser.save();
-        request.session.uid = newUser._id;
-        request.session.username = newUser.username;
-        result.redirect('/home');
-    } catch (err) {
-        console.log('Error during registration:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
->>>>>>> achievements_progress_bar
     }
     const defaultAchievements = [
       {
@@ -923,7 +808,6 @@ app.get("/weather", async (req, res) => {
   const { lat, lon } = req.query;
   const apiKey = process.env.WEATHER_API_KEY
 
-<<<<<<< HEAD
   try {
     const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
     res.json(response.data);
@@ -932,7 +816,6 @@ app.get("/weather", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch weather data" })
   }
 })
-=======
 /**
  * Fetches all categories for the logged-in user.
  * Uses the user's ID stored in the session to find the user in the database where the categories are stored.
@@ -1142,7 +1025,6 @@ app.post('/achievements/replace', async (request, result) => {
         result.status(500).json({ error: 'Internal server error' });
     }
 });
->>>>>>> achievements_progress_bar
 
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
