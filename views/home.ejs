@@ -51,21 +51,41 @@
                 </div>
 
 
+                <!-- amount spent / budget -->
+
+                <div id="spentVsBudget" style="text-align: center;"></div>
+                <br>
+
+
+                <!-- daily weekly monthly buttons -->
+
+                <div class="flex justify-center space-x-2">
+                    <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">daily</button>
+                    <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">weekly</button>
+                    <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">monthly</button>
+                </div>
 
                 <script>
+
+                    // budget donut
                     const canvas = document.getElementById("canvas");
                     const ctx = canvas.getContext("2d");
 
-                    // e66f6f = red, 8ce66f = green
-                    const colors = ['#e66f6f', '#8ce66f'];
-                    const values = [25, 75]; // proportional values; ADJUSTABLE
+                    function drawChart(values) {
+                        // e66f6f = red, 8ce66f = green
+                        const colors = ['#e66f6f', '#8ce66f'];
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                    const img = new Image();
-                    img.src = "/images/game/Ami-Base/white.png";
+                        const img = new Image();
+                        img.src = "/images/game/Ami-Base/white.png";
 
-                    img.onload = function () {
-                        dmbChart(150, 150, 125, 25, values, colors, img);
-                    };
+                        img.onload = function () {
+                            dmbChart(150, 150, 125, 25, values, colors, img);
+                        };
+                    }
 
                     function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
                         const PI = Math.PI;
@@ -100,27 +120,7 @@
                         const imageSize = innerRadius * 1.5;
                         ctx.drawImage(img, cx - imageSize / 2, cy - imageSize / 2, imageSize, imageSize);
                     }
-                </script>
 
-
-                <!-- amount spent / budget -->
-
-                <div id="spentVsBudget" style="text-align: center;">$25/$100</div>
-                <br>
-
-
-                <!-- daily weekly monthly buttons -->
-
-                <div class="flex justify-center space-x-2">
-                    <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">daily</button>
-                    <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">weekly</button>
-                    <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">monthly</button>
-                </div>
-
-                <script>
 
                     function dailyTransactions(transactionDate) {
                         const itemDate = new Date(transactionDate);
@@ -142,7 +142,7 @@
                         // set start of week to sunday
                         const startOfWeek = new Date(today);
                         startOfWeek.setUTCDate(today.getUTCDate() - today.getUTCDate());
-                        startOfWeek.setUTCHours(0,0,0,0);
+                        startOfWeek.setUTCHours(0, 0, 0, 0);
                         // set end of week to saturday
                         const endOfWeek = new Date(startOfWeek);
                         endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6);
@@ -162,7 +162,7 @@
                         );
                     }
 
-
+                    // sum transaction amounts depending on daily/weekly/monthly
                     function sumAmounts(items, filterFunction) {
                         return items
                             .filter(item => filterFunction(item.date))
@@ -184,7 +184,6 @@
                             const budgetData = await budgetResponse.json();
                             const budget = budgetData.budget;
                             const selectedBudget = budget[timeframe];
-                            console.log(budget)
 
 
                             let total = 0;
@@ -201,7 +200,10 @@
                                 total = sumAmounts(transactions, monthlyTransactions);
                             }
 
-                            document.getElementById("spentVsBudget").innerHTML = `$${total} / ${selectedBudget}`;
+                            document.getElementById("spentVsBudget").innerHTML = `$${total} / $${selectedBudget}`;
+
+                            const values = [(total / selectedBudget) * 100, ((selectedBudget - total) / selectedBudget) * 100]
+                            drawChart(values);
                         }
                         catch (err) {
                             console.error("Error:", err)
@@ -210,22 +212,43 @@
                     }
 
 
-                    document.getElementById("dailyButton").addEventListener('click', () => {
+                    const buttons = {
+                        daily: document.getElementById("dailyButton"),
+                        weekly: document.getElementById("weeklyButton"),
+                        monthly: document.getElementById("monthlyButton"),
+                        
+                    }
+                    buttons.daily.addEventListener('click', () => {
                         updateSpending("daily");
+                        selectedButton("daily");
                     })
 
-                    document.getElementById("weeklyButton").addEventListener('click', () => {
+                    buttons.weekly.addEventListener('click', () => {
                         updateSpending("weekly");
+                        selectedButton("weekly");
                     })
 
-                    document.getElementById("monthlyButton").addEventListener('click', () => {
+                    buttons.monthly.addEventListener('click', () => {
                         updateSpending("monthly");
+                        selectedButton("monthly");
                     })
+
+                    function selectedButton(selected) {
+                        for (const key in buttons) {
+                            if (key === selected) {
+                                buttons[key].classList.add("border-solid", "border-black", "border-2")
+                            }
+                            else {
+                                buttons[key].classList.remove("border-solid", "border-black", "border-2")
+                            }
+                        }
+                    }
 
 
                     window.addEventListener('load', () => {
-                            updateSpending("daily");
-                        });
+                        updateSpending("daily");
+                        selectedButton("daily");
+                    });
 
                 </script>
 
