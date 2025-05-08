@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </head>
 
 <style>
@@ -184,6 +186,7 @@
                             const budgetData = await budgetResponse.json();
                             const budget = budgetData.budget;
                             const selectedBudget = budget[timeframe];
+                            console.log(budget)
 
 
                             let total = 0;
@@ -249,6 +252,44 @@
                         updateSpending("daily");
                         selectedButton("daily");
                     });
+
+
+                    // GEOLOCATION
+
+                        function getLocation() {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(success, fail);
+                            } else {
+                                console.log("Geolocation is not supported by this browser.");
+                            }
+                        }
+
+                        // const axios = require("axios");
+
+                        async function success(position) {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            
+                            try{
+                                const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
+                                const weatherData = response.data.weather[0].main;
+                                if (weatherData === "Clear" || weatherData === "Clouds") {
+                                    document.body.style.backgroundImage = "url('https://d7hftxdivxxvm.cloudfront.net/?quality=80&resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=910')"
+                                }
+                                else {
+                                    document.body.style.backgroundImage = "url('https://thumbs.dreamstime.com/b/silhouetted-figure-umbrella-walking-neon-lit-rainy-city-street-night-evoking-moody-atmospheric-cyberpunk-324115145.jpg')"
+                                }
+                            }
+                            catch (error) {
+                                console.log("Error fetching weather data:", error)
+                            }
+                        }
+
+                        function fail() {
+                            alert("Weather for your location not available at this time.")
+                        }
+
+                        window.addEventListener("load", getLocation);
 
                 </script>
 

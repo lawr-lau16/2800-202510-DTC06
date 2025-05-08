@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const session = require('express-session');
 const favicon = require('serve-favicon');
 const path = require('path');
+const axios = require('axios');
+
 
 /**
  * Require dotenv to load environment variables from a .env file for security.
@@ -472,13 +474,25 @@ app.post('/budget', async (request, result) => {
         }
         const user = await users.findById(request.session.uid).lean();
         console.log('Fetched Budget:', user.budget);
-        console.log(user)
         result.json({ budget: user.budget });
     } catch (err) {
         console.log('Error fetching budget:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
+
+app.get("/weather", async (req, res) => {
+    const {lat, lon} = req.query;
+    const apiKey = process.env.WEATHER_API_KEY
+
+    try {
+        const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+        res.json(response.data);
+    }
+    catch (error) {
+        res.status(500).json({error: "Failed to fetch weather data"})
+    }
+})
 
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
