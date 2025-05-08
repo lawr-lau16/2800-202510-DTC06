@@ -470,8 +470,9 @@ app.post('/budget', async (request, result) => {
         if (!request.session.uid) {
             return result.redirect('/login');
         }
-        const user = await users.findById(request.session.uid);
+        const user = await users.findById(request.session.uid).lean();
         console.log('Fetched Budget:', user.budget);
+        console.log(user)
         result.json({ budget: user.budget });
     } catch (err) {
         console.log('Error fetching budget:', err.message);

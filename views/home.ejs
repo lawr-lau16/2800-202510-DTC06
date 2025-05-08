@@ -184,6 +184,7 @@
                             const budgetData = await budgetResponse.json();
                             const budget = budgetData.budget;
                             const selectedBudget = budget[timeframe];
+                            console.log(budget)
 
 
                             let total = 0;
@@ -200,7 +201,7 @@
                                 total = sumAmounts(transactions, monthlyTransactions);
                             }
 
-                            document.getElementById("spentVsBudget").innerHTML = `$${total} / $${selectedBudget}`;
+                            document.getElementById("spentVsBudget").innerHTML = `$${total} / ${selectedBudget}`;
                         }
                         catch (err) {
                             console.error("Error:", err)
