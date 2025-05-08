@@ -238,11 +238,37 @@ app.post("/profile/update", async (req, res) => {
 
 // Here the server will recognise that the server is requested with the /home URL and will render the home file.
 // If the user is not logged in, they will be redirected to the login page.
-app.get("/home", (request, result) => {
-  if (!request.session.uid) {
-    return result.redirect("/login");
+app.get("/home", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
   }
-  result.render("home", { username: request.session.username });
+
+  try {
+    const allUserTransactions = await Transaction.find({
+      userId: req.session.uid,
+    });
+
+    const totalIncome = allUserTransactions
+      .filter((t) => t.type === "income")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const totalExpenses = allUserTransactions
+      .filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const balance = totalIncome - totalExpenses;
+
+    res.render("home", {
+      username: req.session.username,
+      totalIncome,
+      totalExpenses,
+      balance,
+      expenses: allUserTransactions,
+    });
+  } catch (err) {
+    console.error("Error loading home:", err.message);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Here the server will recognise that the server is requested with the /index URL and will render the index file.
@@ -825,26 +851,24 @@ app.get("/dashboard", async (req, res) => {
       query.category = category;
     }
 
-    const expenses = await Transaction.find(query);
+    const expenses = await Transaction.find({ userId: req.session.uid });
 
-    const allUserTransactions = await Transaction.find({ userId });
-
-    const totalIncome = allUserTransactions
+    const totalIncome = expenses
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
 
-    const totalSpent = allUserTransactions
+    const totalExpenses = expenses
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
 
-    const balance = totalIncome - totalSpent;
+    const balance = totalIncome - totalExpenses;
 
-    res.render("dashboard", {
+    res.render("home", {
+      username: req.session.username,
       expenses,
       totalIncome,
-      totalSpent,
+      totalExpenses,
       balance,
-      category,
     });
   } catch (error) {
     console.error("❌ Error loading dashboard:", error);
