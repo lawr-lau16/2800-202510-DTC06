@@ -95,7 +95,7 @@ const userSchema = new mongoose.Schema({
     categories: Array,
     balance: Number,
     transactions: Array,
-    acheivements: Array,
+    achievements: Array,
     owned: Array,
     pet: String,
     date: Date,
@@ -103,7 +103,8 @@ const userSchema = new mongoose.Schema({
         daily: Number,
         weekly: Number,
         monthly: Number
-    }
+    },
+    coins: Number
 });
 
 /**
@@ -120,11 +121,11 @@ const transactionSchema = new mongoose.Schema({
 });
 
 /**
- * This is the schema for acheivements, it acts as a template for models to use when creating new documents in the database.
- * Acheivements are tied to users in there user schema by thier model ID.
- * The server automatically adds the acheivement ID to the user schema when a new acheivement is created.
+ * This is the schema for achievements, it acts as a template for models to use when creating new documents in the database.
+ * achievements are tied to users in there user schema by thier model ID.
+ * The server automatically adds the achievement ID to the user schema when a new achievement is created.
  */
-const acheivementSchema = new mongoose.Schema({
+const achievementSchema = new mongoose.Schema({
     type: String,
     description: String,
     progress: Number,
@@ -135,8 +136,8 @@ const acheivementSchema = new mongoose.Schema({
     reward: Number
 });
 
-// Here we create a model for the acheivement schema, this will be used to make our collection in the database.
-const acheivements = mongoose.model('acheivements', acheivementSchema);
+// Here we create a model for the achievement schema, this will be used to make our collection in the database.
+const achievements = mongoose.model('achievements', achievementSchema);
 
 // Here we create a model for the user schema, this will be used to make our collection in the database.
 const users = mongoose.model('users', userSchema);
@@ -172,16 +173,34 @@ app.get('/game', (request, result) => {
 // ACHIEVEMENTS PAGE
 /**
  * Here the server will recognise that the server is requested with the /achievements URL and will render the achievements file.
- * The server will also serve the user's acheivements to the page in json format.
+ * The server will also serve the user's achievements to the page in json format.
  * If the user is not logged in, they will be redirected to the login page.
  */
-app.get('/achievements', (request, result) => {
-    if (!request.session.uid) {
-        return result.redirect('/login');
+app.get('/achievements', async (req, res) => {
+    if (!req.session.uid) {
+        return res.redirect('/login');
     }
-    const user = users.findById(request.session.uid);
-    const userAchievements = acheivements.find({ _id: { $in: user.acheivements } });
-    result.render('achievements', { user: user, achievements: userAchievements });
+
+    try {
+        const user = await users.findById(req.session.uid);
+        const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
+        res.render('achievements', { user, achievements: userAchievements });
+    } catch (err) {
+        console.error('Error loading achievements:', err);
+        res.status(500).send('Server error');
+    }
+});
+
+// Route to get achievement data
+app.get('/achievements-data', async (req, res) => {
+    if (!req.session.uid) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const user = await users.findById(req.session.uid);
+    const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
+
+    res.json({ achievements: userAchievements });
 });
 
 // PROFILE PAGE
@@ -256,7 +275,7 @@ app.get('/index', (request, result) => {
  * Sign's up a new user.
  * If the user already exists, an error message is returned.
  * Uses bcrypt to hash the password before saving it to the database.
- * Add's five default acheivements to the user, storing the id's in an array in user and adding the acheivements to the database directly.
+ * Add's five default achievements to the user, storing the id's in an array in user and adding the achievements to the database directly.
  * The new user is saved to the database and their uid is stored in the session.
  * The user is created from the mongoDB users model.
  */
@@ -268,7 +287,7 @@ app.post('/auth/register', async (request, result) => {
         if (existingUser) {
             return result.status(400).json({ error: 'Username already exists' });
         }
-        const defaultAcheivements = [
+        const defaultachievements = [
             { type: 'Daily', description: 'Dont go over the days budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 20 },
             { type: 'Weekly', description: 'Dont go over the weeks budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 60 },
             { type: 'Monthly', description: 'Dont go over the months budget!', progress: 0, target: 1, date: new Date(), previousDate: new Date(), completed: false, reward: 200 },
@@ -282,16 +301,16 @@ app.post('/auth/register', async (request, result) => {
          *
          * @author https://chat.openai.com/
          */
-        for (let i = 0; i < defaultAcheivements.length; i++) {
-            defaultAcheivements[i].date.setMinutes(defaultAcheivements[i].date.getMinutes() + defaultAcheivements[i].date.getTimezoneOffset());
-            defaultAcheivements[i].previousDate.setMinutes(defaultAcheivements[i].previousDate.getMinutes() + defaultAcheivements[i].previousDate.getTimezoneOffset());
+        for (let i = 0; i < defaultachievements.length; i++) {
+            defaultachievements[i].date.setMinutes(defaultachievements[i].date.getMinutes() + defaultachievements[i].date.getTimezoneOffset());
+            defaultachievements[i].previousDate.setMinutes(defaultachievements[i].previousDate.getMinutes() + defaultachievements[i].previousDate.getTimezoneOffset());
         }
         // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        const acheiveArray = [];
-        for (let i = 0; i < defaultAcheivements.length; i++) {
-            const newAcheivement = new acheivements(defaultAcheivements[i]);
-            await newAcheivement.save();
-            acheiveArray.push(newAcheivement._id);
+        const achieveArray = [];
+        for (let i = 0; i < defaultachievements.length; i++) {
+            const newachievement = new achievements(defaultachievements[i]);
+            await newachievement.save();
+            achieveArray.push(newachievement._id);
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new users({
@@ -311,10 +330,11 @@ app.post('/auth/register', async (request, result) => {
             ],
             balance: 0,
             transactions: [],
-            acheivements: acheiveArray,
+            achievements: achieveArray,
             owned: [],
             pet: null,
-            date: new Date()
+            date: new Date(),
+            coins: 0    // Start at 0 coins
         });
         await newUser.save();
         request.session.uid = newUser._id;
@@ -551,7 +571,7 @@ app.post('/achievements', async (request, result) => {
             return result.redirect('/login');
         }
         const user = await users.findById(request.session.uid);
-        const userAchievements = await acheivements.find({ _id: { $in: user.acheivements } });
+        const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
         console.log('Fetched Achievements:', userAchievements);
         result.json({ achievements: userAchievements, user: user });
     } catch (err) {
@@ -561,16 +581,16 @@ app.post('/achievements', async (request, result) => {
 });
 
 /**
- * Updates the acheivement that is passed by the script in the view.
- * The acheivement is identified by its ID and the new data is passed to the database.
- * The acheivement is updated in the database, with the new progress, completed and date and previousDate values.
+ * Updates the achievement that is passed by the script in the view.
+ * The achievement is identified by its ID and the new data is passed to the database.
+ * The achievement is updated in the database, with the new progress, completed and date and previousDate values.
  */
 app.post('/achievements/update', async (request, result) => {
     try {
         if (!request.session.uid) {
             return result.redirect('/login');
         }
-        const acheivementId = request.body.acheivementId;
+        const achievementId = request.body.achievementId;
         const progress = request.body.progress;
         const completed = request.body.completed;
         const date = new Date(request.body.date);
@@ -593,8 +613,8 @@ app.post('/achievements/update', async (request, result) => {
          */
         previousDate.setMinutes(previousDate.getMinutes() + previousDate.getTimezoneOffset());
         // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        await acheivements.findByIdAndUpdate(acheivementId, { progress, completed, date, previousDate });
-        console.log('Updated Achievement:', acheivementId);
+        await achievements.findByIdAndUpdate(achievementId, { progress, completed, date, previousDate });
+        console.log('Updated Achievement:', achievementId);
         result.json({ message: 'Achievement updated successfully' });
     } catch (err) {
         console.log('Error updating achievement:', err.message);
@@ -603,10 +623,10 @@ app.post('/achievements/update', async (request, result) => {
 });
 
 /**
- * Replace's an acheivement with a new one.
- * The new acheivement is created from the mongoDB acheivements model, and populated with the new data passed to the server.
- * The new acheivement is saved to the database and the user's acheivements array.
- * The old acheivement is deleted, and its id removed from user's acheivements array, and the reward is returned to the view.
+ * Replace's an achievement with a new one.
+ * The new achievement is created from the mongoDB achievements model, and populated with the new data passed to the server.
+ * The new achievement is saved to the database and the user's achievements array.
+ * The old achievement is deleted, and its id removed from user's achievements array, and the reward is returned to the view.
  */
 app.post('/achievements/replace', async (request, result) => {
     try {
@@ -640,7 +660,7 @@ app.post('/achievements/replace', async (request, result) => {
         const completed = request.body.completed;
         const reward = request.body.reward;
         const oldID = request.body.oldID;
-        const newAcheivement = new acheivements({
+        const newachievement = new achievements({
             type,
             description,
             progress,
@@ -650,12 +670,12 @@ app.post('/achievements/replace', async (request, result) => {
             completed,
             reward
         });
-        await newAcheivement.save();
-        await users.findByIdAndUpdate(request.session.uid, { $push: { acheivements: newAcheivement._id } });
-        const oldReward = await acheivements.findById(oldID);
-        await acheivements.findByIdAndDelete(oldID);
-        await users.findByIdAndUpdate(request.session.uid, { $pull: { acheivements: oldID } });
-        console.log('Replaced and achievement with:', newAcheivement);
+        await newachievement.save();
+        await users.findByIdAndUpdate(request.session.uid, { $push: { achievements: newachievement._id } });
+        const oldReward = await achievements.findById(oldID);
+        await achievements.findByIdAndDelete(oldID);
+        await users.findByIdAndUpdate(request.session.uid, { $pull: { achievements: oldID } });
+        console.log('Replaced and achievement with:', newachievement);
         result.json({ reward: oldReward.reward });
     } catch (err) {
         console.log('Error replacing achievement:', err.message);
