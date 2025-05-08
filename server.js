@@ -107,9 +107,8 @@ const userSchema = new mongoose.Schema({
   },
   date: Date,
   budget: {
-    daily: Number,
     weekly: Number,
-    monthly: Number,
+    monthly: Number
   },
   coins: Number
 });
@@ -414,6 +413,10 @@ app.post("/auth/register", async (request, result) => {
       balance: 0,
       transactions: [],
       achievements: achieveArray,
+      budget: {
+        weekly: null,
+        monthly: null
+      },
       owned: [],
       pet: null,
       date: new Date(),
