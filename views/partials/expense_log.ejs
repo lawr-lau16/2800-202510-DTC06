@@ -1,0 +1,52 @@
+<form action="/add-expense" method="POST" class="space-y-4 mt-6">
+  <div class="flex justify-center gap-2 mb-2">
+    <button
+      type="button"
+      id="expenseBtn"
+      class="bg-black text-white px-4 py-2 rounded"
+    >
+      Expense
+    </button>
+    <button
+      type="button"
+      id="incomeBtn"
+      class="bg-white text-black px-4 py-2 rounded border"
+    >
+      Income
+    </button>
+  </div>
+
+  <input type="hidden" name="type" id="typeInput" value="expense" />
+
+  <input
+    name="name"
+    required
+    placeholder="Name"
+    class="w-full border p-2 rounded"
+  />
+  <input
+    name="amount"
+    type="number"
+    required
+    placeholder="Amount"
+    step="0.01"
+    class="w-full border p-2 rounded"
+  />
+  <input name="date" type="date" required class="w-full border p-2 rounded" />
+
+  <select
+    id="categorySelect"
+    name="category"
+    required
+    class="w-full border p-2 rounded"
+  >
+    <option value="">Select a category</option>
+  </select>
+
+  <button
+    type="submit"
+    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
+  >
+    Save
+  </button>
+</form>
