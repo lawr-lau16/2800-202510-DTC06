@@ -1,315 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EconAmi | [home]</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- External libraries -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EconAmi | [home]</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- External libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/scripts/home.js"></script>
 
 </head>
 
-  <style>
-    body {
-        background-repeat: no-repeat;
-        background-size: 100%;
-    }
-  </style>
+<style>
+  body {
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
 
-  <body>
-    <!-- Top Navigation -->
-    <%- include('./components/nav_top') %>
+<body>
+  <!-- Top Navigation -->
+  <%- include('./components/nav_top') %>
 
     <section class="min-h-dvh">
       <div class="bg-slate-200 max-w-[60%] mx-auto rounded-xl">
         <!-- speech bubble -->
         <div class="mx-auto max-w-[80%]">
           <!-- bubble with text -->
-          <div
-            class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full"
-          >
+          <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
             Hello <%= username %>!
           </div>
           <!-- bubble tail -->
-          <div
-            class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent"
-          ></div>
+          <div class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+          </div>
         </div>
 
         <!-- budget donut -->
 
-                <div style="display: flex; justify-content: center;">
-                    <canvas id="canvas" width=325 height=325></canvas>
-                </div>
+        <div style="display: flex; justify-content: center;">
+          <canvas id="canvas" width=325 height=325></canvas>
+        </div>
 
 
-                <!-- amount spent / budget -->
+        <!-- amount spent / budget -->
 
-                <div id="spentVsBudget" style="text-align: center;"></div>
-                <br>
-
-
-                <!-- daily weekly monthly buttons -->
-
-                <div class="flex justify-center space-x-2">
-                    <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">daily</button>
-                    <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">weekly</button>
-                    <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                        type="button">monthly</button>
-                </div>
-
-                <script>
-
-                    // budget donut
-                    const canvas = document.getElementById("canvas");
-                    const ctx = canvas.getContext("2d");
-
-                    function drawChart(values) {
-                        // e66f6f = red, 8ce66f = green
-                        const colors = ['#e66f6f', '#8ce66f'];
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                        const img = new Image();
-                        img.src = "/images/game/Ami-Base/white.png";
-
-                        img.onload = function () {
-                            dmbChart(150, 150, 125, 25, values, colors, img);
-                        };
-                    }
-
-          function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
-            const PI = Math.PI;
-            const PI2 = 2 * PI;
-            const offset = PI / 2; // red starts from the bottom
-
-            ctx.lineWidth = arcwidth;
-
-            const total = values.reduce((a, b) => a + b, 0);
-            let accum = 0;
-
-            for (let i = 0; i < values.length; i++) {
-              ctx.beginPath();
-              ctx.arc(
-                cx,
-                cy,
-                radius,
-                offset + PI2 * (accum / total),
-                offset + PI2 * ((accum + values[i]) / total)
-              );
-              ctx.strokeStyle = colors[i];
-              ctx.stroke();
-              accum += values[i];
-            }
-
-            // Inner "cutout"
-            const innerRadius = radius - arcwidth - 3;
-            ctx.beginPath();
-            ctx.arc(cx, cy, innerRadius, 0, PI2);
-            ctx.fillStyle = "transparent";
-            ctx.fill();
-
-                        // Ami in the center
-                        const imageSize = innerRadius * 1.5;
-                        ctx.drawImage(img, cx - imageSize / 2, cy - imageSize / 2, imageSize, imageSize);
-                    }
+        <div id="spentVsBudget" style="text-align: center;"></div>
+        <br>
 
 
-                    function dailyTransactions(transactionDate) {
-                        const itemDate = new Date(transactionDate);
-                        const today = new Date();
+        <!-- daily weekly monthly buttons -->
 
-                        return (
-                            itemDate.getUTCFullYear() === today.getUTCFullYear()
-                            &&
-                            itemDate.getUTCMonth() === today.getUTCMonth()
-                            &&
-                            itemDate.getUTCDate() === today.getUTCDate()
-                        );
-                    }
-
-
-                    function weeklyTransactions(transactionDate) {
-                        const itemDate = new Date(transactionDate);
-                        const today = new Date();
-                        // set start of week to sunday
-                        const startOfWeek = new Date(today);
-                        startOfWeek.setUTCDate(today.getUTCDate() - today.getUTCDate());
-                        startOfWeek.setUTCHours(0, 0, 0, 0);
-                        // set end of week to saturday
-                        const endOfWeek = new Date(startOfWeek);
-                        endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6);
-                        endOfWeek.setUTCHours(23, 59, 59, 990);
-
-                        return itemDate >= startOfWeek && itemDate <= endOfWeek;
-                    }
-
-
-                    function monthlyTransactions(transactionDate) {
-                        const itemDate = new Date(transactionDate);
-                        const today = new Date();
-                        return (
-                            itemDate.getUTCFullYear() === today.getUTCFullYear()
-                            &&
-                            itemDate.getUTCMonth() === today.getUTCMonth()
-                        );
-                    }
-
-                    // sum transaction amounts depending on daily/weekly/monthly
-                    function sumAmounts(items, filterFunction) {
-                        return items
-                            .filter(item => filterFunction(item.date))
-                            .reduce((total, item) => total + item.amount, 0);
-                    }
-
-
-                    async function updateSpending(timeframe) {
-                        try {
-                            const transactionsResponse = await fetch('/transactions/fetch', {
-                                method: 'POST'
-                            });
-                            const transactionsData = await transactionsResponse.json();
-                            const transactions = transactionsData.transactions;
-
-                            const budgetResponse = await fetch('/budget', {
-                                method: 'POST'
-                            });
-                            const budgetData = await budgetResponse.json();
-                            const budget = budgetData.budget;
-                            const selectedBudget = budget[timeframe];
-                            console.log(budget)
-
-
-                            let total = 0;
-
-                            if (timeframe === "daily") {
-                                total = sumAmounts(transactions, dailyTransactions);
-                            }
-
-                            if (timeframe === "weekly") {
-                                total = sumAmounts(transactions, weeklyTransactions);
-                            }
-
-                            if (timeframe === "monthly") {
-                                total = sumAmounts(transactions, monthlyTransactions);
-                            }
-
-                            document.getElementById("spentVsBudget").innerHTML = `$${total} / $${selectedBudget}`;
-
-                            const values = [(total / selectedBudget) * 100, ((selectedBudget - total) / selectedBudget) * 100]
-                            drawChart(values);
-                        }
-                        catch (err) {
-                            console.error("Error:", err)
-                            document.getElementById("spentVsBudget").innerHTML = "Error loading data."
-                        }
-                    }
-
-
-                    const buttons = {
-                        daily: document.getElementById("dailyButton"),
-                        weekly: document.getElementById("weeklyButton"),
-                        monthly: document.getElementById("monthlyButton"),
-                        
-                    }
-                    buttons.daily.addEventListener('click', () => {
-                        updateSpending("daily");
-                        selectedButton("daily");
-                    })
-
-                    buttons.weekly.addEventListener('click', () => {
-                        updateSpending("weekly");
-                        selectedButton("weekly");
-                    })
-
-                    buttons.monthly.addEventListener('click', () => {
-                        updateSpending("monthly");
-                        selectedButton("monthly");
-                    })
-
-                    function selectedButton(selected) {
-                        for (const key in buttons) {
-                            if (key === selected) {
-                                buttons[key].classList.add("border-solid", "border-black", "border-2")
-                            }
-                            else {
-                                buttons[key].classList.remove("border-solid", "border-black", "border-2")
-                            }
-                        }
-                    }
-
-
-                    window.addEventListener('load', () => {
-                        updateSpending("daily");
-                        selectedButton("daily");
-                    });
-
-
-                    // GEOLOCATION
-
-                        function getLocation() {
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(success, fail);
-                            } else {
-                                console.log("Geolocation is not supported by this browser.");
-                            }
-                        }
-
-                        async function success(position) {
-                            const lat = position.coords.latitude;
-                            const lon = position.coords.longitude;
-                            
-                            try{
-                                const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
-                                const weatherData = response.data.weather[0].main;
-                                if (weatherData === "Clear" || weatherData === "Clouds") {
-                                    document.body.style.backgroundImage = "url('https://d7hftxdivxxvm.cloudfront.net/?quality=80&resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=910')"
-                                }
-                                else {
-                                    document.body.style.backgroundImage = "url('https://thumbs.dreamstime.com/b/silhouetted-figure-umbrella-walking-neon-lit-rainy-city-street-night-evoking-moody-atmospheric-cyberpunk-324115145.jpg')"
-                                }
-                            }
-                            catch (error) {
-                                console.log("Error fetching weather data:", error)
-                            }
-                        }
-
-                        function fail() {
-                            alert("Weather for your location not available at this time.")
-                        }
-
-                        window.addEventListener("load", getLocation);
-
-                </script>
+        <div class="flex justify-center space-x-2">
+          <!-- <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+                        type="button">daily</button> -->
+          <button id="weeklyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+            type="button">weekly</button>
+          <button id="monthlyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+            type="button">monthly</button>
+        </div>
 
 
         <!-- add expense/income toggle. GURPREET PLEASE REPLACE THIS WITH YOUR EXPENSE/INCOME TOGGLE -->
-        <button
-          id="openSlideUp"
-          class="hover:bg-blue-600 flex items-center justify-center transition-transform duration-300 hover:scale-105 active:scale-95 fixed bottom-15 right-2 transform -translate-x-1/2 bg-blue-600 text-white rounded-lg px-6 py-1 text-2xl shadow-lg"
-        >
-          Add Expense
-        </button>
+        <div class="flex justify-center space-x-2">
+          <button id="openSlideUp" class="bg-blue-200 px-2 py-1 my-4 rounded hover:bg-blue-300 transition">
+            Add Expense
+          </button>
+          <br>
 
-        <div
-          id="overlay"
-          class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"
-        ></div>
+        </div>
 
-        <div
-          id="slideUpPanel"
-          class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh]"
-        >
-          <button
-            id="closeSlideUp"
-            class="absolute top-1 right-2 text-2xl text-gray-500"
-          >
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+        <div id="slideUpPanel"
+          class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh]">
+          <button id="closeSlideUp" class="absolute top-1 right-2 text-2xl text-gray-500">
             &times;
           </button>
 
@@ -319,25 +88,25 @@
               <h1 class="text-2xl text-blue-800 text-center font-bold mb-4">
                 Budget Overview
               </h1>
-              <button
-                id="loadAddExpense"
-                type="button"
-                class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white"
-              >
+              <button id="loadAddExpense" type="button"
+                class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white">
                 Add New Transaction
               </button>
               <div class="grid grid-cols-2 gap-4 my-4">
                 <div class="bg-green-100 p-4 rounded">
                   <p class="font-semibold">Total Income:</p>
-                  <p>$<%= totalIncome %></p>
+                  <p>$<%= totalIncome %>
+                  </p>
                 </div>
                 <div class="bg-red-100 p-4 rounded">
                   <p class="font-semibold">Total Expenses:</p>
-                  <p>$<%= totalExpenses %></p>
+                  <p>$<%= totalExpenses %>
+                  </p>
                 </div>
                 <div class="bg-blue-100 p-4 rounded col-span-2">
                   <p class="font-semibold">Balance:</p>
-                  <p>$<%= balance %></p>
+                  <p>$<%= balance %>
+                  </p>
                 </div>
               </div>
 
@@ -346,37 +115,20 @@
                   <form action="/dashboard" method="GET">
                     <input type="hidden" name="category" value="" />
                     <input type="hidden" name="openPanel" value="true" />
-                    <button
-                      type="submit"
-                      class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
-                    >
+                    <button type="submit" class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400">
                       All
                     </button>
                   </form>
-                  <button
-                    onclick="showDropdown('income')"
-                    class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
-                  >
+                  <button onclick="showDropdown('income')" class="px-4 py-1 bg-green-200 rounded hover:bg-green-300">
                     Income
                   </button>
-                  <button
-                    onclick="showDropdown('expense')"
-                    class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
-                  >
+                  <button onclick="showDropdown('expense')" class="px-4 py-1 bg-red-200 rounded hover:bg-red-300">
                     Expense
                   </button>
                 </div>
-                <form
-                  action="/dashboard"
-                  method="GET"
-                  id="incomeDropdown"
-                  class="hidden"
-                >
+                <form action="/dashboard" method="GET" id="incomeDropdown" class="hidden">
                   <input type="hidden" name="type" value="income" />
-                  <select
-                    name="category"
-                    class="border border-gray-400 p-2 rounded mb-2"
-                  >
+                  <select name="category" class="border border-gray-400 p-2 rounded mb-2">
                     <option value="">All</option>
                     <option value="Salary">Salary</option>
                     <option value="Freelance">Freelance</option>
@@ -389,24 +141,13 @@
                     </option>
                     <option value="Other Income">Other Income</option>
                   </select>
-                  <button
-                    type="submit"
-                    class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
-                  >
+                  <button type="submit" class="ml-2 px-4 py-1 bg-blue-500 text-white rounded">
                     Filter
                   </button>
                 </form>
-                <form
-                  action="/dashboard"
-                  method="GET"
-                  id="expenseDropdown"
-                  class="hidden"
-                >
+                <form action="/dashboard" method="GET" id="expenseDropdown" class="hidden">
                   <input type="hidden" name="type" value="expense" />
-                  <select
-                    name="category"
-                    class="border border-gray-400 p-2 rounded mb-2"
-                  >
+                  <select name="category" class="border border-gray-400 p-2 rounded mb-2">
                     <option value="">All</option>
                     <option value="Food & Dining">Food & Dining</option>
                     <option value="Transportation">Transportation</option>
@@ -423,10 +164,7 @@
                     <option value="Travel">Travel</option>
                     <option value="Other">Other</option>
                   </select>
-                  <button
-                    type="submit"
-                    class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
-                  >
+                  <button type="submit" class="ml-2 px-4 py-1 bg-blue-500 text-white rounded">
                     Filter
                   </button>
                 </form>
@@ -434,24 +172,21 @@
 
               <h2 class="text-xl font-semibold mb-2">Your Transactions</h2>
               <ul>
-                <% expenses.forEach(e => { %>
-                <li
-                  class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center"
-                >
-                  <div>
-                    <strong><%= e.name %></strong> - $<%= e.amount %> (<%=
-                    e.type === 'income' ? 'Income' : 'Expense' %>: <%=
-                    e.category %>)
-                  </div>
-                  <form action="/delete-expense/<%= e._id %>" method="POST">
-                    <button
-                      class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2 hover:text-white hover:bg-red-300 hover:font-semibold"
-                    >
-                      X
-                    </button>
-                  </form>
-                </li>
-                <% }) %>
+                <% expenses.forEach(e=> { %>
+                  <li class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center">
+                    <div>
+                      <strong>
+                        <%= e.name %>
+                      </strong> - $<%= e.amount %> (<%= e.type==='income' ? 'Income' : 'Expense' %>: <%= e.category %>)
+                    </div>
+                    <form action="/delete-expense/<%= e._id %>" method="POST">
+                      <button
+                        class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2 hover:text-white hover:bg-red-300 hover:font-semibold">
+                        X
+                      </button>
+                    </form>
+                  </li>
+                  <% }) %>
               </ul>
             </div>
           </div>
@@ -608,135 +343,10 @@
 
           loadAddExpenseBtn.addEventListener("click", loadAndShowAddForm);
         </script>
-        <div class="flex justify-center">
-          <div style="margin: 10px">
-            <button
-              type="button"
-              class="collapsible flex items-center bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2"
-            >
-              <!-- closed arrow -->
-              <svg
-                class="closed-arrow w-6 h-6 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 16.881V7.119a1 1 0 0 1 1.636-.772l5.927 4.881a1 1 0 0 1 0 1.544l-5.927 4.88A1 1 0 0 1 8 16.882Z"
-                />
-              </svg>
 
-              <!-- opened arrow -->
-              <svg
-                class="opened-arrow w-6 h-6 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-                style="display: none"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7.119 8h9.762a1 1 0 0 1 .772 1.636l-4.881 5.927a1 1 0 0 1-1.544 0l-4.88-5.927A1 1 0 0 1 7.118 8Z"
-                />
-              </svg>
-
-              Add expense/income
-            </button>
-
-            <div class="content" style="display: none">
-              <form class="space-y-2">
-                <input
-                  type="button"
-                  value="income"
-                  class="bg-green-200 px-2 py-1 rounded hover:bg-green-300 transition"
-                />
-                <input
-                  type="button"
-                  value="expense"
-                  class="bg-red-200 px-2 py-1 rounded hover:bg-red-300 transition"
-                />
-                <br />
-
-                <label for="name">Name: </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-                <br />
-
-                <label for="type">Category: </label>
-                <input
-                  type="text"
-                  id="category"
-                  name="category"
-                  class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-                <br />
-
-                <label for="date">Date: </label>
-                <input type="date" id="date" name="date" />
-                <br />
-
-                <label for="amount">Amount: </label>
-                <input
-                  type="text"
-                  id="amount"
-                  name="amount"
-                  class="shadow appearance-none border rounded py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-                <br />
-
-                <input
-                  type="button"
-                  value="Expand Form"
-                  class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                />
-                <input
-                  type="button"
-                  value="Submit"
-                  class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
-                />
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <script>
-          const collapsible = document.querySelector(".collapsible");
-          const content = collapsible.nextElementSibling;
-          const closedArrow = document.querySelector(".closed-arrow");
-          const openedArrow = document.querySelector(".opened-arrow");
-
-          collapsible.addEventListener("click", function () {
-            if (content.style.display === "none") {
-              content.style.display = "block";
-              closedArrow.style.display = "none";
-              openedArrow.style.display = "block";
-            } else {
-              content.style.display = "none";
-              closedArrow.style.display = "block";
-              openedArrow.style.display = "none";
-            }
-          });
-        </script>
 
         <!-- these should probably be in bottom nav (except logout, probably going into profile) but i'll keep them here for now in case we need them -->
-        <form action="/auth/logout" method="POST">
+        <!-- <form action="/auth/logout" method="POST">
           <button
             type="submit"
             class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
@@ -767,11 +377,14 @@
           >
             View Transactions
           </button>
-        </form>
+        </form> -->
+
       </div>
+
     </section>
 
     <!-- Bottom Navigation -->
     <%- include('./components/nav_bottom') %>
-  </body>
+</body>
+
 </html>

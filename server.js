@@ -372,11 +372,11 @@ app.post("/auth/register", async (request, result) => {
       );
     }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    const acheiveArray = [];
+    const achieveArray = [];
     for (let i = 0; i < defaultAchievements.length; i++) {
       const newAchievement = new achievements(defaultAchievements[i]);
       await newAchievement.save();
-      acheiveArray.push(newAchievement._id);
+      achieveArray.push(newAchievement._id);
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new users({
@@ -396,7 +396,7 @@ app.post("/auth/register", async (request, result) => {
       ],
       balance: 0,
       transactions: [],
-      achievements: acheiveArray,
+      achievements: achieveArray,
       owned: [],
       pet: null,
       date: new Date(),
