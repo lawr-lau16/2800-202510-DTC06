@@ -6,10 +6,6 @@ const favicon = require('serve-favicon');
 const path = require('path');
 const axios = require('axios');
 
-const session = require("express-session");
-const favicon = require("serve-favicon");
-const path = require("path");
-
 /**
  * Require dotenv to load environment variables from a .env file for security.
  * This will allow secret keys to be stored in a .env file instead of hardcoded in the code.
