@@ -354,7 +354,7 @@ app.post('/auth/login', async (request, result) => {
     }
 });
 
-/*
+/**
  * Log's out a user.
  * The session is destroyed and the user is redirected to the login page.
  * If there is an error during logout, an error message is returned.
@@ -662,11 +662,6 @@ app.post('/achievements/replace', async (request, result) => {
         result.status(500).json({ error: 'Internal server error' });
     }
 });
-
-
-
-
-
 
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
