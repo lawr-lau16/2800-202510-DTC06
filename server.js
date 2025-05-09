@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const session = require('express-session');
-const favicon = require('serve-favicon');
-const path = require('path');
-const axios = require('axios');
+const session = require("express-session");
+const favicon = require("serve-favicon");
+const path = require("path");
+const axios = require("axios");
 const { type } = require("os");
 
 /**
@@ -104,14 +104,14 @@ const userSchema = new mongoose.Schema({
   pet: {
     base: String,
     item: String,
-    happiness: Number
+    happiness: Number,
   },
   date: Date,
   budget: {
     weekly: Number,
-    monthly: Number
+    monthly: Number,
   },
-  coins: Number
+  coins: Number,
 });
 
 /**
@@ -125,7 +125,7 @@ const transactionSchema = new mongoose.Schema({
   date: Date,
   amount: Number,
   comments: String,
-  type: String
+  type: String,
 });
 
 /**
@@ -141,7 +141,7 @@ const achievementSchema = new mongoose.Schema({
   date: Date,
   previousDate: Date,
   completed: Boolean,
-  reward: Number
+  reward: Number,
 });
 
 // Here we create a model for the achievement schema, this will be used to make our collection in the database.
@@ -179,7 +179,7 @@ app.get("/game", (request, result) => {
 });
 
 app.get("/add-expense", (req, res) => {
-    res.render("partials/expense_log");
+  res.render("partials/expense_log");
 });
 
 // ACHIEVEMENTS PAGE
@@ -188,31 +188,35 @@ app.get("/add-expense", (req, res) => {
  * The server will also serve the user's achievements to the page in json format.
  * If the user is not logged in, they will be redirected to the login page.
  */
-app.get('/achievements', async (req, res) => {
-    if (!req.session.uid) {
-        return res.redirect('/login');
-    }
+app.get("/achievements", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
 
-    try {
-        const user = await users.findById(req.session.uid);
-        const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
-        res.render('achievements', { user, achievements: userAchievements });
-    } catch (err) {
-        console.error('Error loading achievements:', err);
-        res.status(500).send('Server error');
-    }
+  try {
+    const user = await users.findById(req.session.uid);
+    const userAchievements = await achievements.find({
+      _id: { $in: user.achievements },
+    });
+    res.render("achievements", { user, achievements: userAchievements });
+  } catch (err) {
+    console.error("Error loading achievements:", err);
+    res.status(500).send("Server error");
+  }
 });
 
 // Route to get achievement data
-app.get('/achievements-data', async (req, res) => {
-    if (!req.session.uid) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+app.get("/achievements-data", async (req, res) => {
+  if (!req.session.uid) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
-    const user = await users.findById(req.session.uid);
-    const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
+  const user = await users.findById(req.session.uid);
+  const userAchievements = await achievements.find({
+    _id: { $in: user.achievements },
+  });
 
-    res.json({ achievements: userAchievements });
+  res.json({ achievements: userAchievements });
 });
 
 // PROFILE PAGE
@@ -242,8 +246,8 @@ app.post("/profile/update", async (req, res) => {
       username,
       budget: {
         weekly: Number(weekly),
-        monthly: Number(monthly)
-      }
+        monthly: Number(monthly),
+      },
     };
 
     // Only hash password if it's provided and not blank
@@ -255,14 +259,14 @@ app.post("/profile/update", async (req, res) => {
     // Only update the selected field
     const updateOps = {};
 
-    if (username) updateOps['username'] = username;
-    if (password && password.trim() !== '') {
+    if (username) updateOps["username"] = username;
+    if (password && password.trim() !== "") {
       const hashedPassword = await bcrypt.hash(password, 10);
-      updateOps['password'] = hashedPassword;
+      updateOps["password"] = hashedPassword;
     }
-    if (weekly !== undefined) updateOps['budget.weekly'] = Number(weekly);
-    if (monthly !== undefined) updateOps['budget.monthly'] = Number(monthly);
-    
+    if (weekly !== undefined) updateOps["budget.weekly"] = Number(weekly);
+    if (monthly !== undefined) updateOps["budget.monthly"] = Number(monthly);
+
     await users.findByIdAndUpdate(req.session.uid, { $set: updateOps });
     res.status(200).json({ message: "Profile updated" });
   } catch (err) {
@@ -278,12 +282,14 @@ app.get("/home", async (req, res) => {
     return res.redirect("/login");
   }
   try {
-      const user = await users.findById(req.session.uid);
-      const userTransactions = await transactions.find({ _id: { $in: user.transactions } });
+    const user = await users.findById(req.session.uid);
+    const userTransactions = await transactions.find({
+      _id: { $in: user.transactions },
+    });
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
-      const totalExpenses = userTransactions
+    const totalExpenses = userTransactions
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpenses;
@@ -292,7 +298,7 @@ app.get("/home", async (req, res) => {
       totalIncome,
       totalExpenses,
       balance,
-      expenses: userTransactions
+      expenses: userTransactions,
     });
   } catch (err) {
     console.error("Error loading home:", err.message);
@@ -334,7 +340,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 20
+        reward: 20,
       },
       {
         type: "Weekly",
@@ -344,7 +350,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 60
+        reward: 60,
       },
       {
         type: "Monthly",
@@ -354,7 +360,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 200
+        reward: 200,
       },
       {
         type: "Drink",
@@ -365,7 +371,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 50
+        reward: 50,
       },
       {
         type: "Login",
@@ -375,8 +381,8 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 10
-      }
+        reward: 10,
+      },
     ];
     /**
      * This is used to set the date to the correct timezone.
@@ -388,11 +394,11 @@ app.post("/auth/register", async (request, result) => {
     for (let i = 0; i < defaultAchievements.length; i++) {
       defaultAchievements[i].date.setMinutes(
         defaultAchievements[i].date.getMinutes() +
-        defaultAchievements[i].date.getTimezoneOffset()
+          defaultAchievements[i].date.getTimezoneOffset()
       );
       defaultAchievements[i].previousDate.setMinutes(
         defaultAchievements[i].previousDate.getMinutes() +
-        defaultAchievements[i].previousDate.getTimezoneOffset()
+          defaultAchievements[i].previousDate.getTimezoneOffset()
       );
     }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -416,18 +422,18 @@ app.post("/auth/register", async (request, result) => {
         "Health",
         "Insurance",
         "Education",
-        "Pets"
+        "Pets",
       ],
       balance: 0,
       transactions: [],
       achievements: achieveArray,
       budget: {
         weekly: 0,
-        monthly: 0
+        monthly: 0,
       },
       owned: [],
       pet: null,
-      date: new Date()
+      date: new Date(),
     });
     await newUser.save();
     request.session.uid = newUser._id;
@@ -509,7 +515,7 @@ app.post("/transaction/add", (request, result) => {
     category,
     date,
     amount,
-    comments
+    comments,
   });
   newTransaction
     .save()
@@ -577,6 +583,34 @@ app.post("/transactions/fetch", async (request, result) => {
   } catch (err) {
     console.log("Error fetching transactions:", err.message);
     result.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/transactions/chart-data", async (req, res) => {
+  if (!req.session.uid) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const user = await users.findById(req.session.uid);
+    const allTransactions = await transactions.find({
+      _id: { $in: user.transactions },
+      type: "expense", // optional: only show expenses in chart
+    });
+
+    // Aggregate total amounts by category
+    const categoryTotals = {};
+    allTransactions.forEach((t) => {
+      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+    });
+
+    const labels = Object.keys(categoryTotals);
+    const values = Object.values(categoryTotals);
+
+    res.json({ labels, values });
+  } catch (err) {
+    console.error("Error fetching chart data:", err.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -719,7 +753,7 @@ app.post("/achievements/update", async (request, result) => {
       progress,
       completed,
       date,
-      previousDate
+      previousDate,
     });
     console.log("Updated Achievement:", achievementId);
     result.json({ message: "Achievement updated successfully" });
@@ -798,54 +832,55 @@ app.post("/achievements/replace", async (request, result) => {
 
 app.get("/weather", async (req, res) => {
   const { lat, lon } = req.query;
-  const apiKey = process.env.WEATHER_API_KEY
+  const apiKey = process.env.WEATHER_API_KEY;
 
   try {
-    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+    );
     res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch weather data" });
   }
-  catch (error) {
-    res.status(500).json({ error: "Failed to fetch weather data" })
-  }
-})
+});
 
 /**
  * Fetches the user's budget's from the database.
  * Uses the user's ID stored in the session to find the user in the database where the budget's are stored.
  * The budget's are identified and populated in a new temporary object to deliver to the view.
  */
-app.post('/budget', async (request, result) => {
-    try {
-        if (!request.session.uid) {
-            return result.redirect('/login');
-        }
-        const user = await users.findById(request.session.uid);
-        console.log('Fetched Budget:', user.budget);
-        result.json({ budget: user.budget });
-    } catch (err) {
-        console.log('Error fetching budget:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
+app.post("/budget", async (request, result) => {
+  try {
+    if (!request.session.uid) {
+      return result.redirect("/login");
     }
+    const user = await users.findById(request.session.uid);
+    console.log("Fetched Budget:", user.budget);
+    result.json({ budget: user.budget });
+  } catch (err) {
+    console.log("Error fetching budget:", err.message);
+    result.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // Delete a transaction
 // Routed to home page
 app.post("/delete-expense/:id", async (req, res) => {
-    if (!req.session.uid) {
-        return res.redirect("/login");
-    }
-    try {
-        await transactions.findByIdAndDelete(req.params.id);
-        await users.findByIdAndUpdate(req.session.uid, {
-            $pull: { transactions: req.params.id },
-        });
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    await transactions.findByIdAndDelete(req.params.id);
+    await users.findByIdAndUpdate(req.session.uid, {
+      $pull: { transactions: req.params.id },
+    });
 
-        console.log(`Transaction deleted successfully.`);
-        res.redirect("/home");
-    } catch (error) {
-        console.error("Error deleting transaction:", error.message);
-        res.status(500).send("Error deleting transaction");
-    }
+    console.log(`Transaction deleted successfully.`);
+    res.redirect("/home");
+  } catch (error) {
+    console.error("Error deleting transaction:", error.message);
+    res.status(500).send("Error deleting transaction");
+  }
 });
 
 // Handle form submission and save to MongoDB
@@ -865,11 +900,11 @@ app.post("/add-expense", async (req, res) => {
     });
     await newTransaction.save();
     try {
-        await user.transactions.push(newTransaction._id);
-        await user.save();
+      await user.transactions.push(newTransaction._id);
+      await user.save();
     } catch (err) {
-        console.error("Error saving transaction to user:", err.message);
-        return res.status(500).send("Error saving transaction to user");
+      console.error("Error saving transaction to user:", err.message);
+      return res.status(500).send("Error saving transaction to user");
     }
     res.redirect("/home");
   } catch (err) {
@@ -881,5 +916,5 @@ app.post("/add-expense", async (req, res) => {
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
