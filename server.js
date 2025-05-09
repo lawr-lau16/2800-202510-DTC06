@@ -5,6 +5,7 @@ const session = require('express-session');
 const favicon = require('serve-favicon');
 const path = require('path');
 const axios = require('axios');
+const { type } = require("os");
 
 /**
  * Require dotenv to load environment variables from a .env file for security.
@@ -103,7 +104,7 @@ const userSchema = new mongoose.Schema({
   pet: {
     base: String,
     item: String,
-    happiness: Number,
+    happiness: Number
   },
   date: Date,
   budget: {
@@ -124,6 +125,7 @@ const transactionSchema = new mongoose.Schema({
   date: Date,
   amount: Number,
   comments: String,
+  type: String
 });
 
 /**
@@ -139,7 +141,7 @@ const achievementSchema = new mongoose.Schema({
   date: Date,
   previousDate: Date,
   completed: Boolean,
-  reward: Number,
+  reward: Number
 });
 
 // Here we create a model for the achievement schema, this will be used to make our collection in the database.
@@ -174,6 +176,10 @@ app.get("/game", (request, result) => {
     return result.redirect("/login");
   }
   result.render("game");
+});
+
+app.get("/add-expense", (req, res) => {
+    res.render("partials/expense_log");
 });
 
 // ACHIEVEMENTS PAGE
@@ -216,10 +222,8 @@ app.get("/profile", async (req, res) => {
   if (!req.session.uid) {
     return res.redirect("/login");
   }
-
   try {
-    const user = await users.findById(req.session.uid).lean();
-    if (!user) return res.status(404).send("User not found");
+    const user = await users.findById(req.session.uid);
     res.render("profile", { user });
   } catch (err) {
     console.error("Error fetching user:", err);
@@ -239,8 +243,8 @@ app.post("/profile/update", async (req, res) => {
       budget: {
         daily: Number(daily),
         weekly: Number(weekly),
-        monthly: Number(monthly),
-      },
+        monthly: Number(monthly)
+      }
     };
 
     // Only hash password if it's provided and not blank
@@ -263,28 +267,22 @@ app.get("/home", async (req, res) => {
   if (!req.session.uid) {
     return res.redirect("/login");
   }
-
   try {
-    const allUserTransactions = await Transaction.find({
-      userId: req.session.uid,
-    });
-
-    const totalIncome = allUserTransactions
+      const user = await users.findById(req.session.uid);
+      const userTransactions = await transactions.find({ _id: { $in: user.transactions } });
+    const totalIncome = userTransactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
-
-    const totalExpenses = allUserTransactions
+      const totalExpenses = userTransactions
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
-
     const balance = totalIncome - totalExpenses;
-
     res.render("home", {
       username: req.session.username,
       totalIncome,
       totalExpenses,
       balance,
-      expenses: allUserTransactions,
+      expenses: userTransactions
     });
   } catch (err) {
     console.error("Error loading home:", err.message);
@@ -326,7 +324,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 20,
+        reward: 20
       },
       {
         type: "Weekly",
@@ -336,7 +334,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 60,
+        reward: 60
       },
       {
         type: "Monthly",
@@ -346,7 +344,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 200,
+        reward: 200
       },
       {
         type: "Drink",
@@ -357,7 +355,7 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 50,
+        reward: 50
       },
       {
         type: "Login",
@@ -367,8 +365,8 @@ app.post("/auth/register", async (request, result) => {
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 10,
-      },
+        reward: 10
+      }
     ];
     /**
      * This is used to set the date to the correct timezone.
@@ -408,7 +406,7 @@ app.post("/auth/register", async (request, result) => {
         "Health",
         "Insurance",
         "Education",
-        "Pets",
+        "Pets"
       ],
       balance: 0,
       transactions: [],
@@ -419,7 +417,7 @@ app.post("/auth/register", async (request, result) => {
       },
       owned: [],
       pet: null,
-      date: new Date(),
+      date: new Date()
     });
     await newUser.save();
     request.session.uid = newUser._id;
@@ -501,7 +499,7 @@ app.post("/transaction/add", (request, result) => {
     category,
     date,
     amount,
-    comments,
+    comments
   });
   newTransaction
     .save()
@@ -820,15 +818,24 @@ app.post('/budget', async (request, result) => {
     }
 });
 
-// Start's the server and listens on the specified port.
-// The port is set to 3000 by default.
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Delete a transaction
+// Routed to home page
+app.post("/delete-expense/:id", async (req, res) => {
+    if (!req.session.uid) {
+        return res.redirect("/login");
+    }
+    try {
+        await transactions.findByIdAndDelete(req.params.id);
+        await users.findByIdAndUpdate(req.session.uid, {
+            $pull: { transactions: req.params.id },
+        });
 
-const Transaction = require("./models/Transaction");
-app.get("/add-expense", (req, res) => {
-  res.render("partials/expense_log");
+        console.log(`Transaction deleted successfully.`);
+        res.redirect("/home");
+    } catch (error) {
+        console.error("Error deleting transaction:", error.message);
+        res.status(500).send("Error deleting transaction");
+    }
 });
 
 // Handle form submission and save to MongoDB
@@ -836,80 +843,33 @@ app.post("/add-expense", async (req, res) => {
   if (!req.session.uid) {
     return res.status(401).send("Unauthorized: user not logged in");
   }
-
+  const user = await users.findById(req.session.uid);
   const { type, name, amount, category, date } = req.body;
-
   try {
-    const newTransaction = new Transaction({
-      userId: req.session.uid, // must be defined!
+    const newTransaction = new transactions({
       type,
       name,
       amount,
       category,
       date: new Date(date),
     });
-
     await newTransaction.save();
-    res.redirect("/dashboard");
+    try {
+        await user.transactions.push(newTransaction._id);
+        await user.save();
+    } catch (err) {
+        console.error("Error saving transaction to user:", err.message);
+        return res.status(500).send("Error saving transaction to user");
+    }
+    res.redirect("/home");
   } catch (err) {
-    console.error("❌ Error saving transaction:", err);
+    console.error("Error saving transaction: ", err.message);
     res.status(500).send("Error saving transaction");
   }
 });
 
-// Dashboard to display entries and totals
-
-// Delete a transaction
-app.post("/delete-expense/:id", async (req, res) => {
-  try {
-    await Transaction.deleteOne({
-      _id: req.params.id,
-      userId: req.session.uid,
-    });
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.error("❌ Error deleting transaction:", error);
-    res.status(500).send("Error deleting transaction");
-  }
-});
-
-// Redirect base URL to dashboard
-
-app.get("/dashboard", async (req, res) => {
-  try {
-    const userId = req.session.user._id;
-    const category = req.query.category || "";
-    const type = req.query.type || "";
-
-    let query = { userId };
-    if (type) {
-      query.type = type;
-    }
-    if (category) {
-      query.category = category;
-    }
-
-    const expenses = await Transaction.find({ userId: req.session.uid });
-
-    const totalIncome = expenses
-      .filter((t) => t.type === "income")
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const totalExpenses = expenses
-      .filter((t) => t.type === "expense")
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const balance = totalIncome - totalExpenses;
-
-    res.render("home", {
-      username: req.session.username,
-      expenses,
-      totalIncome,
-      totalExpenses,
-      balance,
-    });
-  } catch (error) {
-    console.error("❌ Error loading dashboard:", error);
-    res.status(500).send("Error loading dashboard");
-  }
+// Start's the server and listens on the specified port.
+// The port is set to 3000 by default.
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
