@@ -21,7 +21,7 @@
 <body class="h-dvh flex flex-col font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
 
     <!-- Top Navigation -->
-    <%- include('./components/nav_top') %>
+    <%- include('./partials/nav_top') %>
 
     <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
     <!-- There to show that bottom is sticky to the bottom -->
@@ -100,7 +100,13 @@
                             data-field="monthlyBudget">Save</button>
                     </div>
                     <!-- Customize Categories Dropdown - Add or remove categories-->
-                    <div></div>
+                    <div>
+                        <form action="/auth/logout" method="POST">
+                            <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
             </div>
@@ -108,7 +114,7 @@
     </section>
 
     <!-- Bottom Navigation -->
-    <%- include('./components/nav_bottom') %>
+    <%- include('./partials/nav_bottom') %>
 
     <!-- Footer if we want would go here -->
 
