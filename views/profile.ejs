@@ -68,17 +68,6 @@
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="password">Save</button>
                     </div>
-                    <!-- Daily Budget Field -->
-                    <div class="relative group">
-                        <label for="dailyBudget" class="text-xs uppercase block mb-1">Daily Budget</label>
-                        <input type="text" id="dailyBudget" name="dailyBudget"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your dailyBudget here" />
-                        <button
-                            class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
-                            data-field="dailyBudget">Save</button>
-
-                    </div>
                     <!-- Weekly Budget Field -->
                     <div class="relative group">
                         <label for="weeklyBudget" class="text-xs uppercase block mb-1">Weekly Budget</label>
@@ -120,7 +109,7 @@
 
     <!-- Scripts -->
     <script>
-        const user = <% - JSON.stringify(user) %>;
+        const user = <%- JSON.stringify(user) %>;
     </script>
     <script src="/scripts/profile.js"></script>
 

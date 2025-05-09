@@ -231,13 +231,12 @@ app.get("/profile", async (req, res) => {
 app.post("/profile/update", async (req, res) => {
   if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
-  const { username, password, daily, weekly, monthly } = req.body;
+  const { username, password, weekly, monthly } = req.body;
 
   try {
     const update = {
       username,
       budget: {
-        daily: Number(daily),
         weekly: Number(weekly),
         monthly: Number(monthly),
       },
@@ -414,8 +413,8 @@ app.post("/auth/register", async (request, result) => {
       transactions: [],
       achievements: achieveArray,
       budget: {
-        weekly: null,
-        monthly: null
+        weekly: 0,
+        monthly: 0
       },
       owned: [],
       pet: null,

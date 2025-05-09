@@ -10,15 +10,13 @@ window.addEventListener('DOMContentLoaded', () => {
     // Populate fields
     document.getElementById('name').value = user.username || '';
     document.getElementById('password').value = '';
-    document.getElementById('dailyBudget').value = user.Budget?.daily ?? '';
-    document.getElementById('weeklyBudget').value = user.Budget?.weekly ?? '';
-    document.getElementById('monthlyBudget').value = user.Budget?.monthly ?? '';
+    document.getElementById('weeklyBudget').value = String(user.budget?.weekly ?? '');
+    document.getElementById('monthlyBudget').value = String(user.budget?.monthly ?? '');
 
     // Field mapping
     const fieldMap = {
         name: 'username',
         password: 'password',
-        dailyBudget: 'daily',
         weeklyBudget: 'weekly',
         monthlyBudget: 'monthly'
     };
@@ -37,7 +35,6 @@ window.addEventListener('DOMContentLoaded', () => {
             const payload = {
                 username: user.username,
                 password: '',  // let user set new password if they choose
-                daily: user.Budget?.daily,
                 weekly: user.Budget?.weekly,
                 monthly: user.Budget?.monthly
             };
