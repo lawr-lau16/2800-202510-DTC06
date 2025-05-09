@@ -39,10 +39,26 @@
 
 
     <div class="bg-white rounded-xl drop-shadow-sm p-4 mt-4">
+
       <!-- budget donut -->
-      <div class="flex justify-center mx-auto">
+      <div class="relative flex justify-center">
+
+        <div class="absolute flex size-full">
+          <div id="ami" class="relative translate-y-14 w-30 mx-auto">
+            <!-- Item Overlay -->
+            <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+              src="/images/game/items/sprout.png" alt="">
+            <!-- Expression Overlay -->
+            <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+              src="/images/game/Ami-Expressions/default.png" alt="">
+            <!-- Ami Base -->
+            <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png" alt="">
+          </div>
+        </div>
         <canvas id="canvas" height="300"></canvas>
+
       </div>
+
       <!-- amount spent / budget -->
       <div id="spentVsBudget" class="text-center font-semibold text-lg"></div>
       <hr class="m-2 border-2 border-cyan-900/30 rounded-sm">

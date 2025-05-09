@@ -50,11 +50,11 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.fill();
 
         // Ami in the center
-        const imageSize = innerRadius * 2;
-        const scale = imageSize / Math.max(img.width, img.height);
-        const drawWidth = img.width * scale;
-        const drawHeight = img.height * scale;
-        ctx.drawImage(img, cx - drawWidth / 2, cy - drawHeight / 2, drawWidth, drawHeight);
+        // const imageSize = innerRadius * 2;
+        // const scale = imageSize / Math.max(img.width, img.height);
+        // const drawWidth = img.width * scale;
+        // const drawHeight = img.height * scale;
+        // ctx.drawImage(img, cx - drawWidth / 2, cy - drawHeight / 2, drawWidth, drawHeight);
     }
 
 
