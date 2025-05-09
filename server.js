@@ -248,7 +248,18 @@ app.post("/profile/update", async (req, res) => {
       update.password = hashedPassword;
     }
 
-    await users.findByIdAndUpdate(req.session.uid, update);
+    // Only update the selected field
+    const updateOps = {};
+
+    if (username) updateOps['username'] = username;
+    if (password && password.trim() !== '') {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateOps['password'] = hashedPassword;
+    }
+    if (weekly !== undefined) updateOps['budget.weekly'] = Number(weekly);
+    if (monthly !== undefined) updateOps['budget.monthly'] = Number(monthly);
+    
+    await users.findByIdAndUpdate(req.session.uid, { $set: updateOps });
     res.status(200).json({ message: "Profile updated" });
   } catch (err) {
     console.error("Update error:", err.message);
