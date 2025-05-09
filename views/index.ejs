@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EconAmi</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<!-- <style>
+    body {
+        background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+    }
+</style> -->
+
+<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+
+    <!-- Top Navigation -->
+    <%- include('./partials/nav_top') %>
+
+    <!-- PAGE CONTENT -->
+
+    <section class="h-dvh">
+
+        <!-- speech bubble -->
+        <div class="mx-auto max-w-[80%]">
+            <!-- bubble with text -->
+            <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
+
+                <p style="text-align: center;">Hi, I’m Ami!</p>
+                <br>
+
+                <p style="text-align: center;">I’m your friend in your budgeting journey. Please visit every day to play
+                    with me and feed me delicious things!</p>
+                <br>
+
+                <p style="text-align: center;">While you’re here, you can also track your expenses to help you be more
+                    mindful and improve your spending habits.</p>
+                <br>
+
+                <p style="text-align: center;">Complete challenges to earn coins to buy me cute things!</p>
+
+            </div>
+            <!-- bubble tail -->
+            <div
+                class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+            </div>
+        </div>
+
+        <!-- login/signup and Ami -->
+
+        <div style="display: flex; justify-content: center; margin: 20px;">
+            <div style="display: flex; flex-direction: column; margin: 100px;">
+                <form action="/login" method="get">
+                    <button type="submit"
+                        class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">Login/SignUp</button>
+                </form>
+            </div>
+            <div>
+                <img style="height: 200px;" src="/images/game/Ami-Base/white.png">
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Footer if we want would go here -->
+
+</body>
+
+</html>

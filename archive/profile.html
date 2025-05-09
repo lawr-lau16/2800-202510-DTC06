@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="h-dvh flex flex-col">
+
+    <!-- Top Navigation -->
+    <div id="nav_top"></div>
+
+    <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
+    <!-- There to show that bottom is sticky to the bottom -->
+    <section class="bg-slate-100 h-full relative z-100">
+        <!-- Game UI, this will always be on top -->
+
+        <div class="bottom-150 absolute z-0 w-full">
+            <!-- Ami div -->
+            <div class="relative translate-y-4 w-50 mx-auto">
+                <!-- Item Overlay -->
+                <img class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                    src="/images/game/Items/heart.png" alt="">
+                <!-- Expression Overlay -->
+                <img class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                    src="/images/game/Ami-Expressions/default.png" alt="">
+                <!-- Ami Base -->
+                <img class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png" alt="">
+            </div>
+        </div>
+
+        <!-- Profile card -->
+        <div class="bottom-60 absolute z-0 w-full flex justify-center">
+            <div class="relative translate-y-50 bg-white rounded-2xl shadow-lg p-5 w-96 text-center">
+                <h2 class="text-2xl font-bold">Profile</h2>
+
+                <div class="mt-4 text-left space-y-4">
+                    <!-- Name Field - should be populated with name from database -->
+                    <div>
+                        <label for="name" class="text-xs uppercase block mb-1">Name</label>
+                        <input type="text" id="name" name="name"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Your name here" />
+                    </div>
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="text-xs uppercase block mb-1">Password</label>
+                        <input type="password" id="password" name="password"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="*********" />
+                    </div>
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="text-xs uppercase block mb-1">Email</label>
+                        <input type="text" id="email" name="email"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Your email here" />
+                    </div>
+                    <!-- Daily Budget Field -->
+                    <div>
+                        <label for="dailyBudget" class="text-xs uppercase block mb-1">Daily Budget</label>
+                        <input type="text" id="dailyBudget" name="dailyBudget"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Your dailyBudget here" />
+                    </div>
+                    <!-- Weekly Budget Field -->
+                    <div>
+                        <label for="weeklyBudget" class="text-xs uppercase block mb-1">Weekly Budget</label>
+                        <input type="text" id="weeklyBudget" name="weeklyBudget"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Your weeklyBudget here" />
+                    </div>
+                    <!-- Monthly Budget Field -->
+                    <div>
+                        <label for="monthlyBudget" class="text-xs uppercase block mb-1">Monthly Budget</label>
+                        <input type="text" id="monthlyBudget" name="monthlyBudget"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Your monthlyBudget here" />
+                    </div>
+                    <!-- Customize Categories Dropdown - Add or remove categories-->
+                     <div></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTTOM NAV -->
+    <nav id="nav_bottom"></nav>
+
+    <!-- Footer if we want would go here -->
+
+    <!-- Scripts -->
+    <script src="scripts/skeleton.js"></script>
+</body>
+
+</html>
