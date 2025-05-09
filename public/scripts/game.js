@@ -1,4 +1,3 @@
-
 // Set Ami customization based on user settings
 function setAmi() {
     // This will be replaces with user info from database
@@ -53,15 +52,14 @@ function gameButtonItems() {
     itemsButton.addEventListener("click", clickItemButton);
     itemsCloseMenu.addEventListener("click", clickItemCloseButton);
 }
+
 // Open Items menu
 function clickItemButton() {
-    itemsButton.classList.toggle("border-blue-400");
     itemsMenu.classList.toggle("hidden");
 }
 
 // Close Items menu
 function clickItemCloseButton() {
-    itemsButton.classList.toggle("border-blue-400");
     itemsMenu.classList.toggle("hidden");
 }
 
@@ -113,9 +111,60 @@ function dynamicallyDisplayItems() {
 
 }
 
+// Add Achievement button functionality
+function gameButtonAchievement() {
+    achievementButton = document.getElementById("game-achievements");
+    achievementMenu = document.getElementById("achievements-menu");
+    itemsCloseMenu = document.getElementById("close-menu-achievement");
+
+    achievementButton.addEventListener("click", clickAchievementButton);
+    itemsCloseMenu.addEventListener("click", clickAchievementCloseButton);
+}
+
+// Open Items menu
+function clickAchievementButton() {
+    achievementMenu.classList.toggle("hidden");
+}
+
+// Close Items menu
+function clickAchievementCloseButton() {
+    achievementMenu.classList.toggle("hidden");
+}
+
+// For the weather
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, fail);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+async function success(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    gameWindow = document.getElementById("game-window")
+    try {
+        const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
+        const weatherData = response.data.weather[0].main;
+        console.log(weatherData)
+        gameWindow.src = `/images/game/weather/g-${weatherData}.png`
+        console.log(gameWindow)
+    }
+    catch (error) {
+        console.log("Error fetching weather data:", error)
+    }
+}
+
+function fail() {
+    alert("Weather for your location not available at this time.")
+}
+
 
 // execute functions
 setAmi()
 gameButtonPet()
 dynamicallyDisplayItems()
 gameButtonItems()
+gameButtonAchievement()
+getLocation()
