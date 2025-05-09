@@ -201,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
             const weatherData = response.data.weather[0].main;
             console.log(weatherData)
-            mainCard.classList.replace("bg-[url(/images/game/weather/m-Clear.png)]", `bg-[url(/images/game/weather/m-${weatherData}.png)]`)
+            mainCard.classList.replace("bg-[url(/images/game/weather/m-Clear.jpg)]", `bg-[url(/images/game/weather/m-${weatherData}.jpg)]`)
         }
         catch (error) {
             console.log("Error fetching weather data:", error)
