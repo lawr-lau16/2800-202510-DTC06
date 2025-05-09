@@ -1,30 +1,30 @@
-<nav id="nav_bottom" class="sticky bottom-0 justify-around flex bg-blue-300 md:hidden">
+<nav id="nav_bottom" class="sticky bottom-0 justify-around flex bg-[#3EC3DE] text-white md:hidden">
     <form action="/home" method="get">
-        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-house fa-lg"></i>
         </button>
     </form>
 
     <form action="/game" method="get">
-        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-face-smile-beam fa-lg"></i>
         </button>
     </form>
 
     <form action="/transactions" method="get">
-        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-table-list fa-lg"></i>
         </button>
     </form>
 
     <form action="/achievements" method="get">
-        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-star fa-lg"></i>
         </button>
     </form>
 
     <form action="/profile" method="get">
-        <button type="submit" class="hover:cursor-pointer p-4 px-6 transition">
+        <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-circle-user fa-lg"></i>
         </button>
     </form>
@@ -35,9 +35,9 @@
     let current = window.location.pathname;
     document.querySelectorAll("#nav_bottom form").forEach(function (elem) {
         if (elem.action.includes(current)) {
-            elem.classList.add("bg-blue-400", "hover:bg-blue-500", "text-white");
+            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
         } else {
-            elem.classList = `hover:bg-blue-400`
+            elem.classList.add("hover:bg-[#1c9db7]", "transition")
         }
 
     });

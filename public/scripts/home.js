@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-    
+
     // budget donut
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const img = new Image();
-        img.src = "/images/game/Ami-Base/white.png";
+        img.src = "/images/misc_assets/ami.png";
 
         img.onload = function () {
             dmbChart(150, 150, 125, 25, values, colors, img);
