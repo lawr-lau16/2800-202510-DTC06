@@ -179,7 +179,7 @@ app.get("/game", (request, result) => {
 });
 
 app.get("/add-expense", (req, res) => {
-    res.render("partials/expense_log");
+  res.render("partials/expense_log");
 });
 
 // ACHIEVEMENTS PAGE
@@ -189,30 +189,30 @@ app.get("/add-expense", (req, res) => {
  * If the user is not logged in, they will be redirected to the login page.
  */
 app.get('/achievements', async (req, res) => {
-    if (!req.session.uid) {
-        return res.redirect('/login');
-    }
+  if (!req.session.uid) {
+    return res.redirect('/login');
+  }
 
-    try {
-        const user = await users.findById(req.session.uid);
-        const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
-        res.render('achievements', { user, achievements: userAchievements });
-    } catch (err) {
-        console.error('Error loading achievements:', err);
-        res.status(500).send('Server error');
-    }
+  try {
+    const user = await users.findById(req.session.uid);
+    const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
+    res.render('achievements', { user, achievements: userAchievements });
+  } catch (err) {
+    console.error('Error loading achievements:', err);
+    res.status(500).send('Server error');
+  }
 });
 
 // Route to get achievement data
 app.get('/achievements-data', async (req, res) => {
-    if (!req.session.uid) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+  if (!req.session.uid) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 
-    const user = await users.findById(req.session.uid);
-    const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
+  const user = await users.findById(req.session.uid);
+  const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
 
-    res.json({ achievements: userAchievements });
+  res.json({ achievements: userAchievements });
 });
 
 // PROFILE PAGE
@@ -262,7 +262,7 @@ app.post("/profile/update", async (req, res) => {
     }
     if (weekly !== undefined) updateOps['budget.weekly'] = Number(weekly);
     if (monthly !== undefined) updateOps['budget.monthly'] = Number(monthly);
-    
+
     await users.findByIdAndUpdate(req.session.uid, { $set: updateOps });
     res.status(200).json({ message: "Profile updated" });
   } catch (err) {
@@ -278,12 +278,12 @@ app.get("/home", async (req, res) => {
     return res.redirect("/login");
   }
   try {
-      const user = await users.findById(req.session.uid);
-      const userTransactions = await transactions.find({ _id: { $in: user.transactions } });
+    const user = await users.findById(req.session.uid);
+    const userTransactions = await transactions.find({ _id: { $in: user.transactions } });
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
-      const totalExpenses = userTransactions
+    const totalExpenses = userTransactions
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpenses;
@@ -427,7 +427,8 @@ app.post("/auth/register", async (request, result) => {
       },
       owned: [],
       pet: null,
-      date: new Date()
+      date: new Date(),
+      coins
     });
     await newUser.save();
     request.session.uid = newUser._id;
@@ -815,37 +816,37 @@ app.get("/weather", async (req, res) => {
  * The budget's are identified and populated in a new temporary object to deliver to the view.
  */
 app.post('/budget', async (request, result) => {
-    try {
-        if (!request.session.uid) {
-            return result.redirect('/login');
-        }
-        const user = await users.findById(request.session.uid);
-        console.log('Fetched Budget:', user.budget);
-        result.json({ budget: user.budget });
-    } catch (err) {
-        console.log('Error fetching budget:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
+  try {
+    if (!request.session.uid) {
+      return result.redirect('/login');
     }
+    const user = await users.findById(request.session.uid);
+    console.log('Fetched Budget:', user.budget);
+    result.json({ budget: user.budget });
+  } catch (err) {
+    console.log('Error fetching budget:', err.message);
+    result.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Delete a transaction
 // Routed to home page
 app.post("/delete-expense/:id", async (req, res) => {
-    if (!req.session.uid) {
-        return res.redirect("/login");
-    }
-    try {
-        await transactions.findByIdAndDelete(req.params.id);
-        await users.findByIdAndUpdate(req.session.uid, {
-            $pull: { transactions: req.params.id },
-        });
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    await transactions.findByIdAndDelete(req.params.id);
+    await users.findByIdAndUpdate(req.session.uid, {
+      $pull: { transactions: req.params.id },
+    });
 
-        console.log(`Transaction deleted successfully.`);
-        res.redirect("/home");
-    } catch (error) {
-        console.error("Error deleting transaction:", error.message);
-        res.status(500).send("Error deleting transaction");
-    }
+    console.log(`Transaction deleted successfully.`);
+    res.redirect("/home");
+  } catch (error) {
+    console.error("Error deleting transaction:", error.message);
+    res.status(500).send("Error deleting transaction");
+  }
 });
 
 // Handle form submission and save to MongoDB
@@ -865,11 +866,11 @@ app.post("/add-expense", async (req, res) => {
     });
     await newTransaction.save();
     try {
-        await user.transactions.push(newTransaction._id);
-        await user.save();
+      await user.transactions.push(newTransaction._id);
+      await user.save();
     } catch (err) {
-        console.error("Error saving transaction to user:", err.message);
-        return res.status(500).send("Error saving transaction to user");
+      console.error("Error saving transaction to user:", err.message);
+      return res.status(500).send("Error saving transaction to user");
     }
     res.redirect("/home");
   } catch (err) {
@@ -878,8 +879,27 @@ app.post("/add-expense", async (req, res) => {
   }
 });
 
+/**
+ * This will be used for reading the store features in users.
+ * It returns the user's inventory and coins.
+ * Uses the user's ID stored in the session to find the user in the database where the inventory is stored.
+ */
+app.post('/store', async (request, result) => {
+  try {
+    if (!request.session.uid) {
+      return result.redirect('/login');
+    }
+    const user = await users.findById(request.session.uid);
+    console.log('Fetched Store:', user.inventory, user.coins);
+    result.json({ inventory: user.inventory, coins: user.coins });
+  } catch (err) {
+    console.log('Error fetching store:', err.message);
+    result.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
