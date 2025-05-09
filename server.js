@@ -650,25 +650,6 @@ app.post("/categories/remove", async (request, result) => {
 });
 
 /**
- * Fetches the user's budget's from the database.
- * Uses the user's ID stored in the session to find the user in the database where the budget's are stored.
- * The budget's are identified and populated in a new temporary object to deliver to the view.
- */
-app.post("/budget", async (request, result) => {
-  try {
-    if (!request.session.uid) {
-      return result.redirect("/login");
-    }
-    const user = await users.findById(request.session.uid);
-    console.log("Fetched Budget:", user.budget);
-    result.json({ budget: user.budget });
-  } catch (err) {
-    console.log("Error fetching budget:", err.message);
-    result.status(500).json({ error: "Internal server error" });
-  }
-});
-
-/**
  * Fetches the users achievements from the database, along with their user information.
  * Uses the user's ID stored in the session to find the user in the database where the achievements are stored.
  * The achievements are identified and delivered to the view.
@@ -730,7 +711,7 @@ app.post("/achievements/update", async (request, result) => {
       progress,
       completed,
       date,
-      previousDate,
+      previousDate
     });
     console.log("Updated Achievement:", achievementId);
     result.json({ message: "Achievement updated successfully" });
@@ -819,72 +800,6 @@ app.get("/weather", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch weather data" })
   }
 })
-/**
- * Fetches all categories for the logged-in user.
- * Uses the user's ID stored in the session to find the user in the database where the categories are stored.
- * Since all categories are already listed in one place we just return the users categories array.
- */
-app.post('/categories', async (request, result) => {
-    try {
-        if (!request.session.uid) {
-            return result.redirect('/login');
-        }
-        const user = await users.findById(request.session.uid);
-        if (!user) {
-            return result.status(404).json({ error: 'User not found' });
-        }
-        console.log('Fetched Categories:', user.categories);
-        result.json({ categories: user.categories });
-    } catch (err) {
-        console.log('Error fetching categories:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-/**
- * Add's a new category to the user's categories array.
- * First checks if the user is logged in by checking the session.
- * Sends the new array of categories back to the view.
- */
-app.post('/categories/add', async (request, result) => {
-    try {
-        const category = request.body.category;
-        if (!request.session.uid) {
-            return result.status(404).json({ error: 'User not found' });
-        }
-        const user = await users.findById(request.session.uid);
-        user.categories.push(category);
-        await user.save();
-        console.log('Category ', category, ' added successfully to user:', request.session.uid);
-        result.json({ categories: user.categories });
-    } catch (err) {
-        console.log('Error adding category:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-/**
- * Delete's a category from the user's categories array.
- * Filters through and allows all categories that are not equal to the one being deleted.
- * First checks if the user is logged in by checking the session.
- * Sends the new array of categories back to the view.
- */
-app.post('/categories/remove', async (request, result) => {
-    try {
-        const category = request.body.category;
-        if (!request.session.uid) {
-            return result.status(404).json({ error: 'User not found' });
-        }
-        const user = await users.findById(request.session.uid);
-        user.categories = user.categories.filter(cat => cat !== category);
-        await user.save();
-        console.log('Category ', category, ' deleted successfully from user:', request.session.uid);
-        result.json({ categories: user.categories });
-    } catch (err) {
-        console.log('Error deleting category:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
-    }
-});
 
 /**
  * Fetches the user's budget's from the database.
@@ -901,130 +816,6 @@ app.post('/budget', async (request, result) => {
         result.json({ budget: user.budget });
     } catch (err) {
         console.log('Error fetching budget:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-/**
- * Fetches the users achievements from the database, along with their user information.
- * Uses the user's ID stored in the session to find the user in the database where the achievements are stored.
- * The achievements are identified and delivered to the view.
- * The user information is also delivered to the view.
- */
-app.post('/achievements', async (request, result) => {
-    try {
-        if (!request.session.uid) {
-            return result.redirect('/login');
-        }
-        const user = await users.findById(request.session.uid);
-        const userAchievements = await achievements.find({ _id: { $in: user.achievements } });
-        console.log('Fetched Achievements:', userAchievements);
-        result.json({ achievements: userAchievements, user: user });
-    } catch (err) {
-        console.log('Error fetching achievements:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-/**
- * Updates the achievement that is passed by the script in the view.
- * The achievement is identified by its ID and the new data is passed to the database.
- * The achievement is updated in the database, with the new progress, completed and date and previousDate values.
- */
-app.post('/achievements/update', async (request, result) => {
-    try {
-        if (!request.session.uid) {
-            return result.redirect('/login');
-        }
-        const achievementId = request.body.achievementId;
-        const progress = request.body.progress;
-        const completed = request.body.completed;
-        const date = new Date(request.body.date);
-        /**
-         * This is used to set the date to the correct timezone.
-         * Without this, the date will be set to UTC time.
-         * Generated by ChatGPT -4o
-         * 
-         * @author https://chat.openai.com/
-         */
-        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        const previousDate = new Date(request.body.previousDate);
-        /**
-         * This is used to set the date to the correct timezone.
-         * Without this, the date will be set to UTC time.
-         * Generated by ChatGPT -4o
-         *
-         * @author https://chat.openai.com/
-         */
-        previousDate.setMinutes(previousDate.getMinutes() + previousDate.getTimezoneOffset());
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        await achievements.findByIdAndUpdate(achievementId, { progress, completed, date, previousDate });
-        console.log('Updated Achievement:', achievementId);
-        result.json({ message: 'Achievement updated successfully' });
-    } catch (err) {
-        console.log('Error updating achievement:', err.message);
-        result.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-/**
- * Replace's an achievement with a new one.
- * The new achievement is created from the mongoDB achievements model, and populated with the new data passed to the server.
- * The new achievement is saved to the database and the user's achievements array.
- * The old achievement is deleted, and its id removed from user's achievements array, and the reward is returned to the view.
- */
-app.post('/achievements/replace', async (request, result) => {
-    try {
-        if (!request.session.uid) {
-            return result.redirect('/login');
-        }
-        const type = request.body.type;
-        const description = request.body.description;
-        const progress = request.body.progress;
-        const target = request.body.target;
-        const date = new Date(request.body.date);
-        /**
-         * This is used to set the date to the correct timezone.
-         * Without this, the date will be set to UTC time.
-         * Generated by ChatGPT -4o
-         * 
-         * @author https://chat.openai.com/
-         */
-        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        const previousDate = new Date(request.body.previousDate);
-        /**
-         * This is used to set the date to the correct timezone.
-         * Without this, the date will be set to UTC time.
-         * Generated by ChatGPT -4o
-         *
-         * @author https://chat.openai.com/
-         */
-        previousDate.setMinutes(previousDate.getMinutes() + previousDate.getTimezoneOffset());
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        const completed = request.body.completed;
-        const reward = request.body.reward;
-        const oldID = request.body.oldID;
-        const newachievement = new achievements({
-            type,
-            description,
-            progress,
-            target,
-            date,
-            previousDate,
-            completed,
-            reward
-        });
-        await newachievement.save();
-        await users.findByIdAndUpdate(request.session.uid, { $push: { achievements: newachievement._id } });
-        const oldReward = await achievements.findById(oldID);
-        await achievements.findByIdAndDelete(oldID);
-        await users.findByIdAndUpdate(request.session.uid, { $pull: { achievements: oldID } });
-        console.log('Replaced and achievement with:', newachievement);
-        result.json({ reward: oldReward.reward });
-    } catch (err) {
-        console.log('Error replacing achievement:', err.message);
         result.status(500).json({ error: 'Internal server error' });
     }
 });
