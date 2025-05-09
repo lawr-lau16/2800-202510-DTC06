@@ -173,10 +173,12 @@ window.addEventListener('DOMContentLoaded', () => {
     function selectedButton(selected) {
         for (const key in buttons) {
             if (key === selected) {
-                buttons[key].classList = "bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition"
+                buttons[key].classList.add("bg-[#089ddd]", "border-[#0a67a0]", "text-white", "hover:bg-[#44bcf0]", "hover:border-[#0c79bf]")
+                buttons[key].classList.remove("border-[#089ddd]", "text-[#089ddd]", "bg-white", "hover:bg-[#089ddd]", "hover:text-white", "active:bg-[#5edfff]")
             }
             else {
-                buttons[key].classList = "border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
+                buttons[key].classList.add("border-[#089ddd]", "text-[#089ddd]", "bg-white", "hover:bg-[#089ddd]", "hover:text-white", "active:bg-[#5edfff]")
+                buttons[key].classList.remove("bg-[#089ddd]", "border-[#0a67a0]", "text-white", "hover:bg-[#44bcf0]", "hover:border-[#0c79bf]")
             }
         }
     }
