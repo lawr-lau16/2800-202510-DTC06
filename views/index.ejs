@@ -4,31 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EconAmi | [index]</title>
+    <title>EconAmi</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <!-- Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- External libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
     <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<style>
+<!-- <style>
     body {
         background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
         background-repeat: no-repeat;
         background-size: 100%;
     }
-</style>
+</style> -->
 
-<body>
+<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
 
-    <!-- TOP NAV -->
-    <nav class="sticky top-0 md:justify-between flex bg-blue-300 p-4">
-        <a href="#" class="font-[DynaPuff] font-semibold text-3xl">EconAmi</a>
-        <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
-    </nav>
-
+    <!-- Top Navigation -->
+    <%- include('./components/nav_top') %>
 
     <!-- PAGE CONTENT -->
 
@@ -51,20 +52,21 @@
                 <br>
 
                 <p style="text-align: center;">Complete challenges to earn coins to buy me cute things!</p>
-                
+
             </div>
             <!-- bubble tail -->
             <div
                 class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
             </div>
         </div>
-        
+
         <!-- login/signup and Ami -->
-        
+
         <div style="display: flex; justify-content: center; margin: 20px;">
             <div style="display: flex; flex-direction: column; margin: 100px;">
                 <form action="/login" method="get">
-                    <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">Login/SignUp</button>
+                    <button type="submit"
+                        class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">Login/SignUp</button>
                 </form>
             </div>
             <div>
@@ -75,33 +77,8 @@
     </section>
 
 
-
-
-    <!-- BOTTOM NAV -->
-    <nav class="sticky bottom-0 justify-around flex bg-blue-300 md:hidden">
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-house fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-face-smile-beam fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-table-list fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-star fa-lg"></i>
-        </a>
-        <a href="#" class="hover:bg-blue-400 p-4 px-8 transition">
-            <i class="fa-solid fa-circle-user fa-lg"></i>
-        </a>
-    </nav>
-
     <!-- Footer if we want would go here -->
 
 </body>
 
 </html>
-
-
-
-
