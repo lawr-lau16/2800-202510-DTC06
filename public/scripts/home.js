@@ -12,8 +12,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const img = new Image();
         img.src = "/images/misc_assets/ami.png";
 
+
         img.onload = function () {
-            dmbChart(150, 150, 125, 25, values, colors, img);
+            dmbChart(150, 150, 115, 35, values, colors, img);
         };
     }
 
@@ -172,10 +173,10 @@ window.addEventListener('DOMContentLoaded', () => {
     function selectedButton(selected) {
         for (const key in buttons) {
             if (key === selected) {
-                buttons[key].classList.add("border-solid", "border-black", "border-2")
+                buttons[key].classList = "bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition"
             }
             else {
-                buttons[key].classList.remove("border-solid", "border-black", "border-2")
+                buttons[key].classList = "border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
             }
         }
     }
@@ -194,16 +195,13 @@ window.addEventListener('DOMContentLoaded', () => {
     async function success(position) {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
+        mainCard = document.getElementById("main-card")
 
         try {
             const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
             const weatherData = response.data.weather[0].main;
-            if (weatherData === "Clear" || weatherData === "Clouds") {
-                document.body.style.backgroundImage = "url('https://d7hftxdivxxvm.cloudfront.net/?quality=80&resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=910')"
-            }
-            else {
-                document.body.style.backgroundImage = "url('https://thumbs.dreamstime.com/b/silhouetted-figure-umbrella-walking-neon-lit-rainy-city-street-night-evoking-moody-atmospheric-cyberpunk-324115145.jpg')"
-            }
+            console.log(weatherData)
+            mainCard.classList.replace("bg-[url(/images/game/weather/m-Clear.png)]", `bg-[url(/images/game/weather/m-${weatherData}.png)]`)
         }
         catch (error) {
             console.log("Error fetching weather data:", error)

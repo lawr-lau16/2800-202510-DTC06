@@ -147,9 +147,8 @@ async function success(position) {
     try {
         const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
         const weatherData = response.data.weather[0].main;
-        console.log(weatherData)
         gameWindow.src = `/images/game/weather/g-${weatherData}.png`
-        console.log(gameWindow)
+        console.log(weatherData)
     }
     catch (error) {
         console.log("Error fetching weather data:", error)
