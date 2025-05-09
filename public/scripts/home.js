@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const today = new Date();
         // set start of week to sunday
         const startOfWeek = new Date(today);
-        startOfWeek.setUTCDate(today.getUTCDate() - today.getUTCDate());
+        startOfWeek.setUTCDate(today.getUTCDate() - today.getUTCDay());
         startOfWeek.setUTCHours(0, 0, 0, 0);
         // set end of week to saturday
         const endOfWeek = new Date(startOfWeek);
@@ -120,7 +120,6 @@ window.addEventListener('DOMContentLoaded', () => {
             const budgetData = await budgetResponse.json();
             const budget = budgetData.budget;
             const selectedBudget = budget[timeframe];
-            console.log(budget)
 
 
             let total = 0;
