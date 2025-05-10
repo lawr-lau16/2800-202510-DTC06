@@ -305,7 +305,7 @@ app.post("/auth/register", async (request, result) => {
     if (existingUser) {
       return result.status(400).json({ error: "Username already exists" });
     }
-    const defaultAchievements = [
+    const defaultActiveAchievements = [
       {
         type: "create_account",
         description: "Welcome to EconAmi!",
@@ -326,37 +326,6 @@ app.post("/auth/register", async (request, result) => {
         completed: false,
         reward: 10,
       },
-      {
-        type: "Monthly",
-        description: "Dont go over the months budget!",
-        progress: 0,
-        target: 1,
-        date: new Date(),
-        previousDate: new Date(),
-        completed: false,
-        reward: 200,
-      },
-      {
-        type: "Drink",
-        description:
-          "Dont buy any drinks for five days! (Dont add water to your transactions!)",
-        progress: 0,
-        target: 5,
-        date: new Date(),
-        previousDate: new Date(),
-        completed: false,
-        reward: 50,
-      },
-      {
-        type: "Login",
-        description: "Your daily login reward!",
-        progress: 0,
-        target: 1,
-        date: new Date(),
-        previousDate: new Date(),
-        completed: false,
-        reward: 10,
-      },
     ];
     /**
      * This is used to set the date to the correct timezone.
@@ -365,28 +334,31 @@ app.post("/auth/register", async (request, result) => {
      *
      * @author https://chat.openai.com/
      */
-    for (let i = 0; i < defaultAchievements.length; i++) {
-      defaultAchievements[i].date.setMinutes(
-        defaultAchievements[i].date.getMinutes() +
-        defaultAchievements[i].date.getTimezoneOffset()
+    for (let i = 0; i < defaultActiveAchievements.length; i++) {
+      defaultActiveAchievements[i].date.setMinutes(
+        defaultActiveAchievements[i].date.getMinutes() +
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
-      defaultAchievements[i].previousDate.setMinutes(
-        defaultAchievements[i].previousDate.getMinutes() +
-        defaultAchievements[i].previousDate.getTimezoneOffset()
+      defaultActiveAchievements[i].previousDate.setMinutes(
+        defaultActiveAchievements[i].previousDate.getMinutes() +
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
-    }
+    }    
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     const activeAchievements = [];
     const inactiveAchievements = [];
     
-    for (let i = 0; i < defaultAchievements.length; i++) {
-      const newAchievement = new achievements(defaultAchievements[i]);
+    for (const achievementData of defaultActiveAchievements) {
+      achievementData.date.setMinutes(
+        achievementData.date.getMinutes() + achievementData.date.getTimezoneOffset()
+      );
+      achievementData.previousDate.setMinutes(
+        achievementData.previousDate.getMinutes() + achievementData.previousDate.getTimezoneOffset()
+      );
+    
+      const newAchievement = new achievements(achievementData);
       await newAchievement.save();
-      if (activeAchievements.length < 4) {
-        activeAchievements.push(newAchievement._id);
-      } else {
-        inactiveAchievements.push(newAchievement._id);
-      }
+      activeAchievements.push(newAchievement._id);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -408,7 +380,7 @@ app.post("/auth/register", async (request, result) => {
       balance: 0,
       transactions: [],
       activeAchievements,
-      inactiveAchievements,
+      inactiveAchievements: [],
       budget: {
         weekly: 0,
         monthly: 0,
