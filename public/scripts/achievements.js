@@ -1,4 +1,4 @@
-fetch('/achievements-data')
+fetch('/achievements/data')
     .then(res => res.json())
     .then(data => {
         const container = document.getElementById('achievements-container');
