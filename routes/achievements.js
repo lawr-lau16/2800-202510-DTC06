@@ -224,4 +224,17 @@ router.post("/activate", async (req, res) => {
     }
   });
 
+  router.get("/templates", async (req, res) => {
+    if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
+  
+    try {
+      const templates = await achievementTemplates.find({});
+      res.json({ templates });
+    } catch (err) {
+      console.error("Error fetching templates:", err.message);
+      res.status(500).json({ error: "Failed to load templates" });
+    }
+  });
+
+
 module.exports = router;

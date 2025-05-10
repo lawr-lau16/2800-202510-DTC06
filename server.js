@@ -305,6 +305,7 @@ app.post("/auth/register", async (request, result) => {
     if (existingUser) {
       return result.status(400).json({ error: "Username already exists" });
     }
+    // Active Achievements
     const defaultActiveAchievements = [
       {
         type: "create_account",
@@ -327,6 +328,44 @@ app.post("/auth/register", async (request, result) => {
         reward: 10,
       },
     ];
+
+    // Inactive achievements
+    const defaultInactiveAchievements = [
+      {
+        type: "Monthly",
+        description: "Dont go over the months budget!",
+        progress: 0,
+        target: 1,
+        date: new Date(),
+        previousDate: new Date(),
+        completed: false,
+        reward: 200,
+      },
+      {
+        type: "Drink",
+        description: "Dont buy any drinks for five days! (Dont add water to your transactions!)",
+        progress: 0,
+        target: 5,
+        date: new Date(),
+        previousDate: new Date(),
+        completed: false,
+        reward: 50,
+      },
+      {
+        type: "Login",
+        description: "Your daily login reward!",
+        progress: 0,
+        target: 1,
+        date: new Date(),
+        previousDate: new Date(),
+        completed: false,
+        reward: 10,
+      }
+    ];
+
+    const activeAchievements = [];
+    const inactiveAchievements = [];
+
     /**
      * This is used to set the date to the correct timezone.
      * Without this, the date will be set to UTC time.
@@ -343,10 +382,23 @@ app.post("/auth/register", async (request, result) => {
         defaultActiveAchievements[i].previousDate.getMinutes() +
         defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
-    }    
+    };
+
+    for (const achievementData of defaultInactiveAchievements) {
+      achievementData.date.setMinutes(
+        achievementData.date.getMinutes() + 
+        achievementData.date.getTimezoneOffset()
+      );
+      achievementData.previousDate.setMinutes(
+        achievementData.previousDate.getMinutes() + 
+        achievementData.previousDate.getTimezoneOffset()
+      );
+    
+      const newAchievement = new achievements(achievementData);
+      await newAchievement.save();
+      inactiveAchievements.push(newAchievement._id);
+    }
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    const activeAchievements = [];
-    const inactiveAchievements = [];
     
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
@@ -380,7 +432,7 @@ app.post("/auth/register", async (request, result) => {
       balance: 0,
       transactions: [],
       activeAchievements,
-      inactiveAchievements: [],
+      inactiveAchievements,
       budget: {
         weekly: 0,
         monthly: 0,
