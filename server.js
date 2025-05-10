@@ -308,7 +308,7 @@ app.post("/auth/register", async (request, result) => {
     // Active Achievements
     const defaultActiveAchievements = [
       {
-        type: "create_account",
+        type: "welcome",
         description: "Welcome to EconAmi!",
         progress: 1,
         target: 1,
@@ -318,7 +318,7 @@ app.post("/auth/register", async (request, result) => {
         reward: 5,
       },
       {
-        type: "add_achievement",
+        type: "goal",
         description: "Add a new goal for yourself.",
         progress: 0,
         target: 1,
@@ -440,6 +440,7 @@ app.post("/auth/register", async (request, result) => {
       owned: [],
       pet: null,
       date: new Date(),
+      coins: 0,
     });
     await newUser.save();
     request.session.uid = newUser._id;
