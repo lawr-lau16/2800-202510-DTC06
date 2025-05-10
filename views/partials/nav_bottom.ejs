@@ -33,6 +33,15 @@
 
 <script>
     let current = window.location.pathname;
+    // Highlight for desktop sidebar
+    document.querySelectorAll("#nav_highlight form").forEach(function (elem) {
+        if (elem.action.includes(current)) {
+            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
+        } else {
+            elem.classList.add("hover:bg-[#1c9db7]", "transition")
+        }
+    });
+    // Highlight for mobile bottom nav
     document.querySelectorAll("#nav_bottom form").forEach(function (elem) {
         if (elem.action.includes(current)) {
             elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");

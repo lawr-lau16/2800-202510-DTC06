@@ -1,6 +1,67 @@
-<nav class="sticky top-0 md:justify-between flex bg-[#3EC3DE] text-white p-4 z-999">
+<nav class="sticky top-0 flex bg-[#3EC3DE] text-white p-4 z-999">
+    <!-- <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg mr-8"></i></button> -->
     <form action="/home" method="get">
         <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer">EconAmi</button>
     </form>
-    <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
 </nav>
+
+<!-- Sidebar -->
+<div class="fixed left-0 top-17 h-full bg-[#3EC3DE] text-white z-999 hidden md:block" id="sidebar">
+    <div id="nav_highlight" class="flex flex-col text-center">
+        <!-- <button onclick="navClose()" class="cursor-pointer mr-auto p-3 mx-3 mt-2 text-[#439189]"><i
+                class="drop-shadow-sm fa-solid fa-xmark fa-lg"></i></button> -->
+        <form action="/home" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md">
+                <i class="fa-solid fa-house fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/game" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md">
+                <i class="fa-solid fa-face-smile-beam fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/transactions" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md">
+                <i class="fa-solid fa-table-list fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/achievements" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md">
+                <i class="fa-solid fa-star fa-lg"></i>
+            </button>
+        </form>
+
+        <form action="/profile" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md">
+                <i class="fa-solid fa-circle-user fa-lg"></i>
+            </button>
+        </form>
+        <form action="/auth/logout" method="POST">
+            <button type="submit" class="hidden bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
+                Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- <script>
+    let current = window.location.pathname;
+    document.querySelectorAll("#nav_highlight form").forEach(function (elem) {
+        if (elem.action.includes(current)) {
+            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
+        } else {
+            elem.classList.add("hover:bg-[#1c9db7]", "transition")
+        }
+    });
+    document.querySelectorAll("#nav_bottom form").forEach(function (elem) {
+        if (elem.action.includes(current)) {
+            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
+        } else {
+            elem.classList.add("hover:bg-[#1c9db7]", "transition")
+        }
+
+    });
+</script> -->
