@@ -1,8 +1,8 @@
 // Set Ami customization based on user settings
 function setAmi() {
     // This will be replaces with user info from database
-    userBase = "blue";
-    userItem = "heart";
+    userBase = "white";
+    userItem = "";
     amiBase = document.getElementById("ami-base");
     amiItem = document.getElementById("ami-item");
     amiBase.src = `/images/game/Ami-Base/${userBase}.png`
@@ -70,7 +70,7 @@ function dynamicallyDisplayItems() {
     // Array must contain items by exact name of the images for items
     // May be replaced by db future on
     const itemsAvailable = ["heart", "sprout", "star"];
-    const itemsOwned = ["heart", "sprout"];
+    const itemsOwned = [];
     amiItem = document.getElementById("ami-item");
 
     itemsAvailable.forEach(item => {
@@ -92,6 +92,23 @@ function dynamicallyDisplayItems() {
         itemsDiv.append(eachItem);
     });
 
+    // Creates no item option
+    blankItem = document.createElement("div");
+    blankItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer"
+    blankItem.id = "no-item"
+    blankItem.innerHTML = `<div class="relative flex size-full">
+            <img src="" class="absolute">
+            </div>`
+    itemsDiv.prepend(blankItem);
+    // Adds clickability for no item option
+
+    removeItem = document.getElementById("no-item");
+    removeItem.addEventListener("click", () => {
+        // for db
+        userItem = "no-item"
+        amiItem.src = ""
+    })
+
     itemsAvailable.forEach(item => {
         eachItem = document.getElementById(item);
 
@@ -101,6 +118,7 @@ function dynamicallyDisplayItems() {
             })
         } else {
             eachItem.addEventListener("click", () => {
+
                 // update db DO LATER
                 userItem = item
                 // changes Ami's Item
