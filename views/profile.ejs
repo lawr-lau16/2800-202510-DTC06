@@ -53,7 +53,8 @@
                         <label for="name" class="text-xs uppercase block mb-1">Name</label>
                         <input type="text" id="name" name="name"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your name here" />
+                            placeholder="Your name here"
+                            value="<%= user.username %>" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="name">Save</button>
@@ -63,7 +64,8 @@
                         <label for="password" class="text-xs uppercase block mb-1">Password</label>
                         <input type="password" id="password" name="password"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="*********" />
+                            placeholder="*********" 
+                            value="" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="password">Save</button>
@@ -73,7 +75,8 @@
                         <label for="weeklyBudget" class="text-xs uppercase block mb-1">Weekly Budget</label>
                         <input type="text" id="weeklyBudget" name="weeklyBudget"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your weekly budget here" />
+                            placeholder="Your weekly budget here"
+                            value="<%= user.budget?.weekly || '' %>" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="weeklyBudget">Save</button>
@@ -83,7 +86,8 @@
                         <label for="monthlyBudget" class="text-xs uppercase block mb-1">Monthly Budget</label>
                         <input type="text" id="monthlyBudget" name="monthlyBudget"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your monthly budget here" />
+                            placeholder="Your monthly budget here"
+                            value="<%= user.budget?.monthly || '' %>" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="monthlyBudget">Save</button>
@@ -109,9 +113,6 @@
     <!-- Footer if we want would go here -->
 
     <!-- Scripts -->
-    <script>
-        const user = <% - JSON.stringify(user) %>;
-    </script>
     <script src="/scripts/profile.js"></script>
     <script src="/scripts/navigation.js"></script>
 </body>
