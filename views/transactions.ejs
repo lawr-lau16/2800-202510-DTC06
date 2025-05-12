@@ -1,105 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EconAmi | Transactions</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/f0fa2c9149.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EconAmi | Transactions</title>
-  <link rel="icon" type="image/png" href="/images/favicon.png" />
-  <!-- Tailwind -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- External libraries -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
-    rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-
-<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
-  <!-- Top Navigation -->
-  <%- include('./partials/nav_top') %>
-  <!-- Put your things in the section please -->
-  <div class="md:ml-14 h-dvh" id="content">
-    <section class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-      <div class="mt-6">
-        <div class="mb-4">
-          <a href="/home" class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-            ← Back
-          </a>
+  <body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+    <!-- Top Navigation -->
+    <%- include('./partials/nav_top') %>
+    <!-- Put your things in the section please -->
+    <div class="md:ml-14 h-dvh" id="content">
+      <section
+        class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg"
+      >
+        <h1 class="text-2xl font-bold text-center text-blue-800 mb-6">
+          Your Transactions
+        </h1>
+        <div class="mb-6">
+          <div class="flex flex-wrap gap-3 mb-3">
+            <form action="/transactions" method="GET">
+              <input type="hidden" name="category" value="" />
+              <input type="hidden" name="openPanel" value="true" />
+              <button
+                type="submit"
+                class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                All
+              </button>
+            </form>
+            <button
+              onclick="showDropdown('income')"
+              class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
+            >
+              Income
+            </button>
+            <button
+              onclick="showDropdown('expense')"
+              class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
+            >
+              Expense
+            </button>
+          </div>
+          <form
+            action="/transactions"
+            method="GET"
+            id="incomeDropdown"
+            class="hidden"
+          >
+            <input type="hidden" name="type" value="income" />
+            <select
+              name="category"
+              class="border border-gray-400 p-2 rounded mb-2"
+            >
+              <option value="">All</option>
+              <option value="Salary">Salary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Bonus">Bonus</option>
+              <option value="Interest/Dividends">Interest/Dividends</option>
+              <option value="Refunds/Reimbursements">
+                Refunds/Reimbursements
+              </option>
+              <option value="Other Income">Other Income</option>
+            </select>
+            <button
+              type="submit"
+              class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Filter
+            </button>
+          </form>
+          <form
+            action="/transactions"
+            method="GET"
+            id="expenseDropdown"
+            class="hidden"
+          >
+            <input type="hidden" name="type" value="expense" />
+            <select
+              name="category"
+              class="border border-gray-400 p-2 rounded mb-2"
+            >
+              <option value="">All</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Home & Utilities">Home & Utilities</option>
+              <option value="Entertainment & Lifestyle">
+                Entertainment & Lifestyle
+              </option>
+              <option value="Personal & Health">Personal & Health</option>
+              <option value="Bills & Fees">Bills & Fees</option>
+              <option value="Pet">Pet</option>
+              <option value="Car">Car</option>
+              <option value="Shopping & Gifts">Shopping & Gifts</option>
+              <option value="Work & Education">Work & Education</option>
+              <option value="Travel">Travel</option>
+              <option value="Other">Other</option>
+            </select>
+            <button
+              type="submit"
+              class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Filter
+            </button>
+          </form>
         </div>
-      </div>
-      <h1 class="text-2xl font-bold text-center text-blue-800 mb-6">
-        Your Transactions
-      </h1>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left text-gray-700">
-          <thead class="bg-blue-100 text-blue-800">
-            <tr>
-              <th class="px-4 py-3">Name</th>
-              <th class="px-4 py-3">Category</th>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">Amount</th>
-              <th class="px-4 py-3">Comments</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% transactions.forEach(transaction => { %>
-            <tr class="hover:bg-blue-50">
-              <td class="px-4 py-2">
-                <strong><%= transaction.name %></strong>
-              </td>
-              <td class="px-4 py-2"><%= transaction.category %></td>
-              <td class="px-4 py-2"><%= transaction.date.toDateString() %></td>
-              <td class="px-4 py-2 text-blue-600 font-semibold">
-                $<%= transaction.amount %>
-              </td>
-              <td class="px-4 py-2"><%= transaction.comments || 'N/A' %></td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-      <div class="flex justify-center mb-6">
-        <canvas id="transactionsPieChart" width="300" height="300"></canvas>
-      </div>
-    </section>
-  </div>
-  <!-- Bottom Navigation -->
-  <%- include('./partials/nav_bottom') %>
-  <script>
-    axios.get("/transactions/chart-data")
-      .then(response => {
-        const { labels, values } = response.data;
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left text-gray-700">
+            <thead class="bg-blue-100 text-blue-800">
+              <tr>
+                <th class="px-4 py-3">Name</th>
+                <th class="px-4 py-3">Category</th>
+                <th class="px-4 py-3">Date</th>
+                <th class="px-4 py-3">Amount</th>
+                <th class="px-4 py-3">Comments</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <% transactions.forEach(transaction => { %>
+              <tr class="hover:bg-blue-50">
+                <td class="px-4 py-2">
+                  <strong><%= transaction.name %></strong>
+                </td>
+                <td class="px-4 py-2"><%= transaction.category %></td>
+                <td class="px-4 py-2">
+                  <%= transaction.date.toDateString() %>
+                </td>
+                <td class="px-4 py-2 text-blue-600 font-semibold">
+                  $<%= transaction.amount %>
+                </td>
+                <td class="px-4 py-2"><%= transaction.comments || 'N/A' %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-center mb-6">
+          <canvas id="transactionsPieChart" width="300" height="300"></canvas>
+        </div>
+      </section>
+    </div>
+    <!-- Bottom Navigation -->
+    <%- include('./partials/nav_bottom') %>
+    <script>
+      function showDropdown(type) {
+        const incomeDropdown = document.getElementById("incomeDropdown");
+        const expenseDropdown = document.getElementById("expenseDropdown");
 
-        const data = {
-          labels,
-          datasets: [{
-            data: values,
-            backgroundColor: [
-              "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40",
-              "#8E44AD", "#3498DB", "#1ABC9C", "#E74C3C", "#F39C12", "#2ECC71"
+        if (!incomeDropdown || !expenseDropdown) return;
+
+        incomeDropdown.classList.add("hidden");
+        expenseDropdown.classList.add("hidden");
+
+        if (type === "income") {
+          incomeDropdown.classList.remove("hidden");
+        } else if (type === "expense") {
+          expenseDropdown.classList.remove("hidden");
+        }
+      }
+
+      axios
+        .get("/transactions/chart-data")
+        .then((response) => {
+          const { labels, values } = response.data;
+
+          const data = {
+            labels,
+            datasets: [
+              {
+                data: values,
+                backgroundColor: [
+                  "#FF6384",
+                  "#36A2EB",
+                  "#FFCE56",
+                  "#4BC0C0",
+                  "#9966FF",
+                  "#FF9F40",
+                  "#8E44AD",
+                  "#3498DB",
+                  "#1ABC9C",
+                  "#E74C3C",
+                  "#F39C12",
+                  "#2ECC71",
+                ],
+                hoverOffset: 4,
+              },
             ],
-            hoverOffset: 4
-          }]
-        };
+          };
 
-        const config = {
-          type: 'pie',
-          data: data
-        };
+          const config = {
+            type: "pie",
+            data: data,
+          };
 
-        new Chart(document.getElementById("transactionsPieChart"), config);
-      })
-      .catch(error => {
-        console.error("Error loading pie chart data:", error);
-      });
-
-  </script>
-  <script src="/scripts/navigation.js"></script>
-</body>
-
+          new Chart(document.getElementById("transactionsPieChart"), config);
+        })
+        .catch((error) => {
+          console.error("Error loading pie chart data:", error);
+        });
+    </script>
+    <script src="/scripts/navigation.js"></script>
+  </body>
 </html>
