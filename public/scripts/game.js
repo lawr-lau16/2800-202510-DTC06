@@ -63,6 +63,18 @@ function clickItemCloseButton() {
     itemsMenu.classList.toggle("hidden");
 }
 
+// Tab to change Ami's colour
+function itemMenuBaseTab() {
+    itemBaseTab = document.getElementById("items-menu-base");
+    itemBaseTab.addEventListener("click", dynamicallyDisplayBase)
+}
+
+// Tab to change Ami's item
+function itemMenuItemTab() {
+    itemItemsTab = document.getElementById("items-menu-item");
+    itemItemsTab.addEventListener("click", dynamicallyDisplayItems)
+}
+
 // Populates Items menu with available items 
 function dynamicallyDisplayItems() {
     itemsDiv = document.getElementById("items");
@@ -100,8 +112,8 @@ function dynamicallyDisplayItems() {
             <img src="" class="absolute">
             </div>`
     itemsDiv.prepend(blankItem);
-    // Adds clickability for no item option
 
+    // Adds clickability for no item option
     removeItem = document.getElementById("no-item");
     removeItem.addEventListener("click", () => {
         // for db
@@ -123,6 +135,46 @@ function dynamicallyDisplayItems() {
                 userItem = item
                 // changes Ami's Item
                 amiItem.src = `images/game/Items/${item}.png`;
+            })
+        }
+    });
+
+}
+
+// Populates Items menu with available items 
+function dynamicallyDisplayBase() {
+    itemsDiv = document.getElementById("items");
+    itemsDiv.innerHTML = "";
+    // May be replaced by db future on
+    const baseAvailable = ["white", "black", "blue", "red", "green", "gold"];
+    // used to see if user has gold
+    const itemsOwned = [];
+    amiBase = document.getElementById("ami-base");
+
+    baseAvailable.forEach(base => {
+        eachBase = document.createElement("div");
+        eachBase.id = base;
+        // Sets class list for each new div
+        eachBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
+
+        eachBase.innerHTML = `<div class="relative flex size-full">
+            <img src="images/game/Ami-Base/${base}.png" class="mx-auto"></div>`
+        itemsDiv.append(eachBase);
+    });
+
+    baseAvailable.forEach(base => {
+        eachBase = document.getElementById(base);
+
+        if (eachBase.classList.contains("locked")) {
+            eachBase.addEventListener("click", () => {
+                console.log("locked")
+            })
+        } else {
+            eachBase.addEventListener("click", () => {
+                // update db DO LATER
+                userBase = base
+                // changes Ami's base
+                amiBase.src = `images/game/Ami-Base/${base}.png`;
             })
         }
     });
@@ -182,6 +234,9 @@ function fail() {
 setAmi()
 gameButtonPet()
 dynamicallyDisplayItems()
+// dynamicallyDisplayBase()
+itemMenuBaseTab()
+itemMenuItemTab()
 gameButtonItems()
 gameButtonAchievement()
 getLocation()
