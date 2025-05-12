@@ -7,21 +7,23 @@ fetch('/achievements/data')
     const createAchievementElement = (a, isActive) => {
       const percent = Math.min(Math.round((a.progress / a.target) * 100), 100);
       const div = document.createElement('div');
-      div.className = 'flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm mb-4';
+      div.className = 'flex items-center justify-between bg-gray-50 p-4 rounded-lg drop-shadow-sm mb-4';
       div.innerHTML = `
-        <div class="flex items-center space-x-3">
-          <img src="/images/achievements/${a.type.toLowerCase()}.png" class="w-12 h-12" alt="${a.type}">
+        <div class="flex items-center mr-2">
+          <img src="/images/achievements/${a.type.toLowerCase()}.png" class="size-10 mr-2" alt="${a.type}">
           <div>
-            <p class="font-medium">${a.description}</p>
-            <div class="w-40 bg-gray-300 h-2 rounded mt-1">
+            <p>${a.description}</p>
+            <div class="max-w-40 bg-gray-300 h-2 rounded mt-1">
               <div class="bg-green-600 h-2 rounded" style="width: ${percent}%"></div>
             </div>
           </div>
         </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-lg font-semibold">${a.reward}</span>
-          <img src="/images/achievements/coin.png" class="w-6 h-6" alt="Coin">
-          ${!isActive ? `<button class="bg-blue-500 text-white text-sm px-3 py-1 rounded activate-btn" data-id="${a._id}">Activate</button>` : ''}
+        <div class="flex flex-col items-center justify-end">
+        <div class="flex items-center">
+          <span class="font-semibold m-1">${a.reward}</span>
+          <img src="/images/achievements/coin.png" class="size-6" alt="Coin">
+          </div>
+          ${!isActive ? `<button class="bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition" data-id="${a._id}">Activate</button>` : ''}
         </div>`;
       return div;
     };
