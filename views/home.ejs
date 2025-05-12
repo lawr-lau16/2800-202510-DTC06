@@ -1,372 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EconAmi | Home</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/f0fa2c9149.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EconAmi | Home</title>
-  <link rel="icon" type="image/png" href="/images/favicon.png">
-  <!-- Tailwind -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- External libraries -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
-    rel="stylesheet">
-  <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-
-<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
-  <!-- Top Navigation -->
-  <%- include('./partials/nav_top') %>
-  <div class="md:ml-14 h-dvh" id="content">
-    <section id="main-card"
-      class="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl m-4 p-6 drop-shadow-sm bg-[url(/images/game/weather/m-Clear.jpg)] bg-cover">
-
-      <!-- speech bubble -->
-      <div class="drop-shadow-sm">
-        <!-- bubble with text -->
-        <div class="mx-auto bg-white text-center text-xl font-semibold p-8 px-12 rounded-4xl">
-          Hi, <%= username %>!
-        </div>
-        <!-- bubble tail -->
-        <div
-          class="ml-auto mr-16 border-white size-0 border-30 border-r-transparent border-l-0 border-b-0 border-b-transparent">
-        </div>
-      </div>
-
-
-      <div class="bg-white rounded-xl drop-shadow-sm p-4 mt-4">
-
-        <!-- budget donut -->
-        <div class="relative flex justify-center">
-
-          <div class="absolute flex size-full">
-            <div id="ami" class="relative translate-y-14 w-30 mx-auto">
-              <!-- Item Overlay -->
-              <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                src="/images/game/items/sprout.png" alt="">
-              <!-- Expression Overlay -->
-              <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                src="/images/game/Ami-Expressions/default.png" alt="">
-              <!-- Ami Base -->
-              <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png" alt="">
-            </div>
+  <body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+    <!-- Top Navigation -->
+    <%- include('./partials/nav_top') %>
+    <div class="md:ml-14 h-dvh" id="content">
+      <section
+        id="main-card"
+        class="xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl m-4 p-6 drop-shadow-sm bg-[url(/images/game/weather/m-Clear.jpg)] bg-cover"
+      >
+        <!-- speech bubble -->
+        <div class="drop-shadow-sm">
+          <!-- bubble with text -->
+          <div
+            class="mx-auto bg-white text-center text-xl font-semibold p-8 px-12 rounded-4xl"
+          >
+            Hi, <%= username %>!
           </div>
-          <canvas id="canvas" height="300"></canvas>
-
+          <!-- bubble tail -->
+          <div
+            class="ml-auto mr-16 border-white size-0 border-30 border-r-transparent border-l-0 border-b-0 border-b-transparent"
+          ></div>
         </div>
 
-        <!-- amount spent / budget -->
-        <div id="spentVsBudget" class="text-center font-semibold text-lg"></div>
-        <hr class="m-2 border-2 border-cyan-900/30 rounded-sm">
-        <!-- daily weekly monthly buttons -->
+        <div class="bg-white rounded-xl drop-shadow-sm p-4 mt-4">
+          <!-- budget donut -->
+          <div class="relative flex justify-center">
+            <div class="absolute flex size-full">
+              <div id="ami" class="relative translate-y-14 w-30 mx-auto">
+                <!-- Item Overlay -->
+                <img
+                  id="ami-item"
+                  class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                  src="/images/game/items/sprout.png"
+                  alt=""
+                />
+                <!-- Expression Overlay -->
+                <img
+                  id="ami-expression"
+                  class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                  src="/images/game/Ami-Expressions/default.png"
+                  alt=""
+                />
+                <!-- Ami Base -->
+                <img
+                  id="ami-base"
+                  class="select-none pointer-events-none"
+                  src="/images/game/Ami-Base/white.png"
+                  alt=""
+                />
+              </div>
+            </div>
+            <canvas id="canvas" height="300"></canvas>
+          </div>
 
-        <div class="flex justify-center">
-          <!-- <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
+          <!-- amount spent / budget -->
+          <div
+            id="spentVsBudget"
+            class="text-center font-semibold text-lg"
+          ></div>
+          <hr class="m-2 border-2 border-cyan-900/30 rounded-sm" />
+          <!-- daily weekly monthly buttons -->
+
+          <div class="flex justify-center">
+            <!-- <button id="dailyButton" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition"
                         type="button">daily</button> -->
-          <button id="weeklyButton"
-            class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 border-r-0 rounded-r-none font-bold hover:cursor-pointer m-2 mr-0 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
-            type="button">weekly</button>
-          <button id="monthlyButton"
-            class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 border-l-0 rounded-l-none font-bold hover:cursor-pointer m-2 ml-0 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
-            type=" button">monthly</button>
-        </div>
-
-
-        <!-- add expense/income toggle. GURPREET PLEASE REPLACE THIS WITH YOUR EXPENSE/INCOME TOGGLE -->
-        <div class="flex justify-center">
-          <button id="openSlideUp"
-            class="bg-[#de5158] border-[#a01242] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#ff6e75] hover:border-[#bb315f] active:bg-[#ffa4a4] transition">
-            + Add Expense
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="">
-      <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
-
-      <div id="slideUpPanel"
-        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh]">
-        <button id="closeSlideUp" class="absolute top-1 right-2 text-2xl text-gray-500">
-          &times;
-        </button>
-
-        <!-- View 1: Dashboard Panel -->
-        <div id="dashboardContent">
-          <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
-            <h1 class="text-2xl text-blue-800 text-center font-bold mb-4">
-              Budget Overview
-            </h1>
-            <button id="loadAddExpense" type="button"
-              class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white">
-              Add New Transaction
+            <button
+              id="weeklyButton"
+              class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 border-r-0 rounded-r-none font-bold hover:cursor-pointer m-2 mr-0 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
+              type="button"
+            >
+              weekly
             </button>
-            <div class="grid grid-cols-2 gap-4 my-4">
-              <div class="bg-green-100 p-4 rounded">
-                <p class="font-semibold">Total Income:</p>
-                <p>$<%= totalIncome %>
-                </p>
-              </div>
-              <div class="bg-red-100 p-4 rounded">
-                <p class="font-semibold">Total Expenses:</p>
-                <p>$<%= totalExpenses %>
-                </p>
-              </div>
-              <div class="bg-blue-100 p-4 rounded col-span-2">
-                <p class="font-semibold">Balance:</p>
-                <p>$<%= balance %>
-                </p>
-              </div>
-            </div>
+            <button
+              id="monthlyButton"
+              class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 border-l-0 rounded-l-none font-bold hover:cursor-pointer m-2 ml-0 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
+              type=" button"
+            >
+              monthly
+            </button>
+          </div>
 
-            <div class="mb-6">
-              <div class="flex flex-wrap gap-3 mb-3">
-                <form action="/dashboard" method="GET">
-                  <input type="hidden" name="category" value="" />
-                  <input type="hidden" name="openPanel" value="true" />
-                  <button type="submit" class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400">
-                    All
-                  </button>
-                </form>
-                <button onclick="showDropdown('income')" class="px-4 py-1 bg-green-200 rounded hover:bg-green-300">
-                  Income
-                </button>
-                <button onclick="showDropdown('expense')" class="px-4 py-1 bg-red-200 rounded hover:bg-red-300">
-                  Expense
-                </button>
-              </div>
-              <form action="/dashboard" method="GET" id="incomeDropdown" class="hidden">
-                <input type="hidden" name="type" value="income" />
-                <select name="category" class="border border-gray-400 p-2 rounded mb-2">
-                  <option value="">All</option>
-                  <option value="Salary">Salary</option>
-                  <option value="Freelance">Freelance</option>
-                  <option value="Bonus">Bonus</option>
-                  <option value="Interest/Dividends">
-                    Interest/Dividends
-                  </option>
-                  <option value="Refunds/Reimbursements">
-                    Refunds/Reimbursements
-                  </option>
-                  <option value="Other Income">Other Income</option>
-                </select>
-                <button type="submit" class="ml-2 px-4 py-1 bg-blue-500 text-white rounded">
-                  Filter
-                </button>
-              </form>
-              <form action="/dashboard" method="GET" id="expenseDropdown" class="hidden">
-                <input type="hidden" name="type" value="expense" />
-                <select name="category" class="border border-gray-400 p-2 rounded mb-2">
-                  <option value="">All</option>
-                  <option value="Food & Dining">Food & Dining</option>
-                  <option value="Transportation">Transportation</option>
-                  <option value="Home & Utilities">Home & Utilities</option>
-                  <option value="Entertainment & Lifestyle">
-                    Entertainment & Lifestyle
-                  </option>
-                  <option value="Personal & Health">Personal & Health</option>
-                  <option value="Bills & Fees">Bills & Fees</option>
-                  <option value="Pet">Pet</option>
-                  <option value="Car">Car</option>
-                  <option value="Shopping & Gifts">Shopping & Gifts</option>
-                  <option value="Work & Education">Work & Education</option>
-                  <option value="Travel">Travel</option>
-                  <option value="Other">Other</option>
-                </select>
-                <button type="submit" class="ml-2 px-4 py-1 bg-blue-500 text-white rounded">
-                  Filter
-                </button>
-              </form>
-            </div>
+          <!-- add expense/income toggle. GURPREET PLEASE REPLACE THIS WITH YOUR EXPENSE/INCOME TOGGLE -->
+          <div class="flex justify-center">
+            <button
+              id="openSlideUp"
+              class="bg-[#de5158] border-[#a01242] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#ff6e75] hover:border-[#bb315f] active:bg-[#ffa4a4] transition"
+            >
+              + Add Expense
+            </button>
+          </div>
+        </div>
+      </section>
 
-            <h2 class="text-xl font-semibold mb-2">Your Transactions</h2>
-            <ul>
-              <% expenses.forEach(e=> { %>
-              <li class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center">
-                <div>
-                  <strong>
-                    <%= e.name %>
-                  </strong> - $<%= e.amount %> (<%= e.type==='income' ? 'Income' : 'Expense' %>: <%= e.category %>)
+      <section class="">
+        <!-- <div id="overlay" class="fixed inset-0 bg-opacity-50 hidden z-40"></div> -->
+        <div
+          id="overlay"
+          class="fixed inset-0  bg-opacity-30 backdrop-blur-sm hidden z-40 transition duration-300"
+        ></div>
+        <div
+          id="slideUpPanel"
+          class="fixed bottom-0 left-0 right-0 bg-sky-50 rounded-t-2xl shadow-xl p-6 translate-y-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh]"
+        >
+          <button
+            id="closeSlideUp"
+            class="absolute top-1 right-2 text-2xl text-gray-500"
+          >
+            &times;
+          </button>
+
+          <!-- View 1: Dashboard Panel -->
+          <div id="dashboardContent">
+            <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
+              <h1 class="text-2xl text-blue-800 text-center font-bold mb-4">
+                Budget Overview
+              </h1>
+              <button
+                id="loadAddExpense"
+                type="button"
+                class="text-blue-600 border-2 border-blue-900 bg-blue-300 p-2 rounded-xl hover:bg-blue-800 hover:text-white"
+              >
+                Add New Transaction
+              </button>
+              <div class="grid grid-cols-2 gap-4 my-4">
+                <div class="bg-green-100 p-4 rounded">
+                  <p class="font-semibold">Total Income:</p>
+                  <p>$<%= totalIncome %></p>
                 </div>
-                <form action="/delete-expense/<%= e._id %>" method="POST">
+                <div class="bg-red-100 p-4 rounded">
+                  <p class="font-semibold">Total Expenses:</p>
+                  <p>$<%= totalExpenses %></p>
+                </div>
+                <div class="bg-blue-100 p-4 rounded col-span-2">
+                  <p class="font-semibold">Balance:</p>
+                  <p>$<%= balance %></p>
+                </div>
+              </div>
+
+              <div class="mb-6">
+                <div class="flex flex-wrap gap-3 mb-3">
+                  <form action="/dashboard" method="GET">
+                    <input type="hidden" name="category" value="" />
+                    <input type="hidden" name="openPanel" value="true" />
+                    <button
+                      type="submit"
+                      class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+                    >
+                      All
+                    </button>
+                  </form>
                   <button
-                    class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2 hover:text-white hover:bg-red-300 hover:font-semibold">
-                    X
+                    onclick="showDropdown('income')"
+                    class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
+                  >
+                    Income
+                  </button>
+                  <button
+                    onclick="showDropdown('expense')"
+                    class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
+                  >
+                    Expense
+                  </button>
+                </div>
+                <form
+                  action="/dashboard"
+                  method="GET"
+                  id="incomeDropdown"
+                  class="hidden"
+                >
+                  <input type="hidden" name="type" value="income" />
+                  <select
+                    name="category"
+                    class="border border-gray-400 p-2 rounded mb-2"
+                  >
+                    <option value="">All</option>
+                    <option value="Salary">Salary</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Bonus">Bonus</option>
+                    <option value="Interest/Dividends">
+                      Interest/Dividends
+                    </option>
+                    <option value="Refunds/Reimbursements">
+                      Refunds/Reimbursements
+                    </option>
+                    <option value="Other Income">Other Income</option>
+                  </select>
+                  <button
+                    type="submit"
+                    class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+                  >
+                    Filter
                   </button>
                 </form>
-              </li>
-              <% }) %>
-            </ul>
+                <form
+                  action="/dashboard"
+                  method="GET"
+                  id="expenseDropdown"
+                  class="hidden"
+                >
+                  <input type="hidden" name="type" value="expense" />
+                  <select
+                    name="category"
+                    class="border border-gray-400 p-2 rounded mb-2"
+                  >
+                    <option value="">All</option>
+                    <option value="Food & Dining">Food & Dining</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Home & Utilities">Home & Utilities</option>
+                    <option value="Entertainment & Lifestyle">
+                      Entertainment & Lifestyle
+                    </option>
+                    <option value="Personal & Health">Personal & Health</option>
+                    <option value="Bills & Fees">Bills & Fees</option>
+                    <option value="Pet">Pet</option>
+                    <option value="Car">Car</option>
+                    <option value="Shopping & Gifts">Shopping & Gifts</option>
+                    <option value="Work & Education">Work & Education</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <button
+                    type="submit"
+                    class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+                  >
+                    Filter
+                  </button>
+                </form>
+              </div>
+
+              <h2 class="text-xl font-semibold mb-4">Your Transactions</h2>
+              <ul>
+                <% expenses.forEach(e=> { %>
+                <li
+                  class="border-b pl-2 border-blue-600 py-2 flex justify-between items-center"
+                >
+                  <div>
+                    <strong> <%= e.name %> </strong> - $<%= e.amount %> (<%=
+                    e.type==='income' ? 'Income' : 'Expense' %>: <%= e.category
+                    %>)
+                  </div>
+                  <form action="/delete-expense/<%= e._id %>" method="POST">
+                    <button
+                      class="text-red-600 border-2 border-red-400 bg-red-100 rounded-xl px-2 hover:text-white hover:bg-red-300 hover:font-semibold"
+                    >
+                      X
+                    </button>
+                  </form>
+                </li>
+                <% }) %>
+              </ul>
+            </div>
+          </div>
+
+          <!-- View 2: Add Expense Panel -->
+          <div id="addExpenseContent" class="hidden">
+            <button id="backToDashboard" class="text-blue-600 font-bold mb-4">
+              &larr; Back
+            </button>
+            <div id="dynamicFormContainer" class="mt-2"></div>
           </div>
         </div>
 
-        <!-- View 2: Add Expense Panel -->
-        <div id="addExpenseContent" class="hidden">
-          <button id="backToDashboard" class="text-blue-600 font-bold mb-4">
-            &larr; Back
-          </button>
-          <div id="dynamicFormContainer" class="mt-2"></div>
-        </div>
-      </div>
+        <script>
+          const panel = document.getElementById("slideUpPanel");
+          const openBtn = document.getElementById("openSlideUp");
+          const closeBtn = document.getElementById("closeSlideUp");
+          const overlay = document.getElementById("overlay");
+          const loadAddExpenseBtn = document.getElementById("loadAddExpense");
+          const backBtn = document.getElementById("backToDashboard");
+          const dashboardContent = document.getElementById("dashboardContent");
+          const addExpenseContent =
+            document.getElementById("addExpenseContent");
+          const dynamicFormContainer = document.getElementById(
+            "dynamicFormContainer"
+          );
 
-      <script>
-        const panel = document.getElementById("slideUpPanel");
-        const openBtn = document.getElementById("openSlideUp");
-        const closeBtn = document.getElementById("closeSlideUp");
-        const overlay = document.getElementById("overlay");
-        const loadAddExpenseBtn = document.getElementById("loadAddExpense");
-        const backBtn = document.getElementById("backToDashboard");
-        const dashboardContent = document.getElementById("dashboardContent");
-        const addExpenseContent =
-          document.getElementById("addExpenseContent");
-        const dynamicFormContainer = document.getElementById(
-          "dynamicFormContainer"
-        );
+          openBtn.onclick = () => {
+            panel.classList.remove("translate-y-full");
+            panel.classList.add("translate-y-0");
+            overlay.classList.remove("hidden");
+          };
 
-        openBtn.onclick = () => {
-          panel.classList.remove("translate-y-full");
-          panel.classList.add("translate-y-0");
-          overlay.classList.remove("hidden");
-        };
+          closeBtn.onclick = () => {
+            panel.classList.add("translate-y-full");
+            panel.classList.remove("translate-y-0");
+            overlay.classList.add("hidden");
+            showDashboardView();
+          };
 
-        closeBtn.onclick = () => {
-          panel.classList.add("translate-y-full");
-          panel.classList.remove("translate-y-0");
-          overlay.classList.add("hidden");
-          showDashboardView();
-        };
+          overlay.onclick = () => {
+            panel.classList.add("translate-y-full");
+            panel.classList.remove("translate-y-0");
+            overlay.classList.add("hidden");
+            showDashboardView();
+          };
 
-        overlay.onclick = () => {
-          panel.classList.add("translate-y-full");
-          panel.classList.remove("translate-y-0");
-          overlay.classList.add("hidden");
-          showDashboardView();
-        };
+          backBtn.addEventListener("click", () => {
+            showDashboardView();
+          });
 
-        backBtn.addEventListener("click", () => {
-          showDashboardView();
-        });
-
-        function showDashboardView() {
-          dashboardContent.classList.remove("hidden");
-          addExpenseContent.classList.add("hidden");
-          dynamicFormContainer.innerHTML = "";
-        }
-
-        function showAddExpenseView() {
-          dashboardContent.classList.add("hidden");
-          addExpenseContent.classList.remove("hidden");
-        }
-        function showDropdown(type) {
-          const incomeDropdown = document.getElementById("incomeDropdown");
-          const expenseDropdown = document.getElementById("expenseDropdown");
-
-          if (!incomeDropdown || !expenseDropdown) return;
-
-          incomeDropdown.classList.add("hidden");
-          expenseDropdown.classList.add("hidden");
-
-          if (type === "income") {
-            incomeDropdown.classList.remove("hidden");
-          } else if (type === "expense") {
-            expenseDropdown.classList.remove("hidden");
+          function showDashboardView() {
+            dashboardContent.classList.remove("hidden");
+            addExpenseContent.classList.add("hidden");
+            dynamicFormContainer.innerHTML = "";
           }
-        }
 
-        async function loadAndShowAddForm() {
-          try {
-            const response = await fetch("/add-expense");
-            const html = await response.text();
-            dynamicFormContainer.innerHTML = html;
-            showAddExpenseView();
-            initAddForm();
-          } catch (err) {
-            console.error(" Failed to load expense log form:", err);
+          function showAddExpenseView() {
+            dashboardContent.classList.add("hidden");
+            addExpenseContent.classList.remove("hidden");
           }
-        }
+          function showDropdown(type) {
+            const incomeDropdown = document.getElementById("incomeDropdown");
+            const expenseDropdown = document.getElementById("expenseDropdown");
 
-        function initAddForm() {
-          const expenseBtn = document.getElementById("expenseBtn");
-          const incomeBtn = document.getElementById("incomeBtn");
-          const typeInput = document.getElementById("typeInput");
-          const categorySelect = document.getElementById("categorySelect");
+            if (!incomeDropdown || !expenseDropdown) return;
 
-          if (!expenseBtn || !incomeBtn || !typeInput || !categorySelect)
-            return;
+            incomeDropdown.classList.add("hidden");
+            expenseDropdown.classList.add("hidden");
 
-          const expenseCategories = [
-            "Food & Dining",
-            "Transportation",
-            "Home & Utilities",
-            "Entertainment & Lifestyle",
-            "Personal & Health",
-            "Bills & Fees",
-            "Pet",
-            "Car",
-            "Shopping & Gifts",
-            "Work & Education",
-            "Travel",
-            "Other",
-          ];
-          const incomeCategories = [
-            "Salary",
-            "Freelance",
-            "Bonus",
-            "Interest/Dividends",
-            "Refunds/Reimbursements",
-            "Other Income",
-          ];
+            if (type === "income") {
+              incomeDropdown.classList.remove("hidden");
+            } else if (type === "expense") {
+              expenseDropdown.classList.remove("hidden");
+            }
+          }
 
-          function populateCategories(categories) {
-            categorySelect.innerHTML =
-              '<option value="">Select a category</option>';
-            categories.forEach((cat) => {
-              const option = document.createElement("option");
-              option.value = cat;
-              option.textContent = cat;
-              categorySelect.appendChild(option);
+          async function loadAndShowAddForm() {
+            try {
+              const response = await fetch("/add-expense");
+              const html = await response.text();
+              dynamicFormContainer.innerHTML = html;
+              showAddExpenseView();
+              initAddForm();
+            } catch (err) {
+              console.error(" Failed to load expense log form:", err);
+            }
+          }
+
+          function initAddForm() {
+            const expenseBtn = document.getElementById("expenseBtn");
+            const incomeBtn = document.getElementById("incomeBtn");
+            const typeInput = document.getElementById("typeInput");
+            const categorySelect = document.getElementById("categorySelect");
+
+            if (!expenseBtn || !incomeBtn || !typeInput || !categorySelect)
+              return;
+
+            const expenseCategories = [
+              "Food & Dining",
+              "Transportation",
+              "Home & Utilities",
+              "Entertainment & Lifestyle",
+              "Personal & Health",
+              "Bills & Fees",
+              "Pet",
+              "Car",
+              "Shopping & Gifts",
+              "Work & Education",
+              "Travel",
+              "Other",
+            ];
+            const incomeCategories = [
+              "Salary",
+              "Freelance",
+              "Bonus",
+              "Interest/Dividends",
+              "Refunds/Reimbursements",
+              "Other Income",
+            ];
+
+            function populateCategories(categories) {
+              categorySelect.innerHTML =
+                '<option value="">Select a category</option>';
+              categories.forEach((cat) => {
+                const option = document.createElement("option");
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+              });
+            }
+
+            expenseBtn.addEventListener("click", () => {
+              typeInput.value = "expense";
+              populateCategories(expenseCategories);
+              expenseBtn.classList.add("bg-black", "text-white");
+              expenseBtn.classList.remove("bg-white", "text-black");
+              incomeBtn.classList.add("bg-white", "text-black");
+              incomeBtn.classList.remove("bg-black", "text-white");
             });
+
+            incomeBtn.addEventListener("click", () => {
+              typeInput.value = "income";
+              populateCategories(incomeCategories);
+              incomeBtn.classList.add("bg-black", "text-white");
+              incomeBtn.classList.remove("bg-white", "text-black");
+              expenseBtn.classList.add("bg-white", "text-black");
+              expenseBtn.classList.remove("bg-black", "text-white");
+            });
+
+            // Initialize default
+            populateCategories(expenseCategories);
           }
 
-          expenseBtn.addEventListener("click", () => {
-            typeInput.value = "expense";
-            populateCategories(expenseCategories);
-            expenseBtn.classList.add("bg-black", "text-white");
-            expenseBtn.classList.remove("bg-white", "text-black");
-            incomeBtn.classList.add("bg-white", "text-black");
-            incomeBtn.classList.remove("bg-black", "text-white");
-          });
+          loadAddExpenseBtn.addEventListener("click", loadAndShowAddForm);
+        </script>
+      </section>
+    </div>
 
-          incomeBtn.addEventListener("click", () => {
-            typeInput.value = "income";
-            populateCategories(incomeCategories);
-            incomeBtn.classList.add("bg-black", "text-white");
-            incomeBtn.classList.remove("bg-white", "text-black");
-            expenseBtn.classList.add("bg-white", "text-black");
-            expenseBtn.classList.remove("bg-black", "text-white");
-          });
-
-          // Initialize default
-          populateCategories(expenseCategories);
-        }
-
-        loadAddExpenseBtn.addEventListener("click", loadAndShowAddForm);
-      </script>
-
-
-
-    </section>
-  </div>
-
-  <!-- Bottom Navigation -->
-  <%- include('./partials/nav_bottom') %>
-  <!-- Scripts -->
-  <script src="/scripts/home.js"></script>
-  <script src="/scripts/navigation.js"></script>
-</body>
-
+    <!-- Bottom Navigation -->
+    <%- include('./partials/nav_bottom') %>
+    <!-- Scripts -->
+    <script src="/scripts/home.js"></script>
+    <script src="/scripts/navigation.js"></script>
+  </body>
 </html>
