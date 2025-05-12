@@ -1,19 +1,9 @@
 // Debug
 // console.log("Loaded user:", user);
 
+// Wait for the whole page to finish loading before running this code
 window.addEventListener('DOMContentLoaded', () => {
-    if (!user) {
-        console.warn("User object not found.");
-        return;
-    }
-
-    // Populate fields
-    document.getElementById('name').value = user.username || '';
-    document.getElementById('password').value = '';
-    document.getElementById('weeklyBudget').value = user.budget?.weekly ?? '';
-    document.getElementById('monthlyBudget').value = user.budget?.monthly ?? '';
-
-    // Field mapping
+    // This object connects each input field's ID to the matching name used on the server
     const fieldMap = {
         name: 'username',
         password: 'password',
@@ -21,51 +11,50 @@ window.addEventListener('DOMContentLoaded', () => {
         monthlyBudget: 'monthly'
     };
 
-    // Save button handlers
+    // Add a click event to each save button
     document.querySelectorAll('.save-button').forEach(button => {
+        // Get the name field save button
         const field = button.dataset.field;
+
         button.addEventListener('click', async () => {
+            // Popuo asking to confirm before saving the change
             const confirmed = confirm(`Save changes to ${field}?`);
             if (!confirmed) return;
 
-            const value = document.getElementById(field).value;
-            const mapped = fieldMap[field];
+            // Get the new value from input box
+            const input = document.getElementById(field);
+            const value = input.value;
 
-            // Create payload with current values, then overwrite the one being edited
-            const payload = {
-                username: user.username,
-                password: '',  // let user set new password if they choose
-                weekly: user.budget?.weekly,
-                monthly: user.budget?.monthly
-            };
+            // Create the data to send to the server
+            const payload = {};
 
-            // Only update the changed field
-            if (mapped === 'username') {
-                payload.username = value;
-            } else if (mapped === 'password') {
-                payload.password = value;
-            } else {
-                payload[mapped] = value;
+            // Only include the field we are updating
+            if (fieldMap[field]) {
+                // If it's a number (like budgets), convert the text to a number
+                if (field === 'weeklyBudget' || field === 'monthlyBudget') {
+                    payload[fieldMap[field]] = Number(value);
+                    // Else, just use the text as-is
+                } else {
+                    payload[fieldMap[field]] = value;
+                }
             }
 
-            try {
-                const response = await fetch('/profile/update', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            // Send the updated data to the server using fetch
+            const response = await fetch('/profile/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-                if (response.ok) {
-                    alert(`${field} saved!`);
-                    window.location.reload();
-                } else {
-                    const { error } = await response.json();
-                    alert('Error saving: ' + error);
-                }
-            } catch (err) {
-                alert('Network error: ' + err.message);
+            // If the update worked, show a message and reload the page
+            if (response.ok) {
+                alert(`${field} saved!`);
+                window.location.reload();
+                // Else, show the error
+            } else {
+                const { error } = await response.json();
+                alert('Error saving: ' + error);
             }
         });
     });
 });
-
