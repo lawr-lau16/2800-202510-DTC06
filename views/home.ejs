@@ -117,7 +117,7 @@
         <!-- <div id="overlay" class="fixed inset-0 bg-opacity-50 hidden z-40"></div> -->
         <div
           id="overlay"
-          class="fixed inset-0  bg-opacity-30 backdrop-blur-sm hidden z-40 transition duration-300"
+          class="fixed inset-0 bg-opacity-30 backdrop-blur-sm hidden z-40 transition duration-300"
         ></div>
         <div
           id="slideUpPanel"
@@ -156,97 +156,6 @@
                   <p class="font-semibold">Balance:</p>
                   <p>$<%= balance %></p>
                 </div>
-              </div>
-
-              <div class="mb-6">
-                <div class="flex flex-wrap gap-3 mb-3">
-                  <form action="/dashboard" method="GET">
-                    <input type="hidden" name="category" value="" />
-                    <input type="hidden" name="openPanel" value="true" />
-                    <button
-                      type="submit"
-                      class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
-                    >
-                      All
-                    </button>
-                  </form>
-                  <button
-                    onclick="showDropdown('income')"
-                    class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
-                  >
-                    Income
-                  </button>
-                  <button
-                    onclick="showDropdown('expense')"
-                    class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
-                  >
-                    Expense
-                  </button>
-                </div>
-                <form
-                  action="/dashboard"
-                  method="GET"
-                  id="incomeDropdown"
-                  class="hidden"
-                >
-                  <input type="hidden" name="type" value="income" />
-                  <select
-                    name="category"
-                    class="border border-gray-400 p-2 rounded mb-2"
-                  >
-                    <option value="">All</option>
-                    <option value="Salary">Salary</option>
-                    <option value="Freelance">Freelance</option>
-                    <option value="Bonus">Bonus</option>
-                    <option value="Interest/Dividends">
-                      Interest/Dividends
-                    </option>
-                    <option value="Refunds/Reimbursements">
-                      Refunds/Reimbursements
-                    </option>
-                    <option value="Other Income">Other Income</option>
-                  </select>
-                  <button
-                    type="submit"
-                    class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
-                  >
-                    Filter
-                  </button>
-                </form>
-                <form
-                  action="/dashboard"
-                  method="GET"
-                  id="expenseDropdown"
-                  class="hidden"
-                >
-                  <input type="hidden" name="type" value="expense" />
-                  <select
-                    name="category"
-                    class="border border-gray-400 p-2 rounded mb-2"
-                  >
-                    <option value="">All</option>
-                    <option value="Food & Dining">Food & Dining</option>
-                    <option value="Transportation">Transportation</option>
-                    <option value="Home & Utilities">Home & Utilities</option>
-                    <option value="Entertainment & Lifestyle">
-                      Entertainment & Lifestyle
-                    </option>
-                    <option value="Personal & Health">Personal & Health</option>
-                    <option value="Bills & Fees">Bills & Fees</option>
-                    <option value="Pet">Pet</option>
-                    <option value="Car">Car</option>
-                    <option value="Shopping & Gifts">Shopping & Gifts</option>
-                    <option value="Work & Education">Work & Education</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <button
-                    type="submit"
-                    class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
-                  >
-                    Filter
-                  </button>
-                </form>
               </div>
 
               <h2 class="text-xl font-semibold mb-4">Your Transactions</h2>
@@ -329,21 +238,6 @@
           function showAddExpenseView() {
             dashboardContent.classList.add("hidden");
             addExpenseContent.classList.remove("hidden");
-          }
-          function showDropdown(type) {
-            const incomeDropdown = document.getElementById("incomeDropdown");
-            const expenseDropdown = document.getElementById("expenseDropdown");
-
-            if (!incomeDropdown || !expenseDropdown) return;
-
-            incomeDropdown.classList.add("hidden");
-            expenseDropdown.classList.add("hidden");
-
-            if (type === "income") {
-              incomeDropdown.classList.remove("hidden");
-            } else if (type === "expense") {
-              expenseDropdown.classList.remove("hidden");
-            }
           }
 
           async function loadAndShowAddForm() {
