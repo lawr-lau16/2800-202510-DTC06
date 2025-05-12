@@ -25,7 +25,7 @@
 
     <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
     <!-- There to show that bottom is sticky to the bottom -->
-    <section class="bg-slate-100 h-full relative z-100">
+    <section class="bg-slate-100 h-full relative z-100 md:ml-14" id="content">
         <!-- Game UI, this will always be on top -->
 
         <div class="bottom-150 absolute z-0 w-full">
@@ -109,10 +109,10 @@
 
     <!-- Scripts -->
     <script>
-        const user = <%- JSON.stringify(user) %>;
+        const user = <% - JSON.stringify(user) %>;
     </script>
     <script src="/scripts/profile.js"></script>
-
+    <script src="/scripts/navigation.js"></script>
 </body>
 
 </html>

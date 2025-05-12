@@ -1,4 +1,4 @@
-<nav id="nav_bottom" class="sticky bottom-0 justify-around flex bg-[#3EC3DE] text-white md:hidden">
+<nav id="nav_highlight" class="sticky bottom-0 justify-around flex bg-[#3EC3DE] text-white md:hidden">
     <form action="/home" method="get">
         <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-house fa-lg"></i>
@@ -29,16 +29,3 @@
         </button>
     </form>
 </nav>
-
-
-<script>
-    let current = window.location.pathname;
-    document.querySelectorAll("#nav_bottom form").forEach(function (elem) {
-        if (elem.action.includes(current)) {
-            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
-        } else {
-            elem.classList.add("hover:bg-[#1c9db7]", "transition")
-        }
-
-    });
-</script>
