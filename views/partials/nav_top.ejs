@@ -1,12 +1,13 @@
-<nav class="sticky top-0 flex bg-[#3EC3DE] text-white p-4 z-999">
-    <!-- <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg mr-8"></i></button> -->
+<nav class="sticky top-0 flex bg-[#3EC3DE] text-white z-999">
+    <button class="hidden md:block hover:bg-[#1c9db7] transition mr-8 w-14 p-4 " onclick="navigationSidebarToggle()"
+        id="navigationToggle"><i class="fa-solid fa-less-than fa-lg cursor-pointer transition"></i></button>
     <form action="/home" method="get">
-        <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer">EconAmi</button>
+        <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer py-4">EconAmi</button>
     </form>
 </nav>
 
 <!-- Sidebar -->
-<div class="fixed left-0 top-17 h-full bg-[#3EC3DE] text-white z-999 hidden md:block" id="sidebar">
+<div class="fixed top-17 w-14 transition h-full bg-[#3EC3DE] text-white z-999 hidden md:block" id="sidebar">
     <div id="nav_highlight" class="flex flex-col text-center">
         <!-- <button onclick="navClose()" class="cursor-pointer mr-auto p-3 mx-3 mt-2 text-[#439189]"><i
                 class="drop-shadow-sm fa-solid fa-xmark fa-lg"></i></button> -->
@@ -46,22 +47,3 @@
         </form>
     </div>
 </div>
-
-<!-- <script>
-    let current = window.location.pathname;
-    document.querySelectorAll("#nav_highlight form").forEach(function (elem) {
-        if (elem.action.includes(current)) {
-            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
-        } else {
-            elem.classList.add("hover:bg-[#1c9db7]", "transition")
-        }
-    });
-    document.querySelectorAll("#nav_bottom form").forEach(function (elem) {
-        if (elem.action.includes(current)) {
-            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
-        } else {
-            elem.classList.add("hover:bg-[#1c9db7]", "transition")
-        }
-
-    });
-</script> -->
