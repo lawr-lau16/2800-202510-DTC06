@@ -403,11 +403,15 @@ app.post("/auth/register", async (req, res) => {
       {
         type: "pet_ami",
         description: "Introduce yourself to Ami. Go ahead and pet Ami!",
+        type: "pet_ami",
+        description: "Introduce yourself to Ami. Go ahead and pet Ami!",
         progress: 0,
+        target: 1,
         target: 1,
         date: new Date(),
         previousDate: new Date(),
         completed: false,
+        reward: 5,
         reward: 5,
       },
       {
@@ -451,6 +455,16 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
       {
+        type: "ami_happiness",
+        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
+        progress: 0,
+        target: 3,
+        date: new Date(),
+        previousDate: new Date(),
+        completed: false,
+        reward: 10,
+      },
+      {
         type: "drink",
         description: "Bring your own drinks from home for 5 days. (Don't buy coffee outside!)",
         progress: 0,
@@ -471,7 +485,7 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
     ];
-
+    
     const activeAchievements = [];
     const inactiveAchievements = [];
 
@@ -504,10 +518,7 @@ app.post("/auth/register", async (req, res) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements({
-        ...achievementData,
-        userId: req.session.uid
-      });
+      const newAchievement = new achievements({...achievementData, userId: req.session.uid});
       await newAchievement.save();
       inactiveAchievements.push(newAchievement._id);
     }
@@ -523,10 +534,7 @@ app.post("/auth/register", async (req, res) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements({
-        ...achievementData,
-        userId: req.session.uid
-      });
+      const newAchievement = new achievements({...achievementData, userId: req.session.uid});
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
