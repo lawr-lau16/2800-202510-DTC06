@@ -46,7 +46,16 @@ fetch('/achievements/data')
     activeHeader.textContent = 'Active Achievements';
     activeHeader.className = 'text-xl font-bold mb-2';
     container.appendChild(activeHeader);
-    data.active.forEach(a => container.appendChild(createAchievementElement(a, true)));
+
+    // If there are no active active achievements, show a card reminding user to active a new one
+    if (data.active.length === 0) {
+      const emptyCard = document.createElement('div');
+      emptyCard.className = 'bg-white text-gray-500 p-4 rounded-lg border border-gray-300 text-center italic mb-4';
+      emptyCard.textContent = 'You have no active achievements right now. Go ahead and pick a goal for yourself!';
+      container.appendChild(emptyCard);
+    } else {
+      data.active.forEach(a => container.appendChild(createAchievementElement(a, true)));
+    }
 
     // Inactive section
     const inactiveHeader = document.createElement('h2');

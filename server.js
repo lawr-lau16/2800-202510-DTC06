@@ -69,6 +69,7 @@ app.use(
 );
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 // Database connection
 mongoose
   .connect(process.env.MONGO_STRING, {
@@ -89,6 +90,7 @@ mongoose
   .catch((err) => {
     console.log("Error connecting to database:", err.message);
   });
+
 
 /** This is the schema for users, it acts as a template for models to use when creating new documents in the database.
  *  Transaction ID's are included in the user schema.
@@ -122,6 +124,7 @@ const userSchema = new mongoose.Schema({
   coins: Number,
 });
 
+
 /**
  * This is the schema for transactions, it acts as a template for models to use when creating new documents in the database.
  * Transactions are tied to users in there user schema by thier model ID.
@@ -136,12 +139,17 @@ const transactionSchema = new mongoose.Schema({
   type: String,
 });
 
+
 /**
  * This is the schema for achievements, it acts as a template for models to use when creating new documents in the database.
  * Achievements are tied to users in there user schema by thier model ID.
  * The server automatically adds the achievement ID to the user schema when a new achievement is created.
  */
 const achievementSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users'
+  },
   type: String,
   description: String,
   progress: Number,
@@ -194,6 +202,7 @@ app.get("/add-expense", (req, res) => {
   res.render("partials/expense_log");
 });
 
+
 // PROFILE PAGE
 // Fetch user info from mongoDB
 // app.use('/scripts', express.static(__dirname + '/scripts'));
@@ -209,6 +218,7 @@ app.get("/profile", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 // Post changes to mongoDB
 app.post("/profile/update", async (req, res) => {
@@ -242,13 +252,48 @@ app.post("/profile/update", async (req, res) => {
     if (weekly !== undefined) updateOps["budget.weekly"] = Number(weekly);
     if (monthly !== undefined) updateOps["budget.monthly"] = Number(monthly);
 
+    // Update user with new profile values
     await users.findByIdAndUpdate(req.session.uid, { $set: updateOps });
+
+    // Fetch updated user
+    const user = await users.findById(req.session.uid);
+
+    // Track "weekly" progress for "Start by setting your weekly budget" achievement
+    if (weekly !== undefined && Number(weekly) > 0) {
+      const weeklyAchievement = await achievements.findOne({
+        _id: { $in: user.activeAchievements },
+        type: "weekly",
+        completed: false,
+      });
+
+      // If the 'weekly' achievement type exists for the user, and it hasn’t reached its target yet, then increase its progress by 1
+      if (weeklyAchievement && weeklyAchievement.progress < weeklyAchievement.target) {
+        weeklyAchievement.progress += 1;
+        await weeklyAchievement.save();
+      }
+    }
+
+    // Track "monthly" progress for "Set your monthly budget" achievement
+    if (monthly !== undefined && Number(monthly) > 0) {
+      const monthlyAchievement = await achievements.findOne({
+        _id: { $in: user.activeAchievements },
+        type: "monthly",
+        completed: false,
+      });
+      // If the 'monthly' achievement type exists for the user, and it hasn’t reached its target yet, then increase its progress by 1
+      if (monthlyAchievement && monthlyAchievement.progress < monthlyAchievement.target) {
+        monthlyAchievement.progress += 1;
+        await monthlyAchievement.save();
+      }
+    }
+
     res.status(200).json({ message: "Profile updated" });
   } catch (err) {
     console.error("Update error:", err.message);
     res.status(500).json({ error: "Database update failed" });
   }
 });
+
 
 // Here the server will recognise that the server is requested with the /home URL and will render the home file.
 // If the user is not logged in, they will be redirected to the login page.
@@ -282,6 +327,7 @@ app.get("/home", async (req, res) => {
   }
 });
 
+
 // Here the server will recognise that the server is requested with the /index URL and will render the index file.
 // If the user is already logged in, they will be redirected to the home page.
 app.get("/index", (request, result) => {
@@ -290,6 +336,7 @@ app.get("/index", (request, result) => {
   }
   result.render("index");
 });
+
 
 /**
  * Sign's up a new user.
@@ -418,6 +465,7 @@ app.post("/auth/register", async (req, res) => {
     const activeAchievements = [];
     const inactiveAchievements = [];
 
+
     /**
      * This is used to set the date to the correct timezone.
      * Without this, the date will be set to UTC time.
@@ -428,25 +476,28 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements(achievementData);
+      const newAchievement = new achievements({
+        ...achievementData,
+        userId: request.session.uid
+      });
       await newAchievement.save();
       inactiveAchievements.push(newAchievement._id);
     }
@@ -455,14 +506,17 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements(achievementData);
+      const newAchievement = new achievements({
+        ...achievementData,
+        userId: request.session.uid
+      });
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
@@ -507,6 +561,7 @@ app.post("/auth/register", async (req, res) => {
   }
 });
 
+
 /**
  * Log's in a user.
  * If the user does not exist, an error message is returned.
@@ -536,6 +591,7 @@ app.post("/auth/login", async (request, result) => {
   }
 });
 
+
 /**
  * Log's out a user.
  * The session is destroyed and the user is redirected to the login page.
@@ -552,6 +608,7 @@ app.post("/auth/logout", (request, result) => {
     result.redirect("/login");
   });
 });
+
 
 /**
  * Add's a new transaction.
@@ -602,6 +659,7 @@ app.post("/transaction/add", (request, result) => {
     });
 });
 
+
 /**
  * Fetches all transactions for the logged-in user.
  * Uses the user's ID stored in the session to find the user in the database where the transaction id's are stored.
@@ -636,6 +694,7 @@ app.get("/transactions", async (req, res) => {
   }
 });
 
+
 /**
  * Fetches all transactions for the logged-in user. Dose not render a page.
  * Uses the user's ID stored in the session to find the user in the database where the transaction id's are stored.
@@ -657,6 +716,7 @@ app.post("/transactions/fetch", async (request, result) => {
     result.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 app.get("/transactions/chart-data", async (req, res) => {
   if (!req.session.uid) {
@@ -686,6 +746,7 @@ app.get("/transactions/chart-data", async (req, res) => {
   }
 });
 
+
 /**
  * Fetches all categories for the logged-in user.
  * Uses the user's ID stored in the session to find the user in the database where the categories are stored.
@@ -707,6 +768,7 @@ app.post("/categories", async (request, result) => {
     result.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 /**
  * Add's a new category to the user's categories array.
@@ -734,6 +796,7 @@ app.post("/categories/add", async (request, result) => {
     result.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 /**
  * Delete's a category from the user's categories array.
@@ -763,6 +826,7 @@ app.post("/categories/remove", async (request, result) => {
   }
 });
 
+
 app.get("/weather", async (req, res) => {
   const { lat, lon } = req.query;
   const apiKey = process.env.WEATHER_API_KEY;
@@ -776,6 +840,7 @@ app.get("/weather", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch weather data" });
   }
 });
+
 
 /**
  * Fetches the user's budget's from the database.
@@ -796,6 +861,7 @@ app.post("/budget", async (request, result) => {
   }
 });
 
+
 // Delete a transaction
 // Routed to home page
 app.post("/delete-expense/:id", async (req, res) => {
@@ -815,6 +881,7 @@ app.post("/delete-expense/:id", async (req, res) => {
     res.status(500).send("Error deleting transaction");
   }
 });
+
 
 // Handle form submission and save to MongoDB
 app.post("/add-expense", async (req, res) => {
