@@ -156,11 +156,25 @@ function dynamicallyDisplayBase() {
         eachBase.id = base;
         // Sets class list for each new div
         eachBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
-
         eachBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/${base}.png" class="mx-auto"></div>`
         itemsDiv.append(eachBase);
     });
+
+    // Special gold base
+    goldBase = document.createElement("div");
+    goldBase.id = "gold"
+    goldBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
+    if (itemsOwned.includes("gold")) {
+        goldBase.innerHTML = `<div class="relative flex size-full">
+            <img src="images/game/Ami-Base/gold.png" class="mx-auto"></div>`
+    } else {
+        goldBase.innerHTML = `<div class="relative flex size-full"><i class="z-2 mx-auto my-auto fa-solid fa-lock fa-xl"></i>
+            <img src="images/game/Ami-Base/gold.png" class="absolute-fit mx-auto border"></div>
+            `;
+        goldBase.classList.add("locked")
+    }
+    itemsDiv.append(goldBase);
 
     baseAvailable.forEach(base => {
         eachBase = document.getElementById(base);
@@ -233,8 +247,8 @@ function fail() {
 // execute functions
 setAmi()
 gameButtonPet()
-dynamicallyDisplayItems()
-// dynamicallyDisplayBase()
+// dynamicallyDisplayItems()
+dynamicallyDisplayBase()
 itemMenuBaseTab()
 itemMenuItemTab()
 gameButtonItems()
