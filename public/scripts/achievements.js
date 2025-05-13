@@ -69,32 +69,32 @@ fetch('/achievements/data')
         }
       });
     });
-  })
-  .catch(err => console.error('Failed to load achievements:', err));
 
+  // Add click listener to redeem buttons
+  document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('redeem-btn')) {
+      const id = e.target.dataset.id;
 
-// After rendering achievements
-document.addEventListener('click', async (e) => {
-  if (e.target.classList.contains('redeem-btn')) {
-    const id = e.target.dataset.id;
+      try {
+        const res = await fetch('/achievements/redeem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
 
-    try {
-      const res = await fetch('/achievements/redeem', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      });
-
-      const result = await res.json();
-      if (res.ok) {
-        alert(`+${result.reward} coins earned!`);
-        location.reload();
-      } else {
-        alert(result.error || 'Could not redeem.');
+        const result = await res.json();
+        if (res.ok) {
+          alert(`+${result.reward} coins earned!`);
+          location.reload();
+        } else {
+          alert(result.error || 'Could not redeem.');
+        }
+      } catch (err) {
+        console.error('Redeem failed:', err);
+        alert('Redeem failed. Try again.');
       }
-    } catch (err) {
-      console.error('Redeem failed:', err);
-      alert('Redeem failed. Try again.');
     }
-  }
-});
+  })
+  
+  .catch (err => console.error('Failed to load achievements:', err));
+})
