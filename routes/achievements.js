@@ -43,8 +43,12 @@ router.get("/data", async (req, res) => {
   }
 
   const user = await users.findById(req.session.uid);
-  const allActive = await achievements.find({ _id: { $in: user.activeAchievements } });
-  const allInactive = await achievements.find({ _id: { $in: user.inactiveAchievements } });
+  // Preserve same order as user.activeAchievements
+  const allActive = await Promise.all(
+    user.activeAchievements.map(id => achievements.findById(id)));
+  // Preserve same order as user.inactiveAchievements
+  const allInactive = await Promise.all(
+    user.inactiveAchievements.map(id => achievements.findById(id)));
 
   // Split active into completed and not completed
   const active = allActive.filter(a => !a.completed);
@@ -220,6 +224,19 @@ router.post("/activate", async (req, res) => {
     user.inactiveAchievements.splice(index, 1);
     user.activeAchievements.push(id);
     await user.save();
+
+    // Track "add_achievement" progress for "Select an inactive achievement" achievement
+    const addAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "add_achievement",
+      completed: false,
+    });
+
+    // If the 'add_achievement' achievement type exists for the user, and it hasn’t reached its target yet, then increase its progress by 1
+    if (addAchievement && addAchievement.progress < addAchievement.target) {
+      addAchievement.progress += 1;
+      await addAchievement.save();
+    }
 
     res.json({ success: true });
   } catch (err) {
