@@ -268,13 +268,24 @@ router.post("/redeem", async (req, res) => {
   const { id } = req.body;
 
   try {
+    // Fetch user
+    const user = await users.findById(req.session.uid);
+
+    // Fetch achievement
     const achievement = await achievements.findById(id);
+    if (!achievement) {
+      return res.status(404).json({ error: "Achievement not found" });
+    }
     // Set achievement as completed
     achievement.completed = true;
     await achievement.save();
 
-    // Retrieve reward and add to user coins balance
-    const user = await users.findById(req.session.uid);
+    // Remove redeemed achievement from activeAchievements
+    user.activeAchievements = user.activeAchievements.filter(aid =>
+      aid && aid.toString() !== achievement._id.toString()
+    );
+
+    // Add reward to user coins balance
     user.coins += achievement.reward;
     await user.save();
 
