@@ -909,6 +909,30 @@ app.post("/pet", async (req, res) => {
   }
 });
 
+/**
+ * This is the route for the post /pet/update URL.
+ * It updates the pet data based on uid stored in the session, and the data sent in the request body.
+ * It returns the new pet data in json format, after updating it in the database.
+ */
+app.post("/pet/update", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    const { base, item, happiness } = req.body;
+    user.pet.base = base;
+    user.pet.item = item;
+    user.pet.happiness = happiness;
+    await user.save();
+    console.log("Updated Pet:", user.pet);
+    res.json({ pet: user.pet });
+  } catch (err) {
+    console.log("Error updating pet:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
