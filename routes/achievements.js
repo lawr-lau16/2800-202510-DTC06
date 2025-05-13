@@ -13,35 +13,9 @@ const users = mongoose.model("users");
  * If the user is not logged in, they will be redirected to the login page.
  */
 router.get("/", async (req, res) => {
-    if (!req.session.uid) return res.redirect("/login");
-  
-    try {
-      const user = await users.findById(req.session.uid);
-      const activeAchievements = await achievements.find({
-        _id: { $in: user.activeAchievements },
-      });
-      const inactiveAchievements = await achievements.find({
-        _id: { $in: user.inactiveAchievements },
-      });
-  
-      res.render("achievements", {
-        user,
-        activeAchievements,
-        inactiveAchievements,
-      });
-    } catch (err) {
-      console.error("Error loading achievements:", err);
-      res.status(500).send("Server error");
-    }
-  });
+  if (!req.session.uid) return res.redirect("/login");
 
-
-// Route to get achievement data
-router.get("/data", async (req, res) => {
-    if (!req.session.uid) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-  
+  try {
     const user = await users.findById(req.session.uid);
     const activeAchievements = await achievements.find({
       _id: { $in: user.activeAchievements },
@@ -49,9 +23,35 @@ router.get("/data", async (req, res) => {
     const inactiveAchievements = await achievements.find({
       _id: { $in: user.inactiveAchievements },
     });
-  
-    res.json({ active: activeAchievements, inactive: inactiveAchievements });
+
+    res.render("achievements", {
+      user,
+      activeAchievements,
+      inactiveAchievements,
+    });
+  } catch (err) {
+    console.error("Error loading achievements:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+
+// Route to get achievement data
+router.get("/data", async (req, res) => {
+  if (!req.session.uid) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const user = await users.findById(req.session.uid);
+  const activeAchievements = await achievements.find({
+    _id: { $in: user.activeAchievements },
   });
+  const inactiveAchievements = await achievements.find({
+    _id: { $in: user.inactiveAchievements },
+  });
+
+  res.json({ active: activeAchievements, inactive: inactiveAchievements });
+});
 
 /**
  * Fetches the users achievements from the database, along with their user information.
@@ -195,46 +195,71 @@ router.post("/replace", async (request, result) => {
 });
 
 router.post("/activate", async (req, res) => {
-    if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
-  
-    const { id } = req.body;
-  
-    try {
-      const user = await users.findById(req.session.uid);
-  
-      if (user.activeAchievements.length >= 4) {
-        return res.status(400).json({ error: "You can only have 4 active achievements." });
-      }
-  
-      // Check if achievement exists in inactiveAchievements
-      const index = user.inactiveAchievements.indexOf(id);
-      if (index === -1) {
-        return res.status(404).json({ error: "Achievement not found in inactive list." });
-      }
-  
-      // Move it from inactive to active
-      user.inactiveAchievements.splice(index, 1);
-      user.activeAchievements.push(id);
-      await user.save();
-  
-      res.json({ success: true });
-    } catch (err) {
-      console.error("Error activating achievement:", err.message);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
+  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
-  router.get("/templates", async (req, res) => {
-    if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
-  
-    try {
-      const templates = await achievementTemplates.find({});
-      res.json({ templates });
-    } catch (err) {
-      console.error("Error fetching templates:", err.message);
-      res.status(500).json({ error: "Failed to load templates" });
-    }
-  });
+  const { id } = req.body;
 
+  try {
+    const user = await users.findById(req.session.uid);
+
+    if (user.activeAchievements.length >= 4) {
+      return res.status(400).json({ error: "You can only have 4 active achievements." });
+    }
+
+    // Check if achievement exists in inactiveAchievements
+    const index = user.inactiveAchievements.indexOf(id);
+    if (index === -1) {
+      return res.status(404).json({ error: "Achievement not found in inactive list." });
+    }
+
+    // Move it from inactive to active
+    user.inactiveAchievements.splice(index, 1);
+    user.activeAchievements.push(id);
+    await user.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error activating achievement:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/templates", async (req, res) => {
+  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const templates = await achievementTemplates.find({});
+    res.json({ templates });
+  } catch (err) {
+    console.error("Error fetching templates:", err.message);
+    res.status(500).json({ error: "Failed to load templates" });
+  }
+});
+
+
+// Route to redeem achievement
+router.post("/redeem", async (req, res) => {
+  if (!req.session.uid) {
+    return result.redirect("/login");
+  }
+  const { id } = req.body;
+
+  try {
+    const achievement = await achievements.findById(id);
+    // Set achievement as completed
+    achievement.completed = true;
+    await achievement.save();
+
+    // Retrieve reward and add to user coins balance
+    const user = await users.findById(req.session.uid);
+    user.coins += achievement.reward;
+    await user.save();
+
+    res.json({ reward: achievement.reward });
+  } catch (err) {
+    console.error("Error redeeming achievement:", err.message);
+    res.status(500).json({ error: "Could not redeem reward" });
+  }
+});
 
 module.exports = router;

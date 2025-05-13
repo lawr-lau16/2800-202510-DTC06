@@ -314,7 +314,7 @@ app.post("/auth/register", async (request, result) => {
         target: 1,
         date: new Date(),
         previousDate: new Date(),
-        completed: true,
+        completed: false,
         reward: 5,
       },
       {
@@ -333,7 +333,7 @@ app.post("/auth/register", async (request, result) => {
     const defaultInactiveAchievements = [
       {
         type: "weekly",
-        description: "Set your weekly budget from your profile page.",
+        description: "Start by setting your weekly budget from your profile page.",
         progress: 0,
         target: 1,
         date: new Date(),
@@ -352,8 +352,8 @@ app.post("/auth/register", async (request, result) => {
         reward: 10,
       },
       {
-        type: "input_expense",
-        description: "Input 3 expenses.",
+        type: "ami_happiness",
+        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
         progress: 0,
         target: 3,
         date: new Date(),
@@ -362,8 +362,8 @@ app.post("/auth/register", async (request, result) => {
         reward: 10,
       },
       {
-        type: "ami_happiness",
-        description: "Keep Ami's happiness above 85 for 3 days!",
+        type: "input_expense",
+        description: "Input 3 expenses on the home page.",
         progress: 0,
         target: 3,
         date: new Date(),
