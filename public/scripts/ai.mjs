@@ -28,11 +28,3 @@ async function getJoke() {
     console.log(joke);
     return joke;
 }
-
-getJoke()
-    .then((joke) => {
-        console.log("Joke:", joke);
-    })
-    .catch((error) => {
-        console.error("Error:", error);
-    });
