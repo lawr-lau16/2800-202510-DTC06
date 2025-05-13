@@ -18,17 +18,17 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<body class="h-dvh flex flex-col font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+<body class="min-h-dvh flex flex-col font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
 
     <!-- Top Navigation -->
     <%- include('./partials/nav_top') %>
 
     <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
     <!-- There to show that bottom is sticky to the bottom -->
-    <section class="bg-slate-100 h-full relative z-100 md:ml-14" id="content">
+    <section class="h-full relative z-100 md:ml-14 my-8" id="content">
         <!-- Game UI, this will always be on top -->
 
-        <div class="w-full p-8">
+        <div class="">
             <!-- Ami div -->
             <div class="relative w-50 mx-auto">
                 <!-- Item Overlay -->
@@ -43,8 +43,8 @@
         </div>
 
         <!-- Profile card -->
-        <div class="w-full flex justify-center">
-            <div class="relative bg-white rounded-2xl shadow-lg p-4 w-96 text-center">
+        <div class="w-full flex justify-center mt-8">
+            <div class="relative bg-white rounded-2xl drop-shadow-sm p-4 w-96 text-center">
                 <h2 class="text-2xl font-bold">Profile</h2>
 
                 <div class="mt-4 text-left space-y-4">
@@ -53,8 +53,7 @@
                         <label for="name" class="text-xs uppercase block mb-1">Name</label>
                         <input type="text" id="name" name="name"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your name here"
-                            value="<%= user.username %>" />
+                            placeholder="Your name here" value="<%= user.username %>" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="name">Save</button>
@@ -64,8 +63,7 @@
                         <label for="password" class="text-xs uppercase block mb-1">Password</label>
                         <input type="password" id="password" name="password"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="*********" 
-                            value="" />
+                            placeholder="*********" value="" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="password">Save</button>
@@ -75,8 +73,7 @@
                         <label for="weeklyBudget" class="text-xs uppercase block mb-1">Weekly Budget</label>
                         <input type="text" id="weeklyBudget" name="weeklyBudget"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your weekly budget here"
-                            value="<%= user.budget?.weekly || '' %>" />
+                            placeholder="Your weekly budget here" value="<%= user.budget?.weekly || '' %>" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="weeklyBudget">Save</button>
@@ -86,8 +83,7 @@
                         <label for="monthlyBudget" class="text-xs uppercase block mb-1">Monthly Budget</label>
                         <input type="text" id="monthlyBudget" name="monthlyBudget"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your monthly budget here"
-                            value="<%= user.budget?.monthly || '' %>" />
+                            placeholder="Your monthly budget here" value="<%= user.budget?.monthly || '' %>" />
                         <button
                             class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
                             data-field="monthlyBudget">Save</button>
