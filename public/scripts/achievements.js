@@ -28,7 +28,7 @@ fetch('/achievements/data')
         <img src="/images/achievements/coin.png" class="size-6" alt="Coin">
       </div>
       ${isCompleted
-          ? `<button class="activate-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition" data-id="${a._id}">Redeem</button>`
+          ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition" data-id="${a._id}">Redeem</button>`
           : !isActive
             ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition" data-id="${a._id}">Activate</button>`
             : ''
