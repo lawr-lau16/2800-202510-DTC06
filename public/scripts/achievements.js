@@ -8,6 +8,7 @@ fetch('/achievements/data')
     const createAchievementElement = (a, isActive) => {
       const percent = Math.min(Math.round((a.progress / a.target) * 100), 100);
       const isCompleted = a.progress >= a.target && !a.completed;
+      const isClaimed = a.progress >= a.target && a.completed;
 
       const div = document.createElement('div');
       div.className = 'flex items-center justify-between bg-gray-50 p-4 rounded-lg drop-shadow-sm mb-4';
@@ -31,7 +32,9 @@ fetch('/achievements/data')
           ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition" data-id="${a._id}">Redeem</button>`
           : !isActive
             ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition" data-id="${a._id}">Activate</button>`
-            : ''
+            : isClaimed
+              ? `<span class="text-xs text-gray-400 mt-1">Reward claimed</span>`
+              : ''
         }
     </div>
   `;
@@ -57,7 +60,13 @@ fetch('/achievements/data')
     completedHeader.textContent = 'Completed Achievements';
     completedHeader.className = 'text-xl font-bold mt-6 mb-2';
     container.appendChild(completedHeader);
-    data.completed.forEach(a => container.appendChild(createAchievementElement(a, true)));
+
+    // Change styling on completed achievements to look dimmed
+    data.completed.forEach(a => {
+      const card = createAchievementElement(a, true);
+      card.classList.add('opacity-50');
+      container.appendChild(card);
+    });
 
     // Add click listener to activate buttons
     document.querySelectorAll('.activate-btn').forEach(btn => {
