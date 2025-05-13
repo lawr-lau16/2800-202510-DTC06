@@ -145,6 +145,10 @@ const transactionSchema = new mongoose.Schema({
  * The server automatically adds the achievement ID to the user schema when a new achievement is created.
  */
 const achievementSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users'
+  },
   type: String,
   description: String,
   progress: Number,
@@ -260,7 +264,7 @@ app.post("/profile/update", async (req, res) => {
         type: "weekly",
         completed: false,
       });
-      
+
       // If the 'weekly' achievement type exists for the user, and it hasn’t reached its target yet, then increase its progress by 1
       if (weeklyAchievement && weeklyAchievement.progress < weeklyAchievement.target) {
         weeklyAchievement.progress += 1;
@@ -488,7 +492,10 @@ app.post("/auth/register", async (request, result) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements(achievementData);
+      const newAchievement = new achievements({
+        ...achievementData,
+        userId: request.session.uid
+      });
       await newAchievement.save();
       inactiveAchievements.push(newAchievement._id);
     }
@@ -504,7 +511,10 @@ app.post("/auth/register", async (request, result) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements(achievementData);
+      const newAchievement = new achievements({
+        ...achievementData,
+        userId: request.session.uid
+      });
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
