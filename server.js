@@ -401,14 +401,14 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
       {
-        type: "ami_happiness",
-        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
+        type: "pet_ami",
+        description: "Introduce yourself to Ami. Go ahead and pet Ami!",
         progress: 0,
-        target: 3,
+        target: 1,
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 10,
+        reward: 5,
       },
       {
         type: "input_expense",
@@ -439,6 +439,16 @@ app.post("/auth/register", async (req, res) => {
         previousDate: new Date(),
         completed: false,
         reward: 200,
+      },
+      {
+        type: "ami_happiness",
+        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
+        progress: 0,
+        target: 3,
+        date: new Date(),
+        previousDate: new Date(),
+        completed: false,
+        reward: 10,
       },
       {
         type: "drink",
@@ -496,7 +506,7 @@ app.post("/auth/register", async (req, res) => {
 
       const newAchievement = new achievements({
         ...achievementData,
-        userId: request.session.uid
+        userId: req.session.uid
       });
       await newAchievement.save();
       inactiveAchievements.push(newAchievement._id);
@@ -515,7 +525,7 @@ app.post("/auth/register", async (req, res) => {
 
       const newAchievement = new achievements({
         ...achievementData,
-        userId: request.session.uid
+        userId: req.session.uid
       });
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
@@ -932,7 +942,7 @@ app.post("/joke", async (req, res) => {
         model: "gpt-4o",
         temperature: 0.9,
         presence_penalty: 0.6,
-        frequency_penalty: 0.4, 
+        frequency_penalty: 0.4,
         messages: [
           {
             role: "user",
