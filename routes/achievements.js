@@ -61,6 +61,8 @@ router.get("/data", async (req, res) => {
   });
 });
 
+
+
 /**
  * Fetches the users achievements from the database, along with their user information.
  * Uses the user's ID stored in the session to find the user in the database where the achievements are stored.
@@ -214,7 +216,7 @@ router.post("/activate", async (req, res) => {
       return res.status(400).json({ error: "You can only have 4 active achievements." });
     }
 
-    // Check if achievement exists in inactiveAchievements
+    // Check if achievement exists in inactiveAchievements (make sure users can't double click quickly)
     const index = user.inactiveAchievements.indexOf(id);
     if (index === -1) {
       return res.status(404).json({ error: "Achievement not found in inactive list." });
