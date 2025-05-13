@@ -43,23 +43,36 @@ router.get("/data", async (req, res) => {
   }
 
   const user = await users.findById(req.session.uid);
-  // Preserve same order as user.activeAchievements
-  const allActive = await Promise.all(
-    user.activeAchievements.map(id => achievements.findById(id)));
-  // Preserve same order as user.inactiveAchievements
-  const allInactive = await Promise.all(
-    user.inactiveAchievements.map(id => achievements.findById(id)));
 
-  // Split active into completed and not completed
-  const active = allActive.filter(a => !a.completed);
-  const completed = allActive.filter(a => a.completed);
+  // Fetch active and inactive achievements
+  const allActive = await Promise.all(user.activeAchievements.map(id => achievements.findById(id)));
+  const allInactive = await Promise.all(user.inactiveAchievements.map(id => achievements.findById(id)));
+
+  const active = allActive.filter(a => a && !a.completed);
+  const completedFromActive = allActive.filter(a => a && a.completed);
+
+  // Create a set of IDs that are already included
+  const knownIds = new Set([
+    ...user.activeAchievements.map(id => id.toString()),
+    ...user.inactiveAchievements.map(id => id.toString()),
+  ]);
+
+  // Fetch additional completed achievements NOT tracked in active/inactive
+  const extraCompleted = await achievements.find({
+    completed: true,
+    userId: user._id,
+    _id: { $nin: Array.from(knownIds) }
+  });
+
+  const completed = [...completedFromActive, ...extraCompleted];
 
   res.json({
     active,
-    inactive: allInactive,
+    inactive: allInactive.filter(Boolean),
     completed
   });
 });
+
 
 /**
  * Fetches the users achievements from the database, along with their user information.
@@ -176,6 +189,7 @@ router.post("/replace", async (request, result) => {
     const reward = request.body.reward;
     const oldID = request.body.oldID;
     const newAchievement = new achievements({
+      userId: request.session.uid,
       type,
       description,
       progress,
@@ -214,7 +228,7 @@ router.post("/activate", async (req, res) => {
       return res.status(400).json({ error: "You can only have 4 active achievements." });
     }
 
-    // Check if achievement exists in inactiveAchievements
+    // Check if achievement exists in inactiveAchievements (make sure users can't double click quickly)
     const index = user.inactiveAchievements.indexOf(id);
     if (index === -1) {
       return res.status(404).json({ error: "Achievement not found in inactive list." });
@@ -266,13 +280,30 @@ router.post("/redeem", async (req, res) => {
   const { id } = req.body;
 
   try {
+    // Fetch user
+    const user = await users.findById(req.session.uid);
+
+    // Fetch achievement
     const achievement = await achievements.findById(id);
+    if (!achievement) {
+      return res.status(404).json({ error: "Achievement not found" });
+    }
+
+    // Add userID to achievement
+    if (!achievement.userId) {
+      achievement.userId = req.session.uid;
+    }
+    
     // Set achievement as completed
     achievement.completed = true;
     await achievement.save();
 
-    // Retrieve reward and add to user coins balance
-    const user = await users.findById(req.session.uid);
+    // Remove redeemed achievement from activeAchievements
+    user.activeAchievements = user.activeAchievements.filter(aid =>
+      aid && aid.toString() !== achievement._id.toString()
+    );
+
+    // Add reward to user coins balance
     user.coins += achievement.reward;
     await user.save();
 
