@@ -6,6 +6,7 @@ const favicon = require("serve-favicon");
 const path = require("path");
 const axios = require("axios");
 const { type } = require("os");
+const OpenAI = require("openai");
 
 /**
  * Require dotenv to load environment variables from a .env file for security.
@@ -273,6 +274,7 @@ app.get("/home", async (req, res) => {
       totalExpenses,
       balance,
       expenses: userTransactions,
+      joke: req.session.joke
     });
   } catch (err) {
     console.error("Error loading home:", err.message);
@@ -297,13 +299,13 @@ app.get("/index", (request, result) => {
  * The new user is saved to the database and their uid is stored in the session.
  * The user is created from the mongoDB users model.
  */
-app.post("/auth/register", async (request, result) => {
+app.post("/auth/register", async (req, res) => {
   try {
-    const username = request.body.username;
-    const password = request.body.password;
+    const username = req.body.username;
+    const password = req.body.password;
     const existingUser = await users.findOne({ username });
     if (existingUser) {
-      return result.status(400).json({ error: "Username already exists" });
+      return res.status(400).json({ error: "Username already exists" });
     }
     // Active Achievements
     const defaultActiveAchievements = [
@@ -495,12 +497,13 @@ app.post("/auth/register", async (request, result) => {
       coins: 0,
     });
     await newUser.save();
-    request.session.uid = newUser._id;
-    request.session.username = newUser.username;
-    result.redirect("/home");
+    req.session.uid = newUser._id;
+    req.session.username = newUser.username;
+    req.session.joke = null;
+    res.redirect("/home");
   } catch (err) {
     console.log("Error during registration:", err.message);
-    result.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -525,6 +528,7 @@ app.post("/auth/login", async (request, result) => {
     }
     request.session.uid = user._id;
     request.session.username = user.username;
+    request.session.joke = null;
     result.redirect("/home");
   } catch (err) {
     console.log("Error during login:", err.message);
@@ -839,6 +843,50 @@ app.post("/add-expense", async (req, res) => {
   } catch (err) {
     console.error("Error saving transaction: ", err.message);
     res.status(500).send("Error saving transaction");
+  }
+});
+
+/**
+ * Requests a joke from the OpenAI API using the axios library.
+ * The request is plain text as if your talking to the chatbot on it's website.
+ * The following prompt was used to acheive our project's goal.
+ * Roles user and assistant are their way of identifing who is talking.
+ * The bearer is the person who owns the api giving you their key.
+ * The model is the version of the gpt we are using. (currently the cheapest to use for the best randomness)
+ * This script was made by modifying the origional code from OpenAI... as such.
+ * 
+ * @author OpenAI
+ */
+app.post("/joke", async (req, res) => {
+  try {
+    const aiResponse = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4o",
+        temperature: 0.9,
+        presence_penalty: 0.6,
+        frequency_penalty: 0.4, 
+        messages: [
+          {
+            role: "user",
+            content:
+              "Make a unique, short, school-friendly joke in 1 - 2 sentences. Be creative so you avoid repeating earlier jokes.",
+          },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.chatGPT}`,
+        },
+      }
+    );
+    req.session.joke = aiResponse.data.choices[0].message.content;
+    console.log("Fetched Joke:", req.session.joke);
+    res.redirect("/home");
+  } catch (error) {
+    console.error("Error fetching joke:", error.message);
+    res.status(500).send("Error fetching joke");
   }
 });
 
