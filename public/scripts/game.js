@@ -146,7 +146,8 @@ function dynamicallyDisplayBase() {
     itemsDiv = document.getElementById("items");
     itemsDiv.innerHTML = "";
     // May be replaced by db future on
-    const baseAvailable = ["white", "black", "blue", "red", "green", "gold"];
+    const baseAvailable = ["white", "black", "blue", "red", "green", "yellow"];
+    const baseAll = ["white", "black", "blue", "red", "green", "yellow", "gold"];
     // used to see if user has gold
     const itemsOwned = [];
     amiBase = document.getElementById("ami-base");
@@ -155,28 +156,29 @@ function dynamicallyDisplayBase() {
         eachBase = document.createElement("div");
         eachBase.id = base;
         // Sets class list for each new div
-        eachBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
+        eachBase.classList = "size-18 m-2 border-4 rounded-lg hover:cursor-pointer overflow-hidden";
         eachBase.innerHTML = `<div class="relative flex size-full">
-            <img src="images/game/Ami-Base/${base}.png" class="mx-auto"></div>`
+            <img src="images/game/Ami-Base/i-${base}.png" class="mx-auto"></div>`
         itemsDiv.append(eachBase);
     });
 
     // Special gold base
     goldBase = document.createElement("div");
     goldBase.id = "gold"
-    goldBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
+    goldBase.classList = "size-18 m-2 border-4 rounded-lg hover:cursor-pointer overflow-hidden";
     if (itemsOwned.includes("gold")) {
         goldBase.innerHTML = `<div class="relative flex size-full">
-            <img src="images/game/Ami-Base/gold.png" class="mx-auto"></div>`
+            <img src="images/game/Ami-Base/i-gold.png" class="mx-auto"></div>`
     } else {
-        goldBase.innerHTML = `<div class="relative flex size-full"><i class="z-2 mx-auto my-auto fa-solid fa-lock fa-xl"></i>
-            <img src="images/game/Ami-Base/gold.png" class="absolute-fit mx-auto border"></div>
+        goldBase.innerHTML = `<div class="relative flex size-full">
+            <i class="z-2 my-auto mx-auto fa-solid fa-lock fa-xl"></i>
+            <img src="images/game/Ami-Base/i-gold.png" class="absolute size-full"></div>
             `;
         goldBase.classList.add("locked")
     }
     itemsDiv.append(goldBase);
 
-    baseAvailable.forEach(base => {
+    baseAll.forEach(base => {
         eachBase = document.getElementById(base);
 
         if (eachBase.classList.contains("locked")) {
