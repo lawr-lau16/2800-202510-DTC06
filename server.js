@@ -428,22 +428,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements(achievementData);
@@ -455,11 +455,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements(achievementData);
@@ -865,7 +865,7 @@ app.post("/joke", async (req, res) => {
         model: "gpt-4o",
         temperature: 0.9,
         presence_penalty: 0.6,
-        frequency_penalty: 0.4, 
+        frequency_penalty: 0.4,
         messages: [
           {
             role: "user",
@@ -929,6 +929,24 @@ app.post("/pet/update", async (req, res) => {
     res.json({ pet: user.pet });
   } catch (err) {
     console.log("Error updating pet:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * This is the route for reading inventory and coins.
+ * It fetches the user's information using the uid stored in the session.
+  * The data is sent to the view in JSON format.
+ */
+app.post("/inventory", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    res.json({ inventory: user.inventory, coins: user.coins });
+  } catch (err) {
+    console.error("Error fetching inventory:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
