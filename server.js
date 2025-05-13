@@ -890,6 +890,25 @@ app.post("/joke", async (req, res) => {
   }
 });
 
+/**
+ * This is the route for the post /pet URL.
+ * It reads the pet data based on uid stored in the session.
+ * And hands it to the view, In json format.
+ */
+app.post("/pet", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    console.log("Fetched Pet:", user.pet);
+    res.json({ pet: user.pet });
+  } catch (err) {
+    console.log("Error fetching pet:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
