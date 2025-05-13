@@ -221,6 +221,23 @@ router.post("/activate", async (req, res) => {
     user.activeAchievements.push(id);
     await user.save();
 
+
+
+    // Update "add_achievement" meta-achievement
+    const addAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "add_achievement",
+      completed: false,
+    });
+
+    if (addAchievement && addAchievement.progress < addAchievement.target) {
+      addAchievement.progress += 1;
+
+      await addAchievement.save();
+    }
+
+
+
     res.json({ success: true });
   } catch (err) {
     console.error("Error activating achievement:", err.message);
