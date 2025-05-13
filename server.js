@@ -967,6 +967,92 @@ app.post("/joke", async (req, res) => {
   }
 });
 
+/**
+ * This is the route for the post /pet URL.
+ * It reads the pet data based on uid stored in the session.
+ * And hands it to the view, In json format.
+ */
+app.post("/pet", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    console.log("Fetched Pet:", user.pet);
+    res.json({ pet: user.pet });
+  } catch (err) {
+    console.log("Error fetching pet:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * This is the route for the post /pet/update URL.
+ * It updates the pet data based on uid stored in the session, and the data sent in the request body.
+ * It returns the new pet data in json format, after updating it in the database.
+ */
+app.post("/pet/update", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    const { base, item, happiness } = req.body;
+    user.pet.base = base;
+    user.pet.item = item;
+    user.pet.happiness = happiness;
+    await user.save();
+    console.log("Updated Pet:", user.pet);
+    res.json({ pet: user.pet });
+  } catch (err) {
+    console.log("Error updating pet:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * This is the route for reading inventory and coins.
+ * It fetches the user's information using the uid stored in the session.
+ * The data is sent to the view in JSON format.
+ */
+app.post("/inventory", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    res.json({ inventory: user.inventory, coins: user.coins });
+  } catch (err) {
+    console.error("Error fetching inventory:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * This is the route for updating inventory and coins.
+ * It fetches the user using the uid stored in the session.
+ * It updates the user's inventory and coin values with the data in request body.
+ * The updated inventory and coins are sent to the view in JSON format.
+ */
+app.post("/inventory/update", async (req, res) => {
+  if (!req.session.uid) {
+    return res.redirect("/login");
+  }
+  try {
+    const user = await users.findById(req.session.uid);
+    const { inventory, coins } = req.body;
+    user.inventory = inventory;
+    user.coins = coins;
+    await user.save();
+    console.log("Updated Inventory:", user.inventory);
+    console.log("Updated Coins:", user.coins);
+    res.json({ inventory: user.inventory, coins: user.coins });
+  } catch (err) {
+    console.error("Error updating inventory:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Start's the server and listens on the specified port.
 // The port is set to 3000 by default.
 app.listen(PORT, () => {
