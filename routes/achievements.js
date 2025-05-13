@@ -43,14 +43,18 @@ router.get("/data", async (req, res) => {
   }
 
   const user = await users.findById(req.session.uid);
-  const activeAchievements = await achievements.find({
-    _id: { $in: user.activeAchievements },
-  });
-  const inactiveAchievements = await achievements.find({
-    _id: { $in: user.inactiveAchievements },
-  });
+  const allActive = await achievements.find({ _id: { $in: user.activeAchievements } });
+  const allInactive = await achievements.find({ _id: { $in: user.inactiveAchievements } });
 
-  res.json({ active: activeAchievements, inactive: inactiveAchievements });
+  // Split active into completed and not completed
+  const active = allActive.filter(a => !a.completed);
+  const completed = allActive.filter(a => a.completed);
+
+  res.json({
+    active,
+    inactive: allInactive,
+    completed
+  });
 });
 
 /**
