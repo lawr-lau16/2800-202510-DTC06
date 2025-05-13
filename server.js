@@ -494,10 +494,7 @@ app.post("/auth/register", async (req, res) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements({
-        ...achievementData,
-        userId: request.session.uid
-      });
+      const newAchievement = new achievements({...achievementData, userId: req.session.uid});
       await newAchievement.save();
       inactiveAchievements.push(newAchievement._id);
     }
@@ -513,10 +510,7 @@ app.post("/auth/register", async (req, res) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements({
-        ...achievementData,
-        userId: request.session.uid
-      });
+      const newAchievement = new achievements({...achievementData, userId: req.session.uid});
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
