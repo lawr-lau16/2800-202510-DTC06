@@ -231,15 +231,40 @@ app.get("/user/pet", async (request, result) => {
   }
 });
 
-
 app.post("/user/pet", async (request, result) => {
   if (!request.session.uid) {
     return result.status(401).send("Unauthorized");
   }
+
   request.session.joke = "";
   try {
     const user = await users.findById(request.session.uid);
-    user.pet = {...user.pet, ...request.body};
+    // Update the pet with new values
+    user.pet.base = request.body.base;
+    user.pet.item = request.body.item;
+    user.pet.happiness = request.body.happiness;
+
+    // Set lastPetted
+    user.pet.lastPetted = new Date();
+
+
+    // Check for pet_ami achievement
+    const petAmiAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "pet_ami",
+      completed: false,
+    });
+
+    // If pet after accepting the achievement
+    if (
+      petAmiAchievement &&
+      petAmiAchievement.progress < petAmiAchievement.target
+    ) {
+      // Then increment achievement progress
+      petAmiAchievement.progress += 1;
+      await petAmiAchievement.save();
+    }
+
     await user.save();
     result.json(user.pet);
   }
@@ -566,11 +591,9 @@ app.post("/auth/register", async (req, res) => {
         description: "Introduce yourself to Ami. Go ahead and pet Ami!",
         progress: 0,
         target: 1,
-        target: 1,
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 5,
         reward: 5,
       },
       {
@@ -649,22 +672,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -679,11 +702,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -768,7 +791,7 @@ app.post("/auth/login", async (request, result) => {
 
     // Fix timezone
     today.setMinutes(today.getMinutes() + today.getTimezoneOffset());
-    
+
     // Get user's last login date
     const lastLoginDate = new Date(user.lastLogin);
     // Calculate the time difference between the two dates
