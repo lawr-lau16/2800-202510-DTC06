@@ -119,8 +119,15 @@ async function dynamicallyDisplayItems() {
             eachItem.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Items/${item}.png" class="absolute"></div>`
         } else {
-            eachItem.innerHTML = `<div class="relative flex size-full"><i class="mx-auto my-auto fa-solid fa-lock fa-xl"></i>
-            <img src="images/game/Items/${item}.png" class="absolute"></div>
+            eachItem.classList.add("brightness-85")
+            eachItem.innerHTML = `
+            <div class="relative flex size-full">
+                <div class="size-full flex flex-col z-1">
+                    <i class="mx-auto mt-auto fa-solid fa-lock fa-xl"></i>
+                    <p class="mx-auto mt-3">50</p>
+                </div>
+                <img src="images/game/Items/${item}.png" class="absolute">
+            </div>
             `;
             eachItem.classList.add("locked")
         }
@@ -158,8 +165,25 @@ async function dynamicallyDisplayItems() {
         eachItem = document.getElementById(item);
 
         if (eachItem.classList.contains("locked")) {
-            eachItem.addEventListener("click", () => {
+            eachItem.addEventListener("click", async () => {
+
+                price = 50
                 console.log("locked")
+                const res = await fetch('/inventory', { method: 'POST' });
+                const { inventory, coins } = await res.json();
+                if (coins < price) {
+                    return alert("Not enough coins!");
+                }
+                if (window.confirm(`Buy ${item}?`)) {
+                    const updatedInventory = [...inventory, item];
+                    const updatedCoins = coins - price;
+                    await fetch('/inventory/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ inventory: updatedInventory, coins: updatedCoins })
+                    });
+                    dynamicallyDisplayItems()
+                }
             })
         } else {
             eachItem.addEventListener("click", async () => {
