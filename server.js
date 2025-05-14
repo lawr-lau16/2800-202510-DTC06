@@ -120,6 +120,8 @@ const userSchema = new mongoose.Schema({
     monthly: Number,
   },
   coins: Number,
+  lastLogin: Date,
+  loginStreak: Number,
 });
 
 /**
@@ -488,22 +490,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({ ...achievementData, userId: req.session.uid });
@@ -515,11 +517,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({ ...achievementData, userId: req.session.uid });
@@ -555,6 +557,8 @@ app.post("/auth/register", async (req, res) => {
       pet: 80,
       date: new Date(),
       coins: 0,
+      lastLogin: new Date(),
+      loginStreak: 1 
     });
     await newUser.save();
     req.session.uid = newUser._id;
@@ -586,6 +590,46 @@ app.post("/auth/login", async (request, result) => {
     if (!isMatch) {
       return result.status(401).json({ error: "Invalid username or password" });
     }
+
+    // Tracking for login streak achievement
+    // Get today's date
+    const today = new Date();
+    // Get user's last login date
+    const lastLoginDate = new Date(user.lastLogin);
+    // Calculate the time difference between the two dates
+    const diffTime = today - lastLoginDate;
+    // Convert the time difference into days
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    // If user logged in one day after their last login, then increment streak by 1
+    if (diffDays === 1) {
+      user.loginStreak = (user.loginStreak || 1) + 1;
+      // Else if reset streak back to 1
+    } else if (diffDays > 1) {
+      user.loginStreak = 1;
+    }
+
+    // Update lastLogin date
+    user.lastLogin = today;
+
+    // Find user's login achievement
+    const loginAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "login",
+      completed: false,
+    });
+
+    // If achievement exists and progress is below target, then update progress to match streak
+    if (
+      loginAchievement &&
+      user.loginStreak > loginAchievement.progress &&
+      loginAchievement.progress < loginAchievement.target
+    ) {
+      loginAchievement.progress = user.loginStreak;
+      await loginAchievement.save();
+    }
+    await user.save();
+
     request.session.uid = user._id;
     request.session.username = user.username;
     request.session.joke = null;
