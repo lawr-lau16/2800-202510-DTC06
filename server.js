@@ -191,7 +191,7 @@ app.get("/login", (request, result) => {
   result.render("login");
 });
 
-// happiness decay
+// Happiness Decay
 function happinessDecay(pet) {
   const now = new Date();
   const lastPetted = new Date(pet.lastPetted);
@@ -212,6 +212,32 @@ app.get("/game", async (request, result) => {
     const user = await users.findById(request.session.uid);
     const pet = user.pet;
     pet.happiness = happinessDecay(pet);
+
+    // Tracking multi-day happiness for ami_happiness achievement
+    const amiHappinessAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "ami_happiness",
+      completed: false,
+    });
+
+    if (amiHappinessAchievement && pet.happiness >= 80) {
+      const lastDate = new Date(amiHappinessAchievement.previousDate);
+      const now = new Date();
+
+      // New day check
+      const isNewDay =
+        now.getFullYear() !== lastDate.getFullYear() ||
+        now.getMonth() !== lastDate.getMonth() ||
+        now.getDate() !== lastDate.getDate();
+
+      // If new day and happiness above 80, increment progress
+      if (isNewDay && amiHappinessAchievement.progress < amiHappinessAchievement.target) {
+        amiHappinessAchievement.progress += 1;
+        amiHappinessAchievement.previousDate = now;
+        await amiHappinessAchievement.save();
+      }
+    }
+
     console.log("Fetched pet data:", pet);
     result.render("game", { pet });
   }
@@ -628,7 +654,7 @@ app.post("/auth/register", async (req, res) => {
       },
       {
         type: "ami_happiness",
-        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
+        description: "Keep Ami's happiness above 80 for 3 days.",
         progress: 0,
         target: 3,
         date: new Date(),
