@@ -491,7 +491,6 @@ app.post("/auth/register", async (req, res) => {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
         defaultActiveAchievements[i].date.getTimezoneOffset()
-        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
@@ -562,7 +561,7 @@ app.post("/auth/register", async (req, res) => {
       },
       date: new Date(),
       previousDate: new Date(),
-      coins: 0
+      coins: 0,
       lastLogin: new Date(),
       loginStreak: 1 
     });
