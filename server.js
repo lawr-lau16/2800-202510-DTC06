@@ -201,6 +201,54 @@ app.get("/add-expense", (req, res) => {
   res.render("partials/expense_log");
 });
 
+
+// Check if the user stayed within their weekly budget over the last 7 days (starting from when 'weekly_budget' achievement was activated)
+async function checkWeeklyBudgetAchievement(user) {
+  // Find user's active 'weekly_budget' achievement that is not completed
+  const achievement = await achievements.findOne({
+    _id: { $in: user.activeAchievements },
+    type: "weekly_budget",
+    completed: false,
+  });
+
+  // Stop if user does not have this achievement
+  if (!achievement) return;
+
+  // Get start date
+  const start = new Date(achievement.date);
+  // Get current date
+  const now = new Date();
+  // Calculate full days since the achievement activated
+  const daysSince = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  // If les than 7 days, return
+  if (daysSince < 7) return;
+
+  // Define end of 7 day period
+  const end = new Date(start);
+  end.setDate(start.getDate() + 7);
+  end.setHours(23, 59, 59, 999);
+
+  // Get all user expenses from 7 day period
+  const expenses = await mongoose.model("transactions").find({
+    _id: { $in: user.transactions },
+    type: "expense",
+    date: { $gte: start, $lte: end },
+  });
+
+  // Calculate total amount from 7 day period
+  const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
+
+  // If user spent <= their weekly budget (and their budget is set > 0)
+  if (totalSpent <= user.budget.weekly && user.budget.weekly > 0) {
+    // Increment achievement progress by 1
+    if (achievement.progress < achievement.target) {
+      achievement.progress += 1;
+      await achievement.save();
+    }
+  }
+}
+
+
 // PROFILE PAGE
 // Fetch user info from mongoDB
 // app.use('/scripts', express.static(__dirname + '/scripts'));
@@ -309,6 +357,10 @@ app.get("/home", async (req, res) => {
     const userTransactions = await transactions.find({
       _id: { $in: user.transactions },
     });
+
+    // Check for weekly_budget achievement
+    await checkWeeklyBudgetAchievement(user);
+
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + t.amount, 0);
@@ -316,6 +368,7 @@ app.get("/home", async (req, res) => {
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpenses;
+
     res.render("home", {
       username: req.session.username,
       totalIncome,
@@ -563,7 +616,7 @@ app.post("/auth/register", async (req, res) => {
       previousDate: new Date(),
       coins: 0,
       lastLogin: new Date(),
-      loginStreak: 1 
+      loginStreak: 1
     });
     await newUser.save();
     req.session.uid = newUser._id;

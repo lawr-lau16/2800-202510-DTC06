@@ -317,4 +317,57 @@ router.post("/redeem", async (req, res) => {
   }
 });
 
+
+// Check if the user stayed within their weekly budget over the last 7 days (starting from when 'weekly_budget' achievement was activated)
+router.post("/track-weekly-budget", async (req, res) => {
+  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const user = await users.findById(req.session.uid);
+    // Find user's active 'weekly_budget' achievement that is not completed
+    const achievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "weekly_budget",
+      completed: false,
+    });
+
+    // Stop if user does not have this achievement
+    if (!achievement) {
+      return res.json({ success: false, message: "No active weekly budget achievement." });
+    }
+
+    // Get start date
+    const start = new Date(achievement.date);
+    // Define end of 7 day period
+    const end = new Date(start);
+    end.setDate(start.getDate() + 7);
+    end.setHours(23, 59, 59, 999);
+
+    // Get all user expenses from 7 day period
+    const expenses = await mongoose.model("transactions").find({
+      _id: { $in: user.transactions },
+      type: "expense",
+      date: { $gte: start, $lte: end },
+    });
+
+    // Calculate total amount from 7 day period
+    const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
+
+    // If user spent <= their weekly budget (and their budget is set > 0)
+    if (totalSpent <= user.budget.weekly && user.budget.weekly > 0) {
+      // Increment achievement progress by 1
+      if (achievement.progress < achievement.target) {
+        achievement.progress += 1;
+        await achievement.save();
+        return res.json({ success: true, message: "Weekly budget goal achieved!" });
+      }
+    }
+
+    res.json({ success: false, message: "Weekly budget goal not met yet." });
+  } catch (err) {
+    console.error("Error tracking weekly budget:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
