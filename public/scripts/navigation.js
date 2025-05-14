@@ -9,7 +9,7 @@ function navigationCurrent() {
     });
 }
 
-
+// sets sidebar navigation toggle
 function navigationSidebar() {
     navigationToggle = document.getElementById("navigation_toggle")
     sidebar = document.getElementById("sidebar")
@@ -18,12 +18,12 @@ function navigationSidebar() {
     navigationToggle.addEventListener("click", navigationSidebarOpen)
 }
 
+// function to open sidebar
 function navigationSidebarOpen() {
     sidebar.style.width = "180px";
     sidebar.style.transitionDelay = "0s";
     content.style.marginLeft = "180px"
     content.style.transitionDelay = "0s";
-    // content.style.transitionDelay = "0.3s";
     document.querySelectorAll("#sidebar .hide").forEach(function (elem) {
         elem.classList.remove("hidden")
     });
@@ -39,6 +39,7 @@ function navigationSidebarOpen() {
     navigationToggle.addEventListener("click", navigationSidebarClose)
 }
 
+// function to close sidebar
 function navigationSidebarClose() {
     sidebar.style.width = "56px";
     sidebar.style.transitionDelay = "0.2s";
@@ -57,6 +58,27 @@ function navigationSidebarClose() {
     navigationToggle.addEventListener("click", navigationSidebarOpen)
 }
 
+// function to get user's coins and Ami's happiness from db
+// displays it on navbar
+async function navbarStats() {
+    try {
+        const response = await fetch('/inventory', { method: 'POST' });
+        const { coins } = await response.json();
+        coinsDiv = document.getElementById("nav-coins")
+        coinsDiv.innerHTML = coins
+    } catch (err) {
+        console.error("Failed to load inventory:", err);
+    } try {
+        const response = await fetch('/pet', { method: 'POST' });
+        const { pet } = await response.json();
+        happinessDiv = document.getElementById("nav-happiness")
+        happinessDiv.innerHTML = pet.happiness
+    } catch (err) {
+        console.error("Error loading pet:", err);
+    }
+}
+
 // execute functions
+navbarStats()
 navigationCurrent()
 navigationSidebar()
