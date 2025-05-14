@@ -1,12 +1,18 @@
 // Set Ami customization based on user settings
-function setAmi() {
+async function setAmi() {
     // This will be replaces with user info from database
-    userBase = "white";
-    userItem = "";
-    amiBase = document.getElementById("ami-base");
-    amiItem = document.getElementById("ami-item");
-    amiBase.src = `/images/game/Ami-Base/${userBase}.png`
-    amiItem.src = `/images/game/Items/${userItem}.png`
+    try {
+        const response = await fetch('/pet', { method: 'POST' });
+        const { pet } = await response.json();
+        document.getElementById('ami-base').src = `/images/game/Ami-Base/${pet.base}.png`;
+        if (pet.item === '') {
+            document.getElementById('ami-item').src = ``
+        } else {
+            document.getElementById('ami-item').src = `/images/game/Items/${pet.item}.png`;
+        }
+    } catch (err) {
+        console.error("Error loading pet:", err);
+    }
 }
 
 // Add pet button functionality
@@ -75,14 +81,31 @@ function itemMenuItemTab() {
     itemItemsTab.addEventListener("click", dynamicallyDisplayItems)
 }
 
+async function getInventory() {
+    try {
+        const response = await fetch('/inventory', { method: 'POST' });
+        const { inventory } = await response.json();
+        itemsOwned = inventory;
+        return itemsOwned
+    } catch (err) {
+        console.error("Failed to load inventory:", err);
+    }
+}
+
+
 // Populates Items menu with available items 
-function dynamicallyDisplayItems() {
+async function dynamicallyDisplayItems() {
+
     itemsDiv = document.getElementById("items");
     itemsDiv.innerHTML = "";
     // Array must contain items by exact name of the images for items
     // May be replaced by db future on
+
     const itemsAvailable = ["heart", "sprout", "star"];
-    const itemsOwned = [];
+    // itemsOwned = [];
+
+    let itemsOwned = await getInventory()
+
     amiItem = document.getElementById("ami-item");
 
     itemsAvailable.forEach(item => {
@@ -115,11 +138,21 @@ function dynamicallyDisplayItems() {
 
     // Adds clickability for no item option
     removeItem = document.getElementById("no-item");
-    removeItem.addEventListener("click", () => {
-        // for db
-        userItem = "no-item"
-        amiItem.src = ""
+    removeItem.addEventListener("click", async () => {
+        const response = await fetch('/pet', { method: 'POST' });
+        const { pet } = await response.json();
+        await fetch('/pet/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                base: `${pet.base}`,
+                item: '',
+                happiness: pet.happiness
+            })
+        });
+        setAmi()
     })
+
 
     itemsAvailable.forEach(item => {
         eachItem = document.getElementById(item);
@@ -129,12 +162,19 @@ function dynamicallyDisplayItems() {
                 console.log("locked")
             })
         } else {
-            eachItem.addEventListener("click", () => {
-
-                // update db DO LATER
-                userItem = item
-                // changes Ami's Item
-                amiItem.src = `images/game/Items/${item}.png`;
+            eachItem.addEventListener("click", async () => {
+                const response = await fetch('/pet', { method: 'POST' });
+                const { pet } = await response.json();
+                await fetch('/pet/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        base: `${pet.base}`,
+                        item: `${item}`,
+                        happiness: pet.happiness
+                    })
+                });
+                setAmi()
             })
         }
     });
@@ -142,14 +182,14 @@ function dynamicallyDisplayItems() {
 }
 
 // Populates Items menu with available items 
-function dynamicallyDisplayBase() {
+async function dynamicallyDisplayBase() {
     itemsDiv = document.getElementById("items");
     itemsDiv.innerHTML = "";
     // May be replaced by db future on
     const baseAvailable = ["white", "black", "blue", "red", "green", "yellow", "camel"];
     const baseAll = ["white", "black", "blue", "red", "green", "yellow", "camel", "gold"];
     // used to see if user has gold
-    const itemsOwned = [];
+    let itemsOwned = await getInventory()
     amiBase = document.getElementById("ami-base");
 
     baseAvailable.forEach(base => {
@@ -186,11 +226,19 @@ function dynamicallyDisplayBase() {
                 console.log("locked")
             })
         } else {
-            eachBase.addEventListener("click", () => {
-                // update db DO LATER
-                userBase = base
-                // changes Ami's base
-                amiBase.src = `images/game/Ami-Base/${base}.png`;
+            eachBase.addEventListener("click", async () => {
+                const response = await fetch('/pet', { method: 'POST' });
+                const { pet } = await response.json();
+                await fetch('/pet/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        base: `${base}`,
+                        item: `${pet.item}`,
+                        happiness: pet.happiness
+                    })
+                });
+                setAmi()
             })
         }
     });
@@ -249,10 +297,10 @@ function fail() {
 // execute functions
 setAmi()
 gameButtonPet()
-// dynamicallyDisplayItems()
-dynamicallyDisplayBase()
-itemMenuBaseTab()
+dynamicallyDisplayItems()
+// dynamicallyDisplayBase()
 itemMenuItemTab()
+itemMenuBaseTab()
 gameButtonItems()
 gameButtonAchievement()
 getLocation()

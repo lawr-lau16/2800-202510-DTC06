@@ -3,6 +3,24 @@
 
 // Wait for the whole page to finish loading before running this code
 window.addEventListener('DOMContentLoaded', () => {
+
+    // Set Ami customization based on user settings
+    async function setAmi() {
+        // This will be replaces with user info from database
+        try {
+            const response = await fetch('/pet', { method: 'POST' });
+            const { pet } = await response.json();
+            document.getElementById('ami-base').src = `/images/game/Ami-Base/${pet.base}.png`;
+            if (pet.item === '') {
+                document.getElementById('ami-item').src = ``
+            } else {
+                document.getElementById('ami-item').src = `/images/game/Items/${pet.item}.png`;
+            }
+        } catch (err) {
+            console.error("Error loading pet:", err);
+        }
+    }
+
     // This object connects each input field's ID to the matching name used on the server
     const fieldMap = {
         name: 'username',
@@ -57,4 +75,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    setAmi()
 });
