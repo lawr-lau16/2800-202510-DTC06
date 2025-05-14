@@ -220,6 +220,10 @@ async function checkWeeklyBudgetAchievement(user) {
   const start = new Date(achievement.date);
   // Get current date
   const now = new Date();
+
+  // Fix timezone
+  now.setMinutes(now.getMinutes() + now.getTimezoneOffset());
+
   // Calculate full days since the achievement activated
   const daysSince = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   // If les than 7 days, return
@@ -262,10 +266,16 @@ async function checkMonthlyBudgetAchievement(user) {
     completed: false,
   });
 
-  if (!achievement) return;
+  if (!achievement) {
+    return;
+  };
 
   const start = new Date(achievement.date);
   const now = new Date();
+
+  // Fix timezone
+  now.setMinutes(now.getMinutes() + now.getTimezoneOffset());
+
   const daysSince = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   if (daysSince < 30) return;
 
@@ -282,7 +292,9 @@ async function checkMonthlyBudgetAchievement(user) {
   const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
 
   if (totalSpent <= user.budget.monthly && user.budget.monthly > 0) {
-    if (achievement.progress < achievement.target) {
+    const progress = achievement.progress;
+    const target = achievement.target;
+    if (progress < target) {
       achievement.progress += 1;
       await achievement.save();
     }
@@ -696,6 +708,10 @@ app.post("/auth/login", async (request, result) => {
     // Tracking for login streak achievement
     // Get today's date
     const today = new Date();
+
+    // Fix timezone
+    today.setMinutes(today.getMinutes() + today.getTimezoneOffset());
+    
     // Get user's last login date
     const lastLoginDate = new Date(user.lastLogin);
     // Calculate the time difference between the two dates
