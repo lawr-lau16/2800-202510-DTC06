@@ -368,7 +368,7 @@ app.post("/auth/register", async (req, res) => {
       },
       {
         type: "add_achievement",
-        description: "Select an inactive achievement that you want to work on (remember, you can only have a max of 4 active achievements at a time!)",
+        description: "Select an inactive achievement that you want to work on (max of 4 active achievements at a time!)",
         progress: 0,
         target: 1,
         date: new Date(),
@@ -401,8 +401,6 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
       {
-        type: "pet_ami",
-        description: "Introduce yourself to Ami. Go ahead and pet Ami!",
         type: "pet_ami",
         description: "Introduce yourself to Ami. Go ahead and pet Ami!",
         progress: 0,
@@ -455,16 +453,6 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
       {
-        type: "ami_happiness",
-        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
-        progress: 0,
-        target: 3,
-        date: new Date(),
-        previousDate: new Date(),
-        completed: false,
-        reward: 10,
-      },
-      {
         type: "drink",
         description: "Bring your own drinks from home for 5 days. (Don't buy coffee outside!)",
         progress: 0,
@@ -485,7 +473,7 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
     ];
-    
+
     const activeAchievements = [];
     const inactiveAchievements = [];
 
@@ -518,7 +506,7 @@ app.post("/auth/register", async (req, res) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements({...achievementData, userId: req.session.uid});
+      const newAchievement = new achievements({ ...achievementData, userId: req.session.uid });
       await newAchievement.save();
       inactiveAchievements.push(newAchievement._id);
     }
@@ -534,7 +522,7 @@ app.post("/auth/register", async (req, res) => {
         achievementData.previousDate.getTimezoneOffset()
       );
 
-      const newAchievement = new achievements({...achievementData, userId: req.session.uid});
+      const newAchievement = new achievements({ ...achievementData, userId: req.session.uid });
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
@@ -564,7 +552,7 @@ app.post("/auth/register", async (req, res) => {
         monthly: 0,
       },
       owned: [],
-      pet: null,
+      pet: 80,
       date: new Date(),
       coins: 0,
     });
@@ -906,8 +894,10 @@ app.post("/add-expense", async (req, res) => {
   if (!req.session.uid) {
     return res.status(401).send("Unauthorized: user not logged in");
   }
+
   const user = await users.findById(req.session.uid);
   const { type, name, amount, category, date } = req.body;
+
   try {
     const newTransaction = new transactions({
       type,
@@ -916,20 +906,28 @@ app.post("/add-expense", async (req, res) => {
       category,
       date: new Date(date),
     });
+
     await newTransaction.save();
-    try {
-      await user.transactions.push(newTransaction._id);
-      await user.save();
-    } catch (err) {
-      console.error("Error saving transaction to user:", err.message);
-      return res.status(500).send("Error saving transaction to user");
+
+    // Track progress for the "input_expense" achievement
+    const inputExpenseAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "input_expense",
+      completed: false,
+    });
+
+    if (inputExpenseAchievement && inputExpenseAchievement.progress < inputExpenseAchievement.target) {
+      inputExpenseAchievement.progress += 1;
+      await inputExpenseAchievement.save();
     }
+
     res.redirect("/home");
   } catch (err) {
     console.error("Error saving transaction: ", err.message);
     res.status(500).send("Error saving transaction");
   }
 });
+
 
 /**
  * Requests a joke from the OpenAI API using the axios library.
