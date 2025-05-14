@@ -1052,6 +1052,9 @@ app.post("/add-expense", async (req, res) => {
 
     await newTransaction.save();
 
+    user.transactions.push(newTransaction._id);
+    await user.save();
+
     // Track progress for the "input_expense" achievement
     const inputExpenseAchievement = await achievements.findOne({
       _id: { $in: user.activeAchievements },
