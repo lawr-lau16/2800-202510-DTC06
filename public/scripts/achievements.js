@@ -97,7 +97,9 @@ fetch('/achievements/data')
 
     // Add click listener to redeem buttons
     document.addEventListener('click', async (e) => {
+      // Check if element clicked is 'redeem-btn'
       if (e.target.classList.contains('redeem-btn')) {
+        // Get achievement ID
         const id = e.target.dataset.id;
 
         try {
@@ -107,19 +109,22 @@ fetch('/achievements/data')
             body: JSON.stringify({ id }),
           });
 
-          const result = await res.json();
-          if (res.ok) {
-            alert(`+${result.reward} coins earned!`);
-            location.reload();
-          } else {
-            alert(result.error || 'Could not redeem.');
+          if (!res.ok) {
+            const errorText = await res.text();
+            console.error("Server error:", errorText);
+            alert("Failed to redeem reward. Please make sure you're logged in.");
+            return;
           }
+
+          // If no error, show success message with coins earned
+          const result = await res.json();
+          alert(`+${result.reward} coins earned!`);
+          location.reload();
+
         } catch (err) {
           console.error('Redeem failed:', err);
           alert('Redeem failed. Try again.');
         }
       }
-    })
-
-      .catch(err => console.error('Failed to load achievements:', err));
+    });
   })
