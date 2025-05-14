@@ -212,7 +212,9 @@ async function checkWeeklyBudgetAchievement(user) {
   });
 
   // Stop if user does not have this achievement
-  if (!achievement) return;
+  if (!achievement) {
+    return
+  };
 
   // Get start date
   const start = new Date(achievement.date);
@@ -241,7 +243,10 @@ async function checkWeeklyBudgetAchievement(user) {
   // If user spent <= their weekly budget (and their budget is set > 0)
   if (totalSpent <= user.budget.weekly && user.budget.weekly > 0) {
     // Increment achievement progress by 1
-    if (achievement.progress < achievement.target) {
+    const progress = achievement.progress;
+    const target = achievement.target;
+
+    if (progress < target) {
       achievement.progress += 1;
       await achievement.save();
     }
