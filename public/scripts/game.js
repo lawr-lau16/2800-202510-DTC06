@@ -17,6 +17,39 @@ function gameButtonPet() {
     petButton.addEventListener("click", clickPetButton);
 }
 
+// Get pet data from server
+
+let pet;
+document.addEventListener("DOMContentLoaded", async () => {
+    pet = await getPetData();
+});
+async function getPetData() {
+    try {
+        const response = await fetch("/user/pet");
+        const petData = await response.json();
+        console.log(petData);
+        return petData;
+    } catch (err) {
+        console.error(err);
+    }
+    }
+
+async function updatePetData(updatedPet) {
+    try {
+        const response = await fetch('/user/pet', {
+            method: 'POST',
+            body: JSON.stringify(updatedPet),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to update pet data');
+        }
+        const updatedPetFromServer = await response.json();
+        console.log('Updated pet data:', updatedPetFromServer);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 // Function to be executed when pet button is selected
 function clickPetButton() {
     petButton.classList.toggle("border-blue-400");
@@ -27,17 +60,17 @@ function clickPetButton() {
     petButton.addEventListener("click", removePetEventListener);
 }
 
-// changes Ami's expression temporarily
+// changes Ami's expression temporarily and +1 to happiness
 function amiPetHappy() {
     amiExpression.src = "images/game/Ami-Expressions/happy.png";
     setTimeout(() => {
         amiExpression.src = "images/game/Ami-Expressions/default.png";
     }, 700);
-}
+    pet.happiness += 1;
+    pet.lastPetted = new Date();
+    console.log("Happiness +1 after pet", pet.happiness)
+    updatePetData(pet);
 
-// happiness decay
-function happinessDecay() {
-    
 }
 
 // Function to remove Ami clickability
@@ -261,3 +294,4 @@ itemMenuItemTab()
 gameButtonItems()
 gameButtonAchievement()
 getLocation()
+getPetData()

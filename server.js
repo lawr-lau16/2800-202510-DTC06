@@ -112,6 +112,7 @@ const userSchema = new mongoose.Schema({
     base: String,
     item: String,
     happiness: Number,
+    lastPetted: Date,
   },
   date: Date,
   previousDate: Date,
@@ -189,6 +190,18 @@ app.get("/login", (request, result) => {
   result.render("login");
 });
 
+// happiness decay
+function happinessDecay(pet) {
+  const now = new Date();
+  const lastPetted = new Date(pet.lastPetted);
+
+  const minuteDifference = now - lastPetted;
+  const hourDifference = Math.floor(minuteDifference / 3600000);
+  const newHappiness = Math.max(0, pet.happiness - hourDifference);
+
+  return newHappiness;
+}
+
 app.get("/game", async (request, result) => {
   if (!request.session.uid) {
     return result.redirect("/login");
@@ -196,12 +209,42 @@ app.get("/game", async (request, result) => {
   request.session.joke = "";
   try {
     const user = await users.findById(request.session.uid);
-    console.log("Fetched pet data:", user.pet);
-    result.render("game", { pet: user.pet });
+    const pet = user.pet;
+    pet.happiness = happinessDecay(pet);
+    console.log("Fetched pet data:", pet);
+    result.render("game", { pet });
   }
   catch (err) {
     console.log("Error rendering pet info:", err.message);
-    res.status(500).send("Internal server error")
+    result.status(500).send("Internal server error")
+  }
+});
+
+app.get("/user/pet", async (request, result) => {
+  if (!request.session.uid) return result.status(401).send("Unauthorized");
+  try {
+    const user = await users.findById(request.session.uid);
+    result.json(user.pet);
+  } catch (err) {
+    result.status(500).send("Error fetching pet data");
+  }
+});
+
+
+app.post("/user/pet", async (request, result) => {
+  if (!request.session.uid) {
+    return result.status(401).send("Unauthorized");
+  }
+  request.session.joke = "";
+  try {
+    const user = await users.findById(request.session.uid);
+    user.pet = {...user.pet, ...request.body};
+    await user.save();
+    result.json(user.pet);
+  }
+  catch (err) {
+    console.log("Error updating pet info:", err.message);
+    result.status(500).send("Internal server error")
   }
 });
 
@@ -663,7 +706,8 @@ app.post("/auth/register", async (req, res) => {
       pet: {
         base: "White",
         item: "",
-        happiness: 80
+        happiness: 80,
+        lastPetted: new Date(),
       },
       date: new Date(),
       previousDate: new Date(),
