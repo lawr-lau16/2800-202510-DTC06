@@ -38,6 +38,8 @@ async function updatePetData(updatedPet) {
     try {
         const response = await fetch('/user/pet', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'},
             body: JSON.stringify(updatedPet),
         });
         if (!response.ok) {
