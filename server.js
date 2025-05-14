@@ -249,6 +249,42 @@ async function checkWeeklyBudgetAchievement(user) {
 }
 
 
+// Check if the user stayed within their monthly budget over the last 30 days (from achievement start date)
+async function checkMonthlyBudgetAchievement(user) {
+  const achievement = await achievements.findOne({
+    _id: { $in: user.activeAchievements },
+    type: "monthly_budget",
+    completed: false,
+  });
+
+  if (!achievement) return;
+
+  const start = new Date(achievement.date);
+  const now = new Date();
+  const daysSince = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  if (daysSince < 30) return;
+
+  const end = new Date(start);
+  end.setDate(start.getDate() + 30);
+  end.setHours(23, 59, 59, 999);
+
+  const expenses = await transactions.find({
+    _id: { $in: user.transactions },
+    type: "expense",
+    date: { $gte: start, $lte: end },
+  });
+
+  const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
+
+  if (totalSpent <= user.budget.monthly && user.budget.monthly > 0) {
+    if (achievement.progress < achievement.target) {
+      achievement.progress += 1;
+      await achievement.save();
+    }
+  }
+}
+
+
 // PROFILE PAGE
 // Fetch user info from mongoDB
 // app.use('/scripts', express.static(__dirname + '/scripts'));
@@ -360,6 +396,9 @@ app.get("/home", async (req, res) => {
 
     // Check for weekly_budget achievement
     await checkWeeklyBudgetAchievement(user);
+    // Check for monthly_budget achievement
+    await checkMonthlyBudgetAchievement(user);
+
 
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
