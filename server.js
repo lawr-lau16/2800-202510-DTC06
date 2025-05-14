@@ -195,6 +195,7 @@ app.get("/game", (request, result) => {
   if (!request.session.uid) {
     return result.redirect("/login");
   }
+  request.session.joke = "";
   result.render("game");
 });
 
@@ -212,6 +213,7 @@ app.get("/profile", async (req, res) => {
   }
   try {
     const user = await users.findById(req.session.uid);
+    req.session.joke = "";
     res.render("profile", { user });
   } catch (err) {
     console.error("Error fetching user:", err);
@@ -693,6 +695,7 @@ app.get("/transactions", async (req, res) => {
 
     const transactionsList = await transactions.find(filter);
     console.log("Fetched Transactions:", transactionsList);
+    req.session.joke = "";
     res.render("transactions", {
       transactions: transactionsList,
       selectedType: type || "",
