@@ -66,6 +66,9 @@ router.get("/data", async (req, res) => {
 
   const completed = [...completedFromActive, ...extraCompleted];
 
+  // Removes the joke when loading
+  req.session.joke = "";
+
   res.json({
     active,
     inactive: allInactive.filter(Boolean),
