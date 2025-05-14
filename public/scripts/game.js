@@ -146,8 +146,8 @@ function dynamicallyDisplayBase() {
     itemsDiv = document.getElementById("items");
     itemsDiv.innerHTML = "";
     // May be replaced by db future on
-    const baseAvailable = ["white", "black", "blue", "red", "green", "yellow"];
-    const baseAll = ["white", "black", "blue", "red", "green", "yellow", "gold"];
+    const baseAvailable = ["white", "black", "blue", "red", "green", "yellow", "camel"];
+    const baseAll = ["white", "black", "blue", "red", "green", "yellow", "camel", "gold"];
     // used to see if user has gold
     const itemsOwned = [];
     amiBase = document.getElementById("ami-base");
