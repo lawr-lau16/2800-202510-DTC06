@@ -370,4 +370,58 @@ router.post("/track-weekly-budget", async (req, res) => {
   }
 });
 
+
+// Check if the user stayed within their weekly budget over the last 7 days (starting from when 'weekly_budget' achievement was activated)
+router.post("/track-monthly-budget", async (req, res) => {
+  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const user = await users.findById(req.session.uid);
+    // Find user's active 'monthly_budget' achievement that is not completed
+    const achievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "monthly_budget",
+      completed: false,
+    });
+
+    // Stop if user does not have this achievement
+    if (!achievement) {
+      return res.json({ success: false, message: "No active monthly budget achievement." });
+    }
+
+    // Get start date
+    const start = new Date(achievement.date);
+    // Define end of 30 day period
+    const end = new Date(start);
+    end.setDate(start.getDate() + 30);
+    end.setHours(23, 59, 59, 999);
+
+    // Get all user expenses from 30 day period
+    const expenses = await mongoose.model("transactions").find({
+      _id: { $in: user.transactions },
+      type: "expense",
+      date: { $gte: start, $lte: end },
+    });
+
+    // Calculate total amount from 30 day period
+    const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
+
+    // If user spent <= their monthly budget (and their budget is set > 0)
+    if (totalSpent <= user.budget.monthly && user.budget.monthly > 0) {
+      // Increment achievement progress by 1
+      if (achievement.progress < achievement.target) {
+        achievement.progress += 1;
+        await achievement.save();
+        return res.json({ success: true, message: "Monthly budget goal achieved!" });
+      }
+    }
+
+    res.json({ success: false, message: "Monthly budget goal not met yet." });
+  } catch (err) {
+    console.error("Error tracking monthly budget:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 module.exports = router;
