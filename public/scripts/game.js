@@ -35,6 +35,11 @@ function amiPetHappy() {
     }, 700);
 }
 
+// happiness decay
+function happinessDecay() {
+    
+}
+
 // Function to remove Ami clickability
 function removePetEventListener() {
     ami.removeEventListener("click", amiPetHappy);

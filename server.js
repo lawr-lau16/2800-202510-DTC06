@@ -189,13 +189,22 @@ app.get("/login", (request, result) => {
   result.render("login");
 });
 
-app.get("/game", (request, result) => {
+app.get("/game", async (request, result) => {
   if (!request.session.uid) {
     return result.redirect("/login");
   }
   request.session.joke = "";
-  result.render("game");
+  try {
+    const user = await users.findById(request.session.uid);
+    console.log("Fetched pet data:", user.pet);
+    result.render("game", { pet: user.pet });
+  }
+  catch (err) {
+    console.log("Error rendering pet info:", err.message);
+    res.status(500).send("Internal server error")
+  }
 });
+
 
 app.get("/add-expense", (req, res) => {
   res.render("partials/expense_log");
@@ -1134,6 +1143,7 @@ app.post("/pet", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 /**
  * This is the route for the post /pet/update URL.

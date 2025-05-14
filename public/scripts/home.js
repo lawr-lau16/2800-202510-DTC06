@@ -4,50 +4,67 @@ window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
-    function drawChart(values) {
-        // e66f6f = red, 8ce66f = green
+    function drawAnimatedChart(values, duration = 500) {
         const colors = ['#e66f6f', '#8ce66f'];
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+        const start = performance.now();
         const img = new Image();
         img.src = "/images/misc_assets/ami.png";
 
-
         img.onload = function () {
-            dmbChart(150, 150, 115, 35, values, colors, img);
+            function animate(time) {
+                const elapsed = time - start;
+                const progress = Math.min(elapsed / duration, 1); // range [0,1]
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                dmbChart(150, 150, 115, 35, values, colors, img, progress);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            requestAnimationFrame(animate);
         };
     }
 
-    function dmbChart(cx, cy, radius, arcwidth, values, colors, img) {
+
+    function dmbChart(cx, cy, radius, arcwidth, values, colors, img, progress = 1) {
         const PI = Math.PI;
         const PI2 = 2 * PI;
-        const offset = PI / 2; // red starts from the bottom
+        const offset = PI / 2;
 
         ctx.lineWidth = arcwidth;
 
         const total = values.reduce((a, b) => a + b, 0);
         let accum = 0;
+        let drawn = 0;
 
         for (let i = 0; i < values.length; i++) {
+            const value = values[i];
+            const startAngle = offset + PI2 * (accum / total);
+            const endAngle = offset + PI2 * ((accum + value) / total);
+            const arcSpan = endAngle - startAngle;
+            const maxSpan = PI2 * progress;
+
+            if (drawn >= maxSpan) break;
+
             ctx.beginPath();
             ctx.arc(
                 cx,
                 cy,
                 radius,
-                offset + PI2 * (accum / total),
-                offset + PI2 * ((accum + values[i]) / total)
+                startAngle,
+                Math.min(endAngle, offset + maxSpan)
             );
             ctx.strokeStyle = colors[i];
             ctx.stroke();
-            accum += values[i];
+
+            drawn += arcSpan;
+            accum += value;
         }
 
-        // Inner "cutout"
-        const innerRadius = radius - arcwidth - 3;
-        ctx.beginPath();
-        ctx.arc(cx, cy, innerRadius, 0, PI2);
-        ctx.fillStyle = "transparent";
-        ctx.fill();
+    }
+
 
         // Ami in the center
         // const imageSize = innerRadius * 2;
@@ -55,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
         // const drawWidth = img.width * scale;
         // const drawHeight = img.height * scale;
         // ctx.drawImage(img, cx - drawWidth / 2, cy - drawHeight / 2, drawWidth, drawHeight);
-    }
+    
 
 
     // function dailyTransactions(transactionDate) {
@@ -139,7 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById("spentVsBudget").innerHTML = `$${total} / $${selectedBudget}`;
 
             const values = [(total / selectedBudget) * 100, ((selectedBudget - total) / selectedBudget) * 100]
-            drawChart(values);
+            drawAnimatedChart(values);
         }
         catch (err) {
             console.error("Error:", err)
