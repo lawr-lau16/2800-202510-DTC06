@@ -403,6 +403,63 @@ async function checkMonthlyBudgetAchievement(user) {
   }
 }
 
+// Check if user bought coffee for coffee achievement
+async function checkCoffeeAchievement(user) {
+  // Find user's active 'coffee' achievement that is not completed
+  const achievement = await achievements.findOne({
+    _id: { $in: user.activeAchievements },
+    type: "coffee",
+    completed: false,
+  });
+  
+  // Stop if user does not have this achievement
+  if (!achievement) return;
+
+  // Get current date
+  const now = new Date();
+  // Get date last checked for achievement
+  const lastCheck = new Date(achievement.previousDate);
+  // Check if it's a new day
+  const isNewDay =
+    now.getFullYear() !== lastCheck.getFullYear() ||
+    now.getMonth() !== lastCheck.getMonth() ||
+    now.getDate() !== lastCheck.getDate();
+
+  // Skip if already checked today
+  if (!isNewDay) return;
+
+  // Set up time range for day
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+
+  // Search for any expense with name 'coffee'
+  const coffee = await transactions.findOne({
+    _id: { $in: user.transactions },
+    type: "expense",
+    // Case insensitive
+    name: /coffee/i,
+    date: { $gte: start, $lte: end },
+  });
+
+  // If no coffee was bought today and the achievement is not done yet
+  if (!coffee && achievement.progress < achievement.target) {
+    // Increment progress
+    achievement.progress += 1;
+    // Set today as last checked date
+    achievement.previousDate = now;
+    await achievement.save();
+
+    // If coffee was bought today, don't increment progress
+  } else if (coffee) {
+    // Set today as last checked date
+    achievement.previousDate = now;
+    await achievement.save();
+  }
+}
+
+
 // PROFILE PAGE
 // Fetch user info from mongoDB
 // app.use('/scripts', express.static(__dirname + '/scripts'));
@@ -516,6 +573,8 @@ app.get("/home", async (req, res) => {
     await checkWeeklyBudgetAchievement(user);
     // Check for monthly_budget achievement
     await checkMonthlyBudgetAchievement(user);
+    // Check for coffee achievement
+    await checkCoffeeAchievement(user);
 
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
@@ -663,9 +722,9 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
       {
-        type: "drink",
+        type: "coffee",
         description:
-          "Bring your own drinks from home for 5 days. (Don't buy coffee outside!)",
+          "Brew your own coffee at home. (Don't buy coffee outside!)",
         progress: 0,
         target: 5,
         date: new Date(),
