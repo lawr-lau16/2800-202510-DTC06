@@ -4,11 +4,19 @@
     <form action="/home" method="get">
         <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer py-4">EconAmi</button>
     </form>
-    <div class="ml-auto mr-0 md:mr-4 flex my-auto">
+    <div class="ml-auto mr-0 md:mr-4 flex my-auto drop-shadow-md">
         <div id="nav-coins"
-            class="bg-white text-[#0a67a0] px-2 rounded-lg border-[#0a67a0] border-2 text-center font-bold"></div>
+            class="text-[#0a67a0] rounded-lg border-[#026475] h-6 border-3 font-bold flex justify-between my-auto items-center select-none bg-[#3EC3DE]">
+            <img src="\images\navbar\coin.png" alt=""
+                class="size-6 bg-[#3EC3DE] outline-3 outline-[#026475] rounded-full p-0.5 -translate-x-2">
+            <p id="coin-stat" class="items-center px-1 pr-3 text-white tracking-wider drop-shadow-sm"></p>
+        </div>
+
         <div id="nav-happiness"
-            class="bg-white text-[#0a67a0] px-2 rounded-lg border-[#0a67a0] border-2 text-center ml-2 font-bold">
+            class="text-[#0a67a0] rounded-lg border-[#026475] h-6 border-3 font-bold flex justify-between my-auto items-center ml-3 select-none bg-[#3EC3DE]">
+            <img src="\images\navbar\heart.png" alt=""
+                class="size-6 bg-[#3EC3DE] outline-3 outline-[#026475] rounded-full p-0.5 -translate-x-2">
+            <p id="happiness-stat" class="items-center px-1 pr-3 text-white tracking-wider drop-shadow-sm"></p>
         </div>
     </div>
 </nav>

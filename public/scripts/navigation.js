@@ -2,7 +2,7 @@ function navigationCurrent() {
     let current = window.location.pathname;
     document.querySelectorAll("#nav_highlight form").forEach(function (elem) {
         if (elem.action.includes(current)) {
-            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
+            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#087c91]", "text-white", "transition");
         } else {
             elem.classList.add("hover:bg-[#1c9db7]", "transition")
         }
@@ -65,7 +65,7 @@ function resetWidthContent() {
     if (window.screen.width < 768) {
         content.style.marginLeft = "0px"
     }
-    else if (window.screen.width > 768) {
+    else if (window.screen.width >= 768) {
         if (sidebar.classList.contains("open"))
             content.style.marginLeft = "180px"
         else if (!sidebar.classList.contains("open"))
@@ -79,15 +79,16 @@ async function navbarStats() {
     try {
         const response = await fetch('/inventory', { method: 'POST' });
         const { coins } = await response.json();
-        coinsDiv = document.getElementById("nav-coins")
-        coinsDiv.innerHTML = coins
+        coinsStat = document.getElementById("coin-stat")
+        coinsStat.innerHTML = 10
+
     } catch (err) {
         console.error("Failed to load inventory:", err);
     } try {
         const response = await fetch('/pet', { method: 'POST' });
         const { pet } = await response.json();
-        happinessDiv = document.getElementById("nav-happiness")
-        happinessDiv.innerHTML = pet.happiness
+        happinessStat = document.getElementById("happiness-stat")
+        happinessStat.innerHTML = pet.happiness
     } catch (err) {
         console.error("Error loading pet:", err);
     }
