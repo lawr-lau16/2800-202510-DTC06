@@ -118,8 +118,14 @@ fetch('/achievements/data')
 
           // If no error, show success message with coins earned
           const result = await res.json();
-          alert(`+${result.reward} coins earned!`);
-          location.reload();
+
+          // Modal
+          showRewardModal(result.reward);
+          // Update coin display without full reload
+          const coinDisplay = document.querySelector(".text-4xl.font-bold");
+          if (coinDisplay) {
+            coinDisplay.textContent = parseInt(coinDisplay.textContent) + result.reward;
+          }
 
         } catch (err) {
           console.error('Redeem failed:', err);
@@ -128,3 +134,18 @@ fetch('/achievements/data')
       }
     });
   })
+
+
+// Modal
+function showRewardModal(coins) {
+  const modal = document.getElementById("rewardModal");
+  const message = document.getElementById("rewardMessage");
+  message.textContent = `+${coins} coins earned!`;
+  modal.classList.remove("hidden");
+}
+
+function closeRewardModal() {
+  const modal = document.getElementById("rewardModal");
+  modal.classList.add("hidden");
+  location.reload();
+}
