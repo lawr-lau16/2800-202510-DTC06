@@ -464,9 +464,7 @@ app.get("/home", async (req, res) => {
   }
   try {
     const user = await users.findById(req.session.uid);
-    const userTransactions = await transactions.find({
-      _id: { $in: user.transactions },
-    });
+    const userTransactions = await transactions.find( { _id: { $in: user.transactions } } );
 
     // Check for weekly_budget achievement
     await checkWeeklyBudgetAchievement(user);
@@ -481,12 +479,16 @@ app.get("/home", async (req, res) => {
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpenses;
 
+    // Sorts the transactions and slices out the most recent 5 to send to the view
+    const topFive = userTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
     res.render("home", {
       username: req.session.username,
       totalIncome,
       totalExpenses,
       balance,
       expenses: userTransactions,
+      five: topFive,
       joke: req.session.joke,
     });
   } catch (err) {
