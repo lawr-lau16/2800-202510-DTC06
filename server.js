@@ -192,7 +192,7 @@ app.get("/login", (request, result) => {
 });
 
 // happiness decay
-function happinessDecay(pet) {
+async function happinessDecay(pet) {
   const now = new Date();
   const lastPetted = new Date(pet.lastPetted);
 
@@ -200,7 +200,10 @@ function happinessDecay(pet) {
   const hourDifference = Math.floor(minuteDifference / 3600000);
   const newHappiness = Math.max(0, pet.happiness - hourDifference);
 
-  return newHappiness;
+  // Cap off at 100
+  const happiness = Math.min(100, newHappiness);
+
+  return happiness;
 }
 
 app.get("/game", async (request, result) => {
@@ -211,7 +214,11 @@ app.get("/game", async (request, result) => {
   try {
     const user = await users.findById(request.session.uid);
     const pet = user.pet;
-    pet.happiness = happinessDecay(pet);
+
+    // Update the database
+    const happiness = await happinessDecay(pet);
+    await users.findByIdAndUpdate(request.session.uid, { 'pet.happiness': happiness });
+    pet.happiness = happiness;
     console.log("Fetched pet data:", pet);
     result.render("game", { pet });
   }
@@ -239,7 +246,7 @@ app.post("/user/pet", async (request, result) => {
   request.session.joke = "";
   try {
     const user = await users.findById(request.session.uid);
-    user.pet = {...user.pet, ...request.body};
+    user.pet = { ...user.pet, ...request.body };
     await user.save();
     result.json(user.pet);
   }
@@ -649,22 +656,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -679,11 +686,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -693,6 +700,7 @@ app.post("/auth/register", async (req, res) => {
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new users({
@@ -768,7 +776,7 @@ app.post("/auth/login", async (request, result) => {
 
     // Fix timezone
     today.setMinutes(today.getMinutes() + today.getTimezoneOffset());
-    
+
     // Get user's last login date
     const lastLoginDate = new Date(user.lastLogin);
     // Calculate the time difference between the two dates

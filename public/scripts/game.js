@@ -38,14 +38,15 @@ async function getPetData() {
     } catch (err) {
         console.error(err);
     }
-    }
+}
 
 async function updatePetData(updatedPet) {
     try {
         const response = await fetch('/user/pet', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'},
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(updatedPet),
         });
         if (!response.ok) {
@@ -75,8 +76,16 @@ function amiPetHappy() {
         amiExpression.src = "images/game/Ami-Expressions/default.png";
     }, 700);
     pet.happiness += 1;
-    pet.lastPetted = new Date();
+
+    // Cap off at 100
+    pet.happiness = Math.min(100, pet.happiness);
+
+    const newDate = new Date();
+    pet.lastPetted = newDate;
     console.log("Happiness +1 after pet", pet.happiness)
+
+    // Live replace the happy value with the new one
+    document.getElementById("happy").innerText = pet.happiness;
     updatePetData(pet);
 
 }
