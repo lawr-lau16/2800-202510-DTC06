@@ -219,6 +219,32 @@ app.get("/game", async (request, result) => {
     const happiness = await happinessDecay(pet);
     await users.findByIdAndUpdate(request.session.uid, { 'pet.happiness': happiness });
     pet.happiness = happiness;
+
+    // Tracking multi-day happiness for ami_happiness achievement
+    const amiHappinessAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "ami_happiness",
+      completed: false,
+    });
+
+    if (amiHappinessAchievement && pet.happiness >= 80) {
+      const lastDate = new Date(amiHappinessAchievement.previousDate);
+      const now = new Date();
+
+      // New day check
+      const isNewDay =
+        now.getFullYear() !== lastDate.getFullYear() ||
+        now.getMonth() !== lastDate.getMonth() ||
+        now.getDate() !== lastDate.getDate();
+
+      // If new day and happiness above 80, increment progress
+      if (isNewDay && amiHappinessAchievement.progress < amiHappinessAchievement.target) {
+        amiHappinessAchievement.progress += 1;
+        amiHappinessAchievement.previousDate = now;
+        await amiHappinessAchievement.save();
+      }
+    }
+
     console.log("Fetched pet data:", pet);
     result.render("game", { pet });
   }
@@ -238,15 +264,40 @@ app.get("/user/pet", async (request, result) => {
   }
 });
 
-
 app.post("/user/pet", async (request, result) => {
   if (!request.session.uid) {
     return result.status(401).send("Unauthorized");
   }
+
   request.session.joke = "";
   try {
     const user = await users.findById(request.session.uid);
-    user.pet = { ...user.pet, ...request.body };
+    // Update the pet with new values
+    user.pet.base = request.body.base;
+    user.pet.item = request.body.item;
+    user.pet.happiness = request.body.happiness;
+
+    // Set lastPetted
+    user.pet.lastPetted = new Date();
+
+
+    // Check for pet_ami achievement
+    const petAmiAchievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "pet_ami",
+      completed: false,
+    });
+
+    // If pet after accepting the achievement
+    if (
+      petAmiAchievement &&
+      petAmiAchievement.progress < petAmiAchievement.target
+    ) {
+      // Then increment achievement progress
+      petAmiAchievement.progress += 1;
+      await petAmiAchievement.save();
+    }
+
     await user.save();
     result.json(user.pet);
   }
@@ -359,6 +410,67 @@ async function checkMonthlyBudgetAchievement(user) {
   }
 }
 
+// Check if user bought coffee for coffee achievement
+async function checkCoffeeAchievement(user) {
+  // Find user's active 'coffee' achievement that is not completed
+  const achievement = await achievements.findOne({
+    _id: { $in: user.activeAchievements },
+    type: "coffee",
+    completed: false,
+  });
+
+  console.log(achievement, 'this is the achievement!');
+  
+  // Stop if user does not have this achievement
+  if (!achievement) return;
+
+  // Get current date
+  const now = new Date();
+  // Get date last checked for achievement
+  const lastCheck = new Date(achievement.previousDate);
+  // Check if it's a new day
+  const isNewDay =
+    now.getFullYear() !== lastCheck.getFullYear() ||
+    now.getMonth() !== lastCheck.getMonth() ||
+    now.getDate() !== lastCheck.getDate();
+
+  console.log('its a new day... ', isNewDay);
+
+  // Skip if already checked today
+  if (!isNewDay) return;
+
+  // Set up time range for day
+  const start = new Date(lastCheck);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(lastCheck);
+  end.setHours(23, 59, 59, 999);
+
+  // Search for any expense with name 'coffee'
+  const coffee = await transactions.findOne({
+    _id: { $in: user.transactions },
+    type: "expense",
+    // Case insensitive
+    name: /coffee/i,
+    date: { $gte: start, $lte: end },
+  });
+
+  // If no coffee was bought today and the achievement is not done yet
+  if (!coffee && achievement.progress < achievement.target) {
+    // Increment progress
+    achievement.progress += 1;
+    // Set today as last checked date
+    achievement.previousDate = now;
+    await achievement.save();
+
+    // If coffee was bought today, don't increment progress
+  } else if (coffee) {
+    // Set today as last checked date
+    achievement.previousDate = now;
+    await achievement.save();
+  }
+}
+
+
 // PROFILE PAGE
 // Fetch user info from mongoDB
 // app.use('/scripts', express.static(__dirname + '/scripts'));
@@ -470,6 +582,8 @@ app.get("/home", async (req, res) => {
     await checkWeeklyBudgetAchievement(user);
     // Check for monthly_budget achievement
     await checkMonthlyBudgetAchievement(user);
+    // Check for coffee achievement
+    await checkCoffeeAchievement(user);
 
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
@@ -575,11 +689,9 @@ app.post("/auth/register", async (req, res) => {
         description: "Introduce yourself to Ami. Go ahead and pet Ami!",
         progress: 0,
         target: 1,
-        target: 1,
         date: new Date(),
         previousDate: new Date(),
         completed: false,
-        reward: 5,
         reward: 5,
       },
       {
@@ -614,7 +726,7 @@ app.post("/auth/register", async (req, res) => {
       },
       {
         type: "ami_happiness",
-        description: "Keep Ami's happiness above 85 for 3 days (go pet Ami!)",
+        description: "Keep Ami's happiness above 80 for 3 days.",
         progress: 0,
         target: 3,
         date: new Date(),
@@ -623,9 +735,9 @@ app.post("/auth/register", async (req, res) => {
         reward: 10,
       },
       {
-        type: "drink",
+        type: "coffee",
         description:
-          "Bring your own drinks from home for 5 days. (Don't buy coffee outside!)",
+          "Brew your own coffee at home. (Don't buy coffee outside!)",
         progress: 0,
         target: 5,
         date: new Date(),

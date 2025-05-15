@@ -424,4 +424,81 @@ router.post("/track-monthly-budget", async (req, res) => {
 });
 
 
+// Check if the user has any expenses named coffee for coffee achievement
+router.post("/track-coffee", async (req, res) => {
+  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const user = await users.findById(req.session.uid);
+    // Find user's active 'coffee' achievement that is not completed
+    const achievement = await achievements.findOne({
+      _id: { $in: user.activeAchievements },
+      type: "coffee",
+      completed: false,
+    });
+
+    // Stop if user does not have this achievement
+    if (!achievement) {
+      return res.json({ success: false, message: "No active coffee achievement." });
+    }
+
+    // Get start date
+    const now = new Date();
+    // Get date last checked for achievement
+    const lastCheck = new Date(achievement.previousDate);
+    // Check if it's a new day
+    const isNewDay =
+      now.getFullYear() !== lastCheck.getFullYear() ||
+      now.getMonth() !== lastCheck.getMonth() ||
+      now.getDate() !== lastCheck.getDate();
+
+    // Skip if already checked today
+    if (!isNewDay) {
+      return res.json({ success: false, message: "Already checked today." });
+    }
+
+    // Set up time range for day
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // Search for any expense with name 'coffee'
+    const coffeeExpense = await mongoose.model("transactions").findOne({
+      _id: { $in: user.transactions },
+      type: "expense",
+      // Case insensitive
+      name: /coffee/i,
+      date: { $gte: startOfDay, $lte: endOfDay },
+    });
+
+    console.log("why?", coffeeExpense);
+
+    // If no coffee was bought today and the achievement is not done yet
+    if (!coffeeExpense && achievement.progress < achievement.target) {
+      // Increment progress
+      achievement.progress += 1;
+      // Set today as last checked date
+      achievement.previousDate = now;
+      await achievement.save();
+
+      return res.json({ success: true, message: "Day counted, no coffee purchased!" });
+
+      // If coffee was bought today, don't increment progress
+    } else if (coffeeExpense) {
+      // Set today as last checked date
+      achievement.previousDate = now;
+      await achievement.save();
+
+      return res.json({ success: false, message: "You bought coffee today!" });
+    }
+
+    // If nothing changed
+    res.json({ success: false, message: "No progress made." });
+  } catch (err) {
+    console.error("Error tracking coffee achievement:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
