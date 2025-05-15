@@ -1,13 +1,15 @@
 <nav class="sticky top-0 flex bg-[#3EC3DE] text-white z-999 px-4 md:px-0">
-    <button class="hidden md:block hover:bg-[#1c9db7] transition mr-8 w-14 p-4 hover:cursor-pointer"
+    <button class="hidden md:block hover:bg-[#1c9db7] transition mr-4 w-14 p-4 hover:cursor-pointer"
         id="navigation_toggle"><i class="fa-solid fa-less-than fa-lg fa-flip-horizontal"></i></button>
     <form action="/home" method="get">
         <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer py-4">EconAmi</button>
     </form>
-    <div class="ml-auto flex my-auto">
-        <div id="nav-coins" class="bg-blue-500 px-2 rounded-lg border-black border-2 text-center font-semibold"></div>
+    <div class="ml-auto mr-0 md:mr-4 flex my-auto">
+        <div id="nav-coins"
+            class="bg-white text-[#0a67a0] px-2 rounded-lg border-[#0a67a0] border-2 text-center font-bold"></div>
         <div id="nav-happiness"
-            class="bg-blue-500 px-2 rounded-lg border-black border-2 text-center ml-2 font-semibold"></div>
+            class="bg-white text-[#0a67a0] px-2 rounded-lg border-[#0a67a0] border-2 text-center ml-2 font-bold">
+        </div>
     </div>
 </nav>
 
@@ -15,8 +17,6 @@
 <div class="fixed top-17 h-full bg-[#3EC3DE] text-white z-999 hidden md:flex md:flex-col" id="sidebar"
     style="width:56px; transition: 0.3s;">
     <div id="nav_highlight" class="flex flex-col text-center">
-        <!-- <button onclick="navClose()" class="cursor-pointer mr-auto p-3 mx-3 mt-2 text-[#439189]"><i
-                class="drop-shadow-sm fa-solid fa-xmark fa-lg"></i></button> -->
         <form action="/home" method="get">
             <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
                 <i class="fa-solid fa-house fa-lg mr-4 py-3"></i>

@@ -20,6 +20,7 @@ function navigationSidebar() {
 
 // function to open sidebar
 function navigationSidebarOpen() {
+    sidebar.classList.toggle("open")
     sidebar.style.width = "180px";
     sidebar.style.transitionDelay = "0s";
     content.style.marginLeft = "180px"
@@ -41,6 +42,7 @@ function navigationSidebarOpen() {
 
 // function to close sidebar
 function navigationSidebarClose() {
+    sidebar.classList.toggle("open")
     sidebar.style.width = "56px";
     sidebar.style.transitionDelay = "0.2s";
     content.style.marginLeft = "56px"
@@ -56,6 +58,19 @@ function navigationSidebarClose() {
     document.querySelector("#navigation_toggle i").classList.toggle("fa-flip-horizontal")
     navigationToggle.removeEventListener("click", navigationSidebarClose)
     navigationToggle.addEventListener("click", navigationSidebarOpen)
+}
+
+// function to change main content to 0 if mobile
+function resetWidthContent() {
+    if (window.screen.width < 768) {
+        content.style.marginLeft = "0px"
+    }
+    else if (window.screen.width > 768) {
+        if (sidebar.classList.contains("open"))
+            content.style.marginLeft = "180px"
+        else if (!sidebar.classList.contains("open"))
+            content.style.marginLeft = "56px"
+    }
 }
 
 // function to get user's coins and Ami's happiness from db
@@ -79,6 +94,7 @@ async function navbarStats() {
 }
 
 // execute functions
+window.addEventListener('resize', resetWidthContent)
 navbarStats()
 navigationCurrent()
 navigationSidebar()
