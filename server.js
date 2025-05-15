@@ -741,7 +741,7 @@ app.post("/auth/register", async (req, res) => {
       {
         type: "coffee",
         description:
-          "Brew your own coffee at home. (Don't buy coffee outside!)",
+          "Brew your own coffee at home for 5 days. (Don't buy coffee outside!)",
         progress: 0,
         target: 5,
         date: new Date(),
