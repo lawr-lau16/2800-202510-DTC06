@@ -217,7 +217,9 @@ app.get("/game", async (request, result) => {
 
     // Update the database
     const happiness = await happinessDecay(pet);
-    await users.findByIdAndUpdate(request.session.uid, { 'pet.happiness': happiness });
+    await users.findByIdAndUpdate(request.session.uid, {
+      "pet.happiness": happiness,
+    });
     pet.happiness = happiness;
 
     // Tracking multi-day happiness for ami_happiness achievement
@@ -238,7 +240,10 @@ app.get("/game", async (request, result) => {
         now.getDate() !== lastDate.getDate();
 
       // If new day and happiness above 80, increment progress
-      if (isNewDay && amiHappinessAchievement.progress < amiHappinessAchievement.target) {
+      if (
+        isNewDay &&
+        amiHappinessAchievement.progress < amiHappinessAchievement.target
+      ) {
         amiHappinessAchievement.progress += 1;
         amiHappinessAchievement.previousDate = now;
         await amiHappinessAchievement.save();
@@ -247,10 +252,9 @@ app.get("/game", async (request, result) => {
 
     console.log("Fetched pet data:", pet);
     result.render("game", { pet });
-  }
-  catch (err) {
+  } catch (err) {
     console.log("Error rendering pet info:", err.message);
-    result.status(500).send("Internal server error")
+    result.status(500).send("Internal server error");
   }
 });
 
@@ -280,7 +284,6 @@ app.post("/user/pet", async (request, result) => {
     // Set lastPetted
     user.pet.lastPetted = new Date();
 
-
     // Check for pet_ami achievement
     const petAmiAchievement = await achievements.findOne({
       _id: { $in: user.activeAchievements },
@@ -300,13 +303,11 @@ app.post("/user/pet", async (request, result) => {
 
     await user.save();
     result.json(user.pet);
-  }
-  catch (err) {
+  } catch (err) {
     console.log("Error updating pet info:", err.message);
-    result.status(500).send("Internal server error")
+    result.status(500).send("Internal server error");
   }
 });
-
 
 app.get("/add-expense", (req, res) => {
   res.render("partials/expense_log");
@@ -377,7 +378,7 @@ async function checkMonthlyBudgetAchievement(user) {
 
   if (!achievement) {
     return;
-  };
+  }
 
   const start = new Date(achievement.date);
   const now = new Date();
@@ -419,8 +420,8 @@ async function checkCoffeeAchievement(user) {
     completed: false,
   });
 
-  console.log(achievement, 'this is the achievement!');
-  
+  console.log(achievement, "this is the achievement!");
+
   // Stop if user does not have this achievement
   if (!achievement) return;
 
@@ -434,7 +435,7 @@ async function checkCoffeeAchievement(user) {
     now.getMonth() !== lastCheck.getMonth() ||
     now.getDate() !== lastCheck.getDate();
 
-  console.log('its a new day... ', isNewDay);
+  console.log("its a new day... ", isNewDay);
 
   // Skip if already checked today
   if (!isNewDay) return;
@@ -469,7 +470,6 @@ async function checkCoffeeAchievement(user) {
     await achievement.save();
   }
 }
-
 
 // PROFILE PAGE
 // Fetch user info from mongoDB
@@ -576,7 +576,9 @@ app.get("/home", async (req, res) => {
   }
   try {
     const user = await users.findById(req.session.uid);
-    const userTransactions = await transactions.find( { _id: { $in: user.transactions } } );
+    const userTransactions = await transactions.find({
+      _id: { $in: user.transactions },
+    });
 
     // Check for weekly_budget achievement
     await checkWeeklyBudgetAchievement(user);
@@ -594,7 +596,9 @@ app.get("/home", async (req, res) => {
     const balance = totalIncome - totalExpenses;
 
     // Sorts the transactions and slices out the most recent 5 to send to the view
-    const topFive = userTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+    const topFive = userTransactions
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 5);
 
     res.render("home", {
       username: req.session.username,
@@ -770,22 +774,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-        defaultActiveAchievements[i].date.getTimezoneOffset()
+          defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-        achievementData.date.getTimezoneOffset()
+          achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-        achievementData.previousDate.getTimezoneOffset()
+          achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -800,11 +804,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-        achievementData.date.getTimezoneOffset()
+          achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-        achievementData.previousDate.getTimezoneOffset()
+          achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -814,7 +818,6 @@ app.post("/auth/register", async (req, res) => {
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
-
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new users({
@@ -1119,8 +1122,14 @@ app.get("/transactions/chart-data", async (req, res) => {
       monthlyTotals[month] = (monthlyTotals[month] || 0) + t.amount;
 
       // Group by week number in month (Week 1 to Week 5)
-      const week = `Week ${Math.ceil(dateObj.getDate() / 7)}`;
-      weeklyTotals[week] = (weeklyTotals[week] || 0) + t.amount;
+      // Weekly Totals: Monday-Sunday grouping
+      const day = dateObj.getDay();
+      const diffToMonday = (day === 0 ? -6 : 1) - day;
+      const monday = new Date(dateObj);
+      monday.setDate(dateObj.getDate() + diffToMonday);
+
+      const weekKey = `Week of ${monday.toISOString().slice(0, 10)}`;
+      weeklyTotals[weekKey] = (weeklyTotals[weekKey] || 0) + t.amount;
     });
 
     // Sort monthly totals by calendar month order
@@ -1146,8 +1155,11 @@ app.get("/transactions/chart-data", async (req, res) => {
 
     // Sort weekly totals by week number
     const sortedWeekly = Object.entries(weeklyTotals).sort(
-      (a, b) => parseInt(a[0].split(" ")[1]) - parseInt(b[0].split(" ")[1])
+      (a, b) =>
+        new Date(a[0].replace("Week of ", "")) -
+        new Date(b[0].replace("Week of ", ""))
     );
+
     const weeklyLabels = sortedWeekly.map(([label]) => label);
     const weeklyValues = sortedWeekly.map(([, value]) => value);
 
@@ -1408,7 +1420,6 @@ app.post("/pet", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 /**
  * This is the route for the post /pet/update URL.
