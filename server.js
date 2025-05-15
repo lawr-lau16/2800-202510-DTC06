@@ -191,8 +191,8 @@ app.get("/login", (request, result) => {
   result.render("login");
 });
 
-// Happiness Decay
-function happinessDecay(pet) {
+// happiness decay
+async function happinessDecay(pet) {
   const now = new Date();
   const lastPetted = new Date(pet.lastPetted);
 
@@ -200,7 +200,10 @@ function happinessDecay(pet) {
   const hourDifference = Math.floor(minuteDifference / 3600000);
   const newHappiness = Math.max(0, pet.happiness - hourDifference);
 
-  return newHappiness;
+  // Cap off at 100
+  const happiness = Math.min(100, newHappiness);
+
+  return happiness;
 }
 
 app.get("/game", async (request, result) => {
@@ -211,7 +214,11 @@ app.get("/game", async (request, result) => {
   try {
     const user = await users.findById(request.session.uid);
     const pet = user.pet;
-    pet.happiness = happinessDecay(pet);
+
+    // Update the database
+    const happiness = await happinessDecay(pet);
+    await users.findByIdAndUpdate(request.session.uid, { 'pet.happiness': happiness });
+    pet.happiness = happiness;
 
     // Tracking multi-day happiness for ami_happiness achievement
     const amiHappinessAchievement = await achievements.findOne({
@@ -411,6 +418,8 @@ async function checkCoffeeAchievement(user) {
     type: "coffee",
     completed: false,
   });
+
+  console.log(achievement, 'this is the achievement!');
   
   // Stop if user does not have this achievement
   if (!achievement) return;
@@ -425,13 +434,15 @@ async function checkCoffeeAchievement(user) {
     now.getMonth() !== lastCheck.getMonth() ||
     now.getDate() !== lastCheck.getDate();
 
+  console.log('its a new day... ', isNewDay);
+
   // Skip if already checked today
   if (!isNewDay) return;
 
   // Set up time range for day
-  const start = new Date();
+  const start = new Date(lastCheck);
   start.setHours(0, 0, 0, 0);
-  const end = new Date();
+  const end = new Date(lastCheck);
   end.setHours(23, 59, 59, 999);
 
   // Search for any expense with name 'coffee'
@@ -565,9 +576,7 @@ app.get("/home", async (req, res) => {
   }
   try {
     const user = await users.findById(req.session.uid);
-    const userTransactions = await transactions.find({
-      _id: { $in: user.transactions },
-    });
+    const userTransactions = await transactions.find( { _id: { $in: user.transactions } } );
 
     // Check for weekly_budget achievement
     await checkWeeklyBudgetAchievement(user);
@@ -584,12 +593,16 @@ app.get("/home", async (req, res) => {
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpenses;
 
+    // Sorts the transactions and slices out the most recent 5 to send to the view
+    const topFive = userTransactions.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
     res.render("home", {
       username: req.session.username,
       totalIncome,
       totalExpenses,
       balance,
       expenses: userTransactions,
+      five: topFive,
       joke: req.session.joke,
     });
   } catch (err) {
@@ -801,6 +814,7 @@ app.post("/auth/register", async (req, res) => {
       await newAchievement.save();
       activeAchievements.push(newAchievement._id);
     }
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new users({

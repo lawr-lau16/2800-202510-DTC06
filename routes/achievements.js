@@ -472,6 +472,8 @@ router.post("/track-coffee", async (req, res) => {
       date: { $gte: startOfDay, $lte: endOfDay },
     });
 
+    console.log("why?", coffeeExpense);
+
     // If no coffee was bought today and the achievement is not done yet
     if (!coffeeExpense && achievement.progress < achievement.target) {
       // Increment progress
