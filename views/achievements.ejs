@@ -16,25 +16,25 @@
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fade-in-up 0.3s ease-out;
+        }
+    </style>
 </head>
-
-<style>
-    @keyframes fade-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-fade-in-up {
-        animation: fade-in-up 0.3s ease-out;
-    }
-</style>
 
 <body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
     <!-- TOP NAV -->

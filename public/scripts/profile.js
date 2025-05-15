@@ -66,8 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             // If the update worked, show a message and reload the page
             if (response.ok) {
-                alert(`${field} saved!`);
-                window.location.reload();
+                showSaveModal();
                 // Else, show the error
             } else {
                 const { error } = await response.json();
@@ -78,3 +77,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setAmi()
 });
+
+
+function showSaveModal(message) {
+    const modal = document.getElementById("saveModal");
+    const messageBox = document.getElementById("saveModalMessage");
+    messageBox.textContent = message;
+    modal.classList.remove("hidden");
+}
+
+function closeSaveModal() {
+    const modal = document.getElementById("saveModal");
+    modal.classList.add("hidden");
+    window.location.reload();
+}
