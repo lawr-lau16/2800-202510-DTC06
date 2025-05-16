@@ -130,12 +130,15 @@ function gameButtonItems() {
 
 // Open Items menu
 function clickItemButton() {
-    itemsMenu.classList.toggle("hidden");
+    itemsMenu.classList.replace("rotate-x-270", "rotate-x-0");
+    itemsMenu.classList.replace("ease-in", "ease-out");
 }
 
 // Close Items menu
 function clickItemCloseButton() {
-    itemsMenu.classList.toggle("hidden");
+    itemsMenu.classList.replace("rotate-x-0", "rotate-x-270");
+    itemsMenu.classList.replace("ease-in", "ease-out");
+    itemsMenu.classList.replace("ease-out", "ease-in");
 }
 
 // Tab to change Ami's colour
@@ -432,12 +435,14 @@ function gameButtonAchievement() {
 
 // Open Items menu
 function clickAchievementButton() {
-    achievementMenu.classList.toggle("hidden");
+    achievementMenu.classList.replace("rotate-x-270", "rotate-x-0");
+    achievementMenu.classList.replace("ease-in", "ease-out");
 }
 
 // Close Items menu
 function clickAchievementCloseButton() {
-    achievementMenu.classList.toggle("hidden");
+    achievementMenu.classList.replace("rotate-x-0", "rotate-x-270");
+    achievementMenu.classList.replace("ease-out", "ease-in");
 }
 
 // For the weather
