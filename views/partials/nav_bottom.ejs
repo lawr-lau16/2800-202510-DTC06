@@ -1,4 +1,4 @@
-<nav id="nav_bottom" class="sticky bottom-0 justify-around flex bg-[#3EC3DE] text-white md:hidden">
+<nav id="nav_highlight" class="sticky bottom-0 justify-around flex bg-[#3EC3DE] text-white md:hidden z-999">
     <form action="/home" method="get">
         <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-house fa-lg"></i>
@@ -7,7 +7,7 @@
 
     <form action="/game" method="get">
         <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
-            <i class="fa-solid fa-face-smile-beam fa-lg"></i>
+            <img src="\images\navbar\game-icon.png" alt="" class="size-5.5 min-w-5.5 my-auto translate-y-0.5">
         </button>
     </form>
 
@@ -20,6 +20,10 @@
     <form action="/achievements" method="get">
         <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-star fa-lg"></i>
+                <div id="achievementsNotificationSm" style="visibility: hidden;"
+                    class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
+                    1
+                </div>
         </button>
     </form>
 
@@ -30,15 +34,25 @@
     </form>
 </nav>
 
-
 <script>
-    let current = window.location.pathname;
-    document.querySelectorAll("#nav_bottom form").forEach(function (elem) {
-        if (elem.action.includes(current)) {
-            elem.classList.add("bg-[#1c9db7]", "hover:bg-[#0b779a]", "text-white", "transition");
-        } else {
-            elem.classList.add("hover:bg-[#1c9db7]", "transition")
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/navbar')
+            .then(response => response.json())
+            .then(data => {
+                const achievements = data.achievements;
+                console.log(achievements)
 
+                const redeemableAchievement = achievements.filter(achievement => achievement.progress === achievement.target).length;
+                if (redeemableAchievement) {
+                    document.getElementById('achievementsNotificationSm').style.visibility = 'visible';
+                    document.getElementById('achievementsNotificationSm').innerHTML = redeemableAchievement;
+                }
+                else {
+                    document.getElementById('achievementsNotificationSm').style.visibility = 'hidden';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching achievements:', error);
+            });
     });
 </script>

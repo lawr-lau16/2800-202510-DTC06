@@ -1,84 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EconAmi</title>
-    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
     <!-- Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- External libraries -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
-        rel="stylesheet">
-    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/f0fa2c9149.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-</head>
-
-<!-- <style>
-    body {
-        background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
-        background-repeat: no-repeat;
-        background-size: 100%;
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <style>
+    .hero-gradient {
+      background: linear-gradient(135deg, #4f46e5 0%, #10b981 100%);
     }
-</style> -->
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .avatar-showcase {
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+  </style>
 
-<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
-
+  <body class="font-sans antialiased text-gray-800">
     <!-- Top Navigation -->
-    <%- include('./partials/nav_top') %>
+    <!-- <%- include('./partials/nav_top_non_user') %> -->
 
     <!-- PAGE CONTENT -->
-
-    <section class="h-dvh">
-
-        <!-- speech bubble -->
-        <div class="mx-auto max-w-[80%]">
-            <!-- bubble with text -->
-            <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
-
-                <p style="text-align: center;">Hi, I’m Ami!</p>
-                <br>
-
-                <p style="text-align: center;">I’m your friend in your budgeting journey. Please visit every day to play
-                    with me and feed me delicious things!</p>
-                <br>
-
-                <p style="text-align: center;">While you’re here, you can also track your expenses to help you be more
-                    mindful and improve your spending habits.</p>
-                <br>
-
-                <p style="text-align: center;">Complete challenges to earn coins to buy me cute things!</p>
-
+    <nav class="bg-white shadow-sm">
+      <div class="bg-[#3EC3DE] text-white w-full px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <span
+                class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer py-4"
+                >EconAmi</span
+              >
             </div>
-            <!-- bubble tail -->
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+            <a
+              href="#features"
+              class="px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:text-indigo-600"
+              >Features</a
+            >
+            <a
+              href="#how-it-works"
+              class="px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:text-indigo-600"
+              >How It Works</a
+            >
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <a
+              href="/login"
+              method="GET"
+              class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              >Login</a
+            >
+            <a
+              href="/login"
+              method="GET"
+              class="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 border-indigo-600"
+              >Sign Up</a
+            >
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            <button
+              type="button"
+              id="mobile-menu-button"
+              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            >
+              <span class="sr-only">Open main menu</span>
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div class="hidden sm:hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+          <a
+            href="#features"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+            >Features</a
+          >
+          <a
+            href="#how-it-works"
+            class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
+            >How It Works</a
+          >
+
+          <div class="mt-4 px-3">
+            <a
+              href="/login"
+              method="GET"
+              class="block w-full px-4 py-2 border border-transparent text-center font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              >Login</a
+            >
+            <a
+              href="/login"
+              method="GET"
+              class="block w-full mt-2 px-4 py-2 border border-transparent text-center font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 border-indigo-600"
+              >Sign Up</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-gradient">
+      <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1
+            class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+          >
+            <span></span>Budgeting Made Fun With
+            <span class="font-[DynaPuff] font-semibold">EconAmi</span>
+          </h1>
+          <p class="mt-6 max-w-lg mx-auto text-xl text-indigo-100">
+            Earn coins for smart spending, unlock achievements, and customize
+            your avatar - all while mastering your finances!
+          </p>
+          <div class="mt-10 flex justify-center space-x-4">
+            <a
+              href="/login"
+              method="GET"
+              class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
+            >
+              Get Started
+            </a>
+            <a
+              href="#how-it-works"
+              method="GET"
+              class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-70 md:py-4 md:text-lg md:px-10"
+            >
+              How It Works
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar Showcase -->
+    <div class="bg-gray-50 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+          <h2
+            class="text-base text-indigo-600 font-semibold tracking-wide uppercase"
+          >
+            Your Financial Journey
+          </h2>
+          <p
+            class="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl"
+          >
+            Meet Your <span class="font-[DynaPuff] font-semibold">Ami</span>
+          </p>
+          <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+            Customize your avatar with items earned through smart budgeting
+            achievements
+          </p>
+        </div>
+        <!-- Avatar goes here -->
+        <div class="mt-16 flex justify-center">
+          <div class="avatar-showcase relative">
             <div
-                class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+              class="w-64 h-64  bg-[#3EC3DE] rounded-full shadow-xl flex items-center justify-center"
+            >
+              <div class="text-center">
+                <img src="\images\misc_assets\ami.png" class="w-30 h-40" />
+                <p
+                  class="mt-2 text-2xl text-white font-[DynaPuff] font-semibold"
+                >
+                  Ami
+                </p>
+              </div>
             </div>
+            <div
+              class="absolute -top-4 -right-4 bg-yellow-400 rounded-full w-16 h-16 flex items-center justify-center shadow-lg"
+            >
+              <span class="text-xl font-bold">50</span>
+              <i class="fas fa-coins ml-1 text-yellow-800"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+          <h2
+            class="text-base text-indigo-600 font-semibold tracking-wide uppercase"
+          >
+            Features
+          </h2>
+          <p
+            class="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl"
+          >
+            A Better Way to Budget
+          </p>
+          <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+            EconAmi turns financial responsibility into an engaging game with
+            real rewards
+          </p>
         </div>
 
-        <!-- login/signup and Ami -->
-
-        <div style="display: flex; justify-content: center; margin: 20px;">
-            <div style="display: flex; flex-direction: column; margin: 100px;">
-                <form action="/login" method="get">
-                    <button type="submit"
-                        class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">Login/SignUp</button>
-                </form>
+        <div class="mt-20">
+          <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-2">
+            <!-- Feature 1 -->
+            <div
+              class="feature-card transition-all duration-300 ease-in-out pt-6"
+            >
+              <div class="flow-root bg-gray-50 rounded-lg px-6 pb-12 h-full">
+                <div class="-mt-6">
+                  <div>
+                    <span
+                      class="inline-flex items-center justify-center p-3 bg-indigo-500 rounded-md shadow-lg"
+                    >
+                      <i class="fas fa-coins text-white text-2xl"></i>
+                    </span>
+                  </div>
+                  <h3
+                    class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+                  >
+                    Earn Achievement Coins
+                  </h3>
+                  <p class="mt-5 text-base text-gray-500">
+                    Get rewarded with coins every time you hit a budgeting
+                    milestone or complete a financial challenge.
+                  </p>
+                </div>
+              </div>
             </div>
+
+            <!-- Feature 2 -->
+            <div
+              class="feature-card transition-all duration-300 ease-in-out pt-6"
+            >
+              <div class="flow-root bg-gray-50 rounded-lg px-6 pb-12 h-full">
+                <div class="-mt-6">
+                  <div>
+                    <span
+                      class="inline-flex items-center justify-center p-3 bg-green-500 rounded-md shadow-lg"
+                    >
+                      <i class="fas fa-robot text-white text-2xl"></i>
+                    </span>
+                  </div>
+                  <h3
+                    class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+                  >
+                    Customize Your Avatar
+                  </h3>
+                  <p class="mt-5 text-base text-gray-500">
+                    Spend your hard-earned coins to unlock new outfits,
+                    accessories, and styles for your EconAmi avatar.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feature 3 -->
+
+            <!-- Feature 4 -->
+            <div
+              class="feature-card transition-all duration-300 ease-in-out pt-6"
+            >
+              <div class="flow-root bg-gray-50 rounded-lg px-6 pb-12 h-full">
+                <div class="-mt-6">
+                  <div>
+                    <span
+                      class="inline-flex items-center justify-center p-3 bg-yellow-500 rounded-md shadow-lg"
+                    >
+                      <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </span>
+                  </div>
+                  <h3
+                    class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+                  >
+                    Track Your Progress
+                  </h3>
+                  <p class="mt-5 text-base text-gray-500">
+                    Visual dashboards show your financial growth alongside your
+                    avatar's evolution.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div
+              class="feature-card transition-all duration-300 ease-in-out pt-6"
+            >
+              <div class="flow-root bg-gray-50 rounded-lg px-6 pb-12 h-full">
+                <div class="-mt-6">
+                  <div>
+                    <span
+                      class="inline-flex items-center justify-center p-3 bg-red-500 rounded-md shadow-lg"
+                    >
+                      <i class="fas fa-gem text-white text-2xl"></i>
+                    </span>
+                  </div>
+                  <h3
+                    class="mt-8 text-lg font-medium text-gray-900 tracking-tight"
+                  >
+                    Exclusive Rewards
+                  </h3>
+                  <p class="mt-5 text-base text-gray-500">
+                    Unlock rare avatar items and special badges for exceptional
+                    financial achievements.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feature 6 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div id="how-it-works" class="py-16 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+          <h2
+            class="text-base text-indigo-600 font-semibold tracking-wide uppercase"
+          >
+            Process
+          </h2>
+          <p
+            class="mt-2 text-3xl font-extrabold leading-8 tracking-tight text-gray-900 sm:text-4xl"
+          >
+            How EconAmi Works
+          </p>
+          <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+            Transform your financial habits through playful engagement
+          </p>
+        </div>
+
+        <div class="mt-16">
+          <div class="lg:grid lg:grid-cols-3 lg:gap-8">
+            <!-- Step 1 -->
+            <div class="mb-12 lg:mb-0">
+              <div
+                class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white"
+              >
+                <span class="text-xl font-bold">1</span>
+              </div>
+              <div class="mt-5">
+                <h4 class="text-lg font-medium text-gray-900">
+                  Set Your Budget
+                </h4>
+                <p class="mt-2 text-base text-gray-500">
+                  Create your monthly budget categories and spending limits
+                  based on your income and goals.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="mb-12 lg:mb-0">
+              <div
+                class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white"
+              >
+                <span class="text-xl font-bold">2</span>
+              </div>
+              <div class="mt-5">
+                <h4 class="text-lg font-medium text-gray-900">
+                  Track Spending
+                </h4>
+                <p class="mt-2 text-base text-gray-500">
+                  Log your expenses and watch your progress. EconAmi
+                  automatically categorizes and analyzes your spending.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
             <div>
-                <img style="height: 200px;" src="/images/game/Ami-Base/white.png">
+              <div
+                class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white"
+              >
+                <span class="text-xl font-bold">3</span>
+              </div>
+              <div class="mt-5">
+                <h4 class="text-lg font-medium text-gray-900">
+                  Earn & Customize
+                </h4>
+                <p class="mt-2 text-base text-gray-500">
+                  Get coins for staying on budget and unlock new avatar items.
+                  Watch your avatar evolve with your financial health!
+                </p>
+              </div>
             </div>
+          </div>
+
+          <div class="mt-16 flex justify-center">
+            <a
+              href="/login"
+              method="GET"
+              class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+            >
+              Start Your Journey
+            </a>
+          </div>
         </div>
+      </div>
+    </div>
 
-    </section>
+    <!-- CTA Section -->
+    <div class="bg-indigo-700">
+      <div
+        class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8"
+      >
+        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+          <span class="block">Ready to transform your finances?</span>
+          <span class="block">Start your EconAmi journey today.</span>
+        </h2>
+        <p class="mt-4 text-lg leading-6 text-indigo-200">
+          Join thousands of users who've made budgeting fun and rewarding.
+        </p>
+        <a
+          href="/login"
+          method="GET"
+          class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto"
+        >
+          Sign up for free
+        </a>
+      </div>
+    </div>
 
+    <!-- Footer -->
+    <footer class="bg-gray-800">
+      
+        <div class="border-t border-gray-700 pt-8 flex justify-between">
+          <p class="text-gray-400 text-sm">
+            &copy; 2023 EconAmi. All rights reserved.
+          </p>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Cookie Policy</a
+            >
+          </div>
+    </footer>
+
+    <!-- <section class="min-h-dvh"> -->
+
+    <!-- speech bubble -->
+    <!-- <div class="mx-auto max-w-[80%]"> -->
+    <!-- bubble with text -->
+    <!-- <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full"> -->
+
+    <!-- <p style="text-align: center;">Hi, I’m Ami!</p> -->
+    <!-- <br> -->
+
+    <!-- <p style="text-align: center;">I’m your friend in your budgeting journey. Please visit every day to play -->
+    <!-- with me and feed me delicious things!</p> -->
+    <!-- <br> -->
+
+    <!-- <p style="text-align: center;">While you’re here, you can also track your expenses to help you be more -->
+    <!-- mindful and improve your spending habits.</p> -->
+    <!-- <br> -->
+
+    <!-- <p style="text-align: center;">Complete challenges to earn coins to buy me cute things!</p> -->
+
+    <!-- </div> -->
+    <!-- bubble tail -->
+    <!-- <div -->
+    <!-- class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent"> -->
+    <!-- </div> -->
+    <!-- </div> -->
+
+    <!-- login/signup and Ami -->
+
+    <!-- <div style="display: flex; justify-content: center; margin: 20px;"> -->
+    <!-- <div style="display: flex; flex-direction: column; margin: 100px;"> -->
+    <!-- <form action="/login" method="get"> -->
+    <!-- <button type="submit" -->
+    <!-- class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition mb-2">Login/SignUp</button> -->
+    <!-- </form> -->
+    <!-- </div> -->
+    <!-- <div> -->
+    <!-- <img style="height: 200px;" src="/images/game/Ami-Base/white.png"> -->
+    <!-- </div> -->
+    <!-- </div> -->
+
+    <!-- </section> -->
 
     <!-- Footer if we want would go here -->
+    <script>
+      // Mobile menu toggle
+      document
+        .getElementById("mobile-menu-button")
+        .addEventListener("click", function () {
+          const menu = document.getElementById("mobile-menu");
+          menu.classList.toggle("hidden");
+        });
 
-</body>
-
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+    </script>
+  </body>
 </html>

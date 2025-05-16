@@ -26,83 +26,312 @@
     <!-- Top Navigation -->
     <%- include('./partials/nav_top') %>
     <!-- Put your things in the section please -->
-    <section class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-      <div class="mt-6">
-        <div class="mb-4">
-          <a
-            href="/home"
-            class="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-          >
-            ← Back
-          </a>
-        </div>
-      </div>
-      <h1 class="text-2xl font-bold text-center text-blue-800 mb-6">
-        Your Transactions
-      </h1>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left text-gray-700">
-          <thead class="bg-blue-100 text-blue-800">
-            <tr>
-              <th class="px-4 py-3">Name</th>
-              <th class="px-4 py-3">Category</th>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">Amount</th>
-              <th class="px-4 py-3">Comments</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% transactions.forEach(transaction => { %>
-            <tr class="hover:bg-blue-50">
-              <td class="px-4 py-2">
-                <strong><%= transaction.name %></strong>
-              </td>
-              <td class="px-4 py-2"><%= transaction.category %></td>
-              <td class="px-4 py-2"><%= transaction.date.toDateString() %></td>
-              <td class="px-4 py-2 text-blue-600 font-semibold">
-                $<%= transaction.amount %>
-              </td>
-              <td class="px-4 py-2"><%= transaction.comments || 'N/A' %></td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-      <div class="flex justify-center mb-6">
-        <canvas id="transactionsPieChart" width="300" height="300"></canvas>
-      </div>
-    </section>
+    <div class="md:ml-14 min-h-dvh" id="content">
+      
+      <section
+        class="max-w-7xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg"
+      >
+        <h1 class="text-2xl font-bold text-center text-blue-800 mb-6">
+          Your Transactions
+        </h1>
 
+        <div class="mb-6">
+          <form
+            action="/transactions"
+            method="GET"
+            class="mb-4 flex gap-3 items-center"
+          >
+            <!-- Keep filter parameters if needed -->
+            <input type="hidden" name="type" value="<%= type || '' %>" />
+            <input
+              type="hidden"
+              name="category"
+              value="<%= category || '' %>"
+            />
+
+            <label for="sort" class="font-medium">Sort by:</label>
+            <select
+              name="sort"
+              id="sort"
+              class="border border-gray-400 p-2 rounded"
+            >
+              <option value="date_desc">Date: Newest First</option>
+              <option value="date_asc">Date: Oldest First</option>
+              <option value="amount_desc">Amount: High to Low</option>
+              <option value="amount_asc">Amount: Low to High</option>
+            </select>
+            <button
+              type="submit"
+              class="px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Apply
+            </button>
+          </form>
+
+          <div class="flex flex-wrap gap-3 mb-3">
+            <form action="/transactions" method="GET">
+              <input type="hidden" name="category" value="" />
+              <input type="hidden" name="openPanel" value="true" />
+              <button
+                type="submit"
+                class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                All
+              </button>
+            </form>
+            <button
+              onclick="showDropdown('income')"
+              class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
+            >
+              Income
+            </button>
+            <button
+              onclick="showDropdown('expense')"
+              class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
+            >
+              Expense
+            </button>
+          </div>
+          <form
+            action="/transactions"
+            method="GET"
+            id="incomeDropdown"
+            class="hidden"
+          >
+            <input type="hidden" name="type" value="income" />
+            <select
+              name="category"
+              class="border border-gray-400 p-2 rounded mb-2"
+            >
+              <option value="">All</option>
+              <option value="Salary">Salary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Bonus">Bonus</option>
+              <option value="Interest/Dividends">Interest/Dividends</option>
+              <option value="Refunds/Reimbursements">
+                Refunds/Reimbursements
+              </option>
+              <option value="Other Income">Other Income</option>
+            </select>
+            <button
+              type="submit"
+              class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Filter
+            </button>
+          </form>
+          <form
+            action="/transactions"
+            method="GET"
+            id="expenseDropdown"
+            class="hidden"
+          >
+            <input type="hidden" name="type" value="expense" />
+            <select
+              name="category"
+              class="border border-gray-400 p-2 rounded mb-2"
+            >
+              <option value="">All</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Home & Utilities">Home & Utilities</option>
+              <option value="Entertainment & Lifestyle">
+                Entertainment & Lifestyle
+              </option>
+              <option value="Personal & Health">Personal & Health</option>
+              <option value="Bills & Fees">Bills & Fees</option>
+              <option value="Pet">Pet</option>
+              <option value="Car">Car</option>
+              <option value="Shopping & Gifts">Shopping & Gifts</option>
+              <option value="Work & Education">Work & Education</option>
+              <option value="Travel">Travel</option>
+              <option value="Other">Other</option>
+            </select>
+            <button
+              type="submit"
+              class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Filter
+            </button>
+          </form>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left text-gray-700">
+            <thead class="bg-blue-100 text-blue-800">
+              <tr>
+                <th class="px-2 py-1">Name</th>
+                <th class="px-2 py-1">Category</th>
+                <th class="px-1 py-1">Date</th>
+                <th class="px-2 py-1">Amount</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <% transactions.forEach(transaction => { %>
+              <tr class="hover:bg-blue-50">
+                <td class="px-2 py-1">
+                  <strong><%= transaction.name %></strong>
+                </td>
+                <td class="px-2 py-1"><%= transaction.category %></td>
+                <td class="px-2 py-1">
+                  <%= transaction.date.toDateString() %>
+                </td>
+                <td class="px-3 py-1 text-blue-600 font-semibold">
+                  $<%= transaction.amount %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-lg mb-10">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-blue-800">Monthly Budget</h2>
+              <p class="text-sm mt-2 text-gray-500">
+                <strong class="text-black">Budget: $<%= budget.monthly
+                %> | <strong class="text-black">Spent:</strong> $<%=
+                spentThisMonth %>
+              </p>
+            </div>
+            <p class="mt-2 sm:mt-0 text-sm font-semibold <%= colorClass %>">
+              <%= percent.toFixed(1) %>% of budget used
+            </p>
+          </div>
+
+          <div class="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
+            <div
+              id="progressBar"
+              class="bg-gradient-to-r from-blue-500 to-blue-700 h-full transition-all duration-500"
+            ></div>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <canvas
+            id="transactionsPieChart"
+            class="w-[400px] h-[400px] mb-8"
+          ></canvas>
+        </div>
+
+        <div class="flex justify-center mt-4 mb-6 px-2">
+          <canvas
+            id="monthlyBarChart"
+            class="w-[400px] h-[400px] mt-10"
+          ></canvas>
+        </div>
+        <div class="flex justify-center mb-6 px-2">
+          <canvas
+            id="weeklyLineChart"
+            class="w-[400px] h-[400px] mt-10"
+          ></canvas>
+        </div>
+      </section>
+    </div>
     <!-- Bottom Navigation -->
     <%- include('./partials/nav_bottom') %>
     <script>
-      axios.get("/transactions/chart-data")
-  .then(response => {
-    const { labels, values } = response.data;
+      const spent = Number("<%= spentThisMonth %>");
+      const monthlyBudget = Number("<%= budget.monthly %>");
+      const percentUsed = Math.min((spent / monthlyBudget) * 100, 100);
+      document.getElementById("progressBar").style.width = "<%= percent %>%";
 
-    const data = {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: [
-          "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40",
-          "#8E44AD", "#3498DB", "#1ABC9C", "#E74C3C", "#F39C12", "#2ECC71"
-        ],
-        hoverOffset: 4
-      }]
-    };
+      function showDropdown(type) {
+        const incomeDropdown = document.getElementById("incomeDropdown");
+        const expenseDropdown = document.getElementById("expenseDropdown");
 
-    const config = {
-      type: 'pie',
-      data: data
-    };
+        if (!incomeDropdown || !expenseDropdown) return;
 
-    new Chart(document.getElementById("transactionsPieChart"), config);
-  })
-  .catch(error => {
-    console.error("Error loading pie chart data:", error);
-  });
+        incomeDropdown.classList.add("hidden");
+        expenseDropdown.classList.add("hidden");
 
+        if (type === "income") {
+          incomeDropdown.classList.remove("hidden");
+        } else if (type === "expense") {
+          expenseDropdown.classList.remove("hidden");
+        }
+      }
+      axios
+        .get("/transactions/chart-data")
+        .then((response) => {
+          const { category, monthly, weekly } = response.data;
+
+          new Chart(document.getElementById("transactionsPieChart"), {
+            type: "pie",
+            data: {
+              labels: category.labels,
+              datasets: [
+                {
+                  data: category.values,
+                  backgroundColor: [
+                    "#FF6384",
+                    "#36A2EB",
+                    "#FFCE56",
+                    "#4BC0C0",
+                    "#9966FF",
+                    "#FF9F40",
+                    "#8E44AD",
+                    "#3498DB",
+                    "#1ABC9C",
+                    "#E74C3C",
+                    "#F39C12",
+                    "#2ECC71",
+                  ],
+                  hoverOffset: 25,
+                },
+              ],
+            },
+            options: { responsive: true, maintainAspectRatio: false },
+          });
+
+          new Chart(document.getElementById("monthlyBarChart"), {
+            type: "bar",
+            data: {
+              labels: monthly.labels,
+              datasets: [
+                {
+                  label: "Expenses",
+                  data: monthly.values,
+                  backgroundColor: "#4BC0C0",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                title: { display: true, text: "Monthly Spending Overview" },
+              },
+            },
+          });
+
+          new Chart(document.getElementById("weeklyLineChart"), {
+            type: "line",
+            data: {
+              labels: weekly.labels,
+              datasets: [
+                {
+                  label: "Weekly Expenses",
+                  data: weekly.values,
+                  borderColor: "#4BC0C0",
+                  fill: false,
+                  tension: 0.3,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: { display: true, text: "Weekly Expense Trend" },
+              },
+            },
+          });
+        })
+        .catch((error) => {
+          console.error("Error loading chart data:", error);
+        });
     </script>
+    <script src="/scripts/navigation.js"></script>
   </body>
 </html>
