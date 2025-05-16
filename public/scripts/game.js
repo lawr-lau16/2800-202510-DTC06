@@ -161,17 +161,55 @@ async function getInventory() {
     }
 }
 
+// Keep current menu in local storage
+function currentMenu() {
+    currentTab = localStorage.getItem("tab-menu");
+    console.log(currentTab)
+    if (currentTab === null || currentTab === "item")
+        dynamicallyDisplayItems()
+    else if (currentTab === "base")
+        dynamicallyDisplayBase()
+}
+
+// Function to select current item/base
+async function itemSelected() {
+    const response = await fetch('/pet', { method: 'POST' });
+    const { pet } = await response.json();
+    itemsDiv = document.getElementById("items");
+    for (let child of document.getElementById("items").children) {
+        if (child.classList.contains("border-[#3EC3DE]")) {
+            currentItem.classList.replace("border-[#3EC3DE]", "border-black")
+            currentItem.classList.remove("scale-105")
+        }
+    }
+    if (pet.item == "") {
+        currentItem = document.getElementById("no-item")
+        currentItem.classList.replace("border-black", "border-[#3EC3DE]")
+        currentItem.classList.add("scale-105")
+    } else {
+        if (itemsDiv.classList.contains("items-tab"))
+            currentItem = document.getElementById(pet.item)
+        else if (itemsDiv.classList.contains("base-tab"))
+            currentItem = document.getElementById(pet.base)
+        currentItem.classList.replace("border-black", "border-[#3EC3DE]")
+        currentItem.classList.add("scale-105")
+    }
+}
 
 // Populates Items menu with available items 
 async function dynamicallyDisplayItems() {
 
     itemsDiv = document.getElementById("items");
-    itemsDiv.innerHTML = "";
-    // Array must contain items by exact name of the images for items
-    // May be replaced by db future on
 
-    const itemsAvailable = ["heart", "sprout", "star"];
-    // itemsOwned = [];
+    itemsDiv.classList.add("items-tab")
+    itemsDiv.classList.remove("base-tab")
+
+    localStorage.setItem("tab-menu", "item");
+
+    itemsDiv.innerHTML = "";
+
+    // Array must contain items by exact name of the images for items
+    const itemsAvailable = ["heart", "sprout", "star", "flower", "bow", "bowtie", "headband", "partyhat"];
 
     let itemsOwned = await getInventory()
 
@@ -181,21 +219,24 @@ async function dynamicallyDisplayItems() {
         eachItem = document.createElement("div");
         eachItem.id = item;
         // Sets class list for each new div
-        eachItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer";
+        eachItem.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black transition hover:scale-105";
         // Goes through which items the user owns
         // If they don't have the item, it will be locked in the menu
         if (itemsOwned.includes(item)) {
             eachItem.innerHTML = `<div class="relative flex size-full">
-            <img src="images/game/Items/${item}.png" class="absolute"></div>`
+            <img src="images/game/Items/i-${item}.png" class="absolute rounded-sm"></div>`
         } else {
-            eachItem.classList.add("brightness-85")
+            eachItem.classList.replace("bg-white", "bg-[#d9d9d9]")
             eachItem.innerHTML = `
             <div class="relative flex size-full">
                 <div class="size-full flex flex-col z-1">
-                    <i class="mx-auto mt-auto fa-solid fa-lock fa-xl"></i>
-                    <p class="mx-auto mt-3">50</p>
+                    <i class="mx-auto mt-auto mb-2 fa-solid fa-lock fa-xl transition group-hover:opacity-80 group-hover:scale-110"></i>
+                    <div class="text-[#0a67a0] rounded-lg border-[#026475] h-6 w-12 mx-auto border-3 font-bold flex items-center justify-center select-none bg-[#3EC3DE] translate-y-4 transition group-hover:scale-105">
+                        <img src="/images/navbar/coin.png" alt="" class="size-4 mx-1">
+                        <p class="items-center text-white tracking-wide drop-shadow-sm mr-1">10</p>
+                    </div>
                 </div>
-                <img src="images/game/Items/${item}.png" class="absolute">
+                <img src="images/game/Items/i-${item}.png" class="absolute brightness-85 group-hover:brightness-100 transition">
             </div>
             `;
             eachItem.classList.add("locked")
@@ -205,12 +246,13 @@ async function dynamicallyDisplayItems() {
 
     // Creates no item option
     blankItem = document.createElement("div");
-    blankItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer"
+    blankItem.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer border-black transition hover:scale-105"
     blankItem.id = "no-item"
     blankItem.innerHTML = `<div class="relative flex size-full">
             <img src="" class="absolute">
             </div>`
     itemsDiv.prepend(blankItem);
+    itemSelected()
 
     // Adds clickability for no item option
     removeItem = document.getElementById("no-item");
@@ -227,8 +269,8 @@ async function dynamicallyDisplayItems() {
             })
         });
         setAmi()
+        itemSelected()
     })
-
 
     itemsAvailable.forEach(item => {
         eachItem = document.getElementById(item);
@@ -236,7 +278,7 @@ async function dynamicallyDisplayItems() {
         if (eachItem.classList.contains("locked")) {
             eachItem.addEventListener("click", async () => {
 
-                price = 50
+                price = 10
                 console.log("locked")
                 const res = await fetch('/inventory', { method: 'POST' });
                 const { inventory, coins } = await res.json();
@@ -252,6 +294,7 @@ async function dynamicallyDisplayItems() {
                         body: JSON.stringify({ inventory: updatedInventory, coins: updatedCoins })
                     });
                     dynamicallyDisplayItems()
+                    navbarStats()
                 }
             })
         } else {
@@ -268,17 +311,24 @@ async function dynamicallyDisplayItems() {
                     })
                 });
                 setAmi()
+                itemSelected()
             })
         }
     });
 
 }
 
-// Populates Items menu with available items 
+// Populates Items menu with available base 
 async function dynamicallyDisplayBase() {
     itemsDiv = document.getElementById("items");
+
+    itemsDiv.classList.remove("items-tab")
+    itemsDiv.classList.add("base-tab")
+
+    localStorage.setItem("tab-menu", "base");
+
     itemsDiv.innerHTML = "";
-    // May be replaced by db future on
+
     const baseAvailable = ["white", "black", "blue", "red", "green", "yellow", "camel"];
     const baseAll = ["white", "black", "blue", "red", "green", "yellow", "camel", "gold"];
     // used to see if user has gold
@@ -289,7 +339,7 @@ async function dynamicallyDisplayBase() {
         eachBase = document.createElement("div");
         eachBase.id = base;
         // Sets class list for each new div
-        eachBase.classList = "size-18 m-2 border-4 rounded-lg hover:cursor-pointer overflow-hidden";
+        eachBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black transition overflow-hidden hover:scale-105";
         eachBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-${base}.png" class="mx-auto"></div>`
         itemsDiv.append(eachBase);
@@ -298,25 +348,55 @@ async function dynamicallyDisplayBase() {
     // Special gold base
     goldBase = document.createElement("div");
     goldBase.id = "gold"
-    goldBase.classList = "size-18 m-2 border-4 rounded-lg hover:cursor-pointer overflow-hidden";
+    goldBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black transition hover:scale-105";
     if (itemsOwned.includes("gold")) {
         goldBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-gold.png" class="mx-auto"></div>`
     } else {
-        goldBase.innerHTML = `<div class="relative flex size-full">
-            <i class="z-2 my-auto mx-auto fa-solid fa-lock fa-xl"></i>
-            <img src="images/game/Ami-Base/i-gold.png" class="absolute size-full"></div>
+        goldBase.innerHTML = `
+            <div class="relative flex size-full">
+                <div class="size-full flex flex-col z-1">
+                    <i class="mx-auto mt-auto mb-2 fa-solid fa-lock fa-xl group-hover:opacity-80 transition group-hover:scale-110"></i>
+                    <div class="text-[#0a67a0] rounded-lg border-[#026475] outline-2 outline-white h-6 w-15 mx-auto border-3 font-bold flex items-center justify-center select-none bg-[#3EC3DE] translate-y-4 transition group-hover:scale-105">
+                        <img src="/images/navbar/coin.png" alt="" class="size-4 mx-1">
+                        <p class="items-center text-white drop-shadow-sm mr-1">999</p>
+                    </div>
+                </div>
+                <img src="images/game/Ami-Base/i-gold.png" class="rounded-sm size-full absolute brightness-85 group-hover:brightness-100 transition">
+            </div>
             `;
         goldBase.classList.add("locked")
     }
-    itemsDiv.append(goldBase);
 
+
+
+
+    itemsDiv.append(goldBase);
+    itemSelected()
     baseAll.forEach(base => {
         eachBase = document.getElementById(base);
 
         if (eachBase.classList.contains("locked")) {
-            eachBase.addEventListener("click", () => {
+            eachBase.addEventListener("click", async () => {
+
+                price = 999
                 console.log("locked")
+                const res = await fetch('/inventory', { method: 'POST' });
+                const { inventory, coins } = await res.json();
+                if (coins < price) {
+                    return alert("Not enough coins!");
+                }
+                if (window.confirm(`Buy ${base}?`)) {
+                    const updatedInventory = [...inventory, base];
+                    const updatedCoins = coins - price;
+                    await fetch('/inventory/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ inventory: updatedInventory, coins: updatedCoins })
+                    });
+                    dynamicallyDisplayBase()
+                    navbarStats()
+                }
             })
         } else {
             eachBase.addEventListener("click", async () => {
@@ -332,11 +412,13 @@ async function dynamicallyDisplayBase() {
                     })
                 });
                 setAmi()
+                itemSelected()
             })
         }
     });
 
 }
+
 
 // Add Achievement button functionality
 function gameButtonAchievement() {
@@ -390,8 +472,7 @@ function fail() {
 // execute functions
 setAmi()
 gameButtonPet()
-dynamicallyDisplayItems()
-// dynamicallyDisplayBase()
+currentMenu()
 itemMenuItemTab()
 itemMenuBaseTab()
 gameButtonItems()
