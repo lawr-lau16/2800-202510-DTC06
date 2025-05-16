@@ -73,7 +73,14 @@
                         class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Sign Up</button>
                     <!-- # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form. -->
                 </form>
-
+                <!-- Here is the conditional message for loging in and signup errors -->
+                <% if (message) { %>
+                    <br>
+                    <br>
+                    <p class="text-red-600"><%= message %></p>
+                    <br>
+                    <br>
+                <% } %>
             </div>
             <div>
                 <img style="height: 200px;"

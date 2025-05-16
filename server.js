@@ -188,7 +188,7 @@ app.get("/login", (request, result) => {
   if (request.session.uid) {
     return result.redirect("/home");
   }
-  result.render("login");
+  result.render("login", { message: "" } );
 });
 
 // happiness decay
@@ -638,7 +638,7 @@ app.post("/auth/register", async (req, res) => {
     const password = req.body.password;
     const existingUser = await users.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ error: "Username already exists" });
+      return res.render('login', { message: 'User already exists, please make another username!' } );
     }
     // Active Achievements
     const defaultActiveAchievements = [
@@ -880,11 +880,11 @@ app.post("/auth/login", async (request, result) => {
     const { username, password } = request.body;
     const user = await users.findOne({ username });
     if (!user) {
-      return result.status(401).json({ error: "Invalid username or password" });
+      return result.render('login', { message: 'Please input a valid username and password!' } );
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return result.status(401).json({ error: "Invalid username or password" });
+       return result.render('login', { message: 'Wrong password please try again!' } );
     }
 
     // Tracking for login streak achievement
@@ -1316,8 +1316,8 @@ app.post("/delete-expense/:id", async (req, res) => {
 // Handle form submission and save to MongoDB
 app.post("/add-expense", async (req, res) => {
   if (!req.session.uid) {
-    return res.status(401).send("Unauthorized: user not logged in");
-  }
+    res.redirect('/login');
+  };
 
   const user = await users.findById(req.session.uid);
   const { type, name, amount, category, date } = req.body;
