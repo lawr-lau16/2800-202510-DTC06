@@ -20,6 +20,10 @@
     <form action="/achievements" method="get">
         <button type="submit" class="hover:cursor-pointer p-4 px-6 drop-shadow-md">
             <i class="fa-solid fa-star fa-lg"></i>
+                <div id="achievementsNotificationSm" style="visibility: hidden;"
+                    class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+                    1
+                </div>
         </button>
     </form>
 
@@ -29,3 +33,26 @@
         </button>
     </form>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/navbar')
+            .then(response => response.json())
+            .then(data => {
+                const achievements = data.achievements;
+                console.log(achievements)
+
+                const redeemableAchievement = achievements.filter(achievement => achievement.progress === achievement.target).length;
+                if (redeemableAchievement) {
+                    document.getElementById('achievementsNotificationSm').style.visibility = 'visible';
+                    document.getElementById('achievementsNotificationSm').innerHTML = redeemableAchievement;
+                }
+                else {
+                    document.getElementById('achievementsNotificationSm').style.visibility = 'hidden';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching achievements:', error);
+            });
+    });
+</script>

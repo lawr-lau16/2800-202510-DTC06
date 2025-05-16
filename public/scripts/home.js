@@ -1,4 +1,22 @@
 window.addEventListener("DOMContentLoaded", () => {
+
+// First time user message
+        fetch('/navbar')
+            .then(response => response.json())
+            .then(data => {
+                const achievements = data.achievements;
+                console.log(achievements)
+
+                const welcomeAchievement = achievements.find(achievement => achievement.type === "welcome" && achievement.completed === false);
+                if (welcomeAchievement) {
+                    document.getElementById('speechBubble').textContent = 'Please take a look at the achievements page ★ to redeem some coins!';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching achievements:', error);
+            });
+
+
   // Set Ami customization based on user settings
   async function setAmi() {
     try {
