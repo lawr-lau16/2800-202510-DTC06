@@ -18,105 +18,113 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<body class="h-dvh flex flex-col bg-[#f5f2f0] text-[#151723] font-[Quicksand]">
+<body class="h-dvh flex flex-col bg-[#f5f2f0] text-[#151723] font-[Quicksand] mx-auto">
     <!-- Top Navigation -->
     <%- include('./partials/nav_top') %>
+    <div id="content" class="h-full lg:mt-12 md:ml-14">
+        <section
+            class="mx-auto my-auto lg:max-h-[700px] lg:max-w-screen-lg size-full drop-shadow-sm lg:rounded-lg lg:overflow-hidden lg:outline-20 lg:outline-[#3EC3DE]">
+            <div
+                class="bg-[url(/images/game/Other/wall_polkadot.png)] bg-repeat bg-size-[auto_350px] size-full relative">
+                <!-- Game UI, this will always be on top -->
 
-    <section class="bg-slate-100 h-full relative md:ml-14" id="content">
-        <!-- Game UI, this will always be on top -->
+                <div class="flex justify-between">
+                    <!-- Buttons -->
+                    <div class="z-10">
+                        <button id="game-pet"
+                            class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
+                            <i class="fa-regular fa-hand fa-2xl"></i>
+                        </button>
+                        <button id="game-items"
+                            class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
+                            <!-- Placeholder for items -->
+                            <i class="fa-solid fa-coins fa-2xl"></i>
+                        </button>
+                        <button id="game-achievements"
+                            class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
+                            <!-- Placeholder for items -->
+                            <i class="fa-solid fa-star fa-2xl"></i>
+                        </button>
+                    </div>
 
-        <div class="flex justify-between">
-            <!-- Buttons -->
-            <div class="z-10">
-                <button id="game-pet"
-                    class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                    <i class="fa-regular fa-hand fa-2xl"></i>
-                </button>
-                <button id="game-items"
-                    class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                    <!-- Placeholder for items -->
-                    <i class="fa-solid fa-coins fa-2xl"></i>
-                </button>
-                <button id="game-achievements"
-                    class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                    <!-- Placeholder for items -->
-                    <i class="fa-solid fa-star fa-2xl"></i>
-                </button>
-            </div>
-
-            <!-- Items menu (Default hidden) -->
-            <div id="items-menu" class="hidden absolute top-0 z-100 w-full">
-                <div class="bg-[#22899e] rounded-b-lg border-4 border-x-0 border-[#0c4049] border-t-[#22899e] px-4">
-                    <!-- This is the header part -->
-                    <div class="flex justify-between m-4">
-                        <h1 class="text-2xl font-bold my-auto text-[#3EC3DE] drop-shadow-sm">
-                            <span id="item-text" class="text-white">Items</span> |
-                            <span id="base-text" class=""></span>Base</span>
-                        </h1>
-                        <!-- Buttons for categories -->
-                        <div>
-                            <button id="items-menu-item"
-                                class="bg-[#31afc9] border-[#0c4049] text-white text-sm px-2 py-1 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#3EC3DE] active:bg-[#5edfff] transition outline-2 outline-[#3EC3DE]">Items</button>
-                            <button id="items-menu-base"
-                                class="border-[#0c4049] text-white  px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Base</button>
+                    <!-- Items menu (Default hidden) -->
+                    <div id="items-menu"
+                        class="rotate-x-270 origin-top absolute top-0 z-100 w-full transition ease-out duration-400">
+                        <div
+                            class="bg-[#22899e] rounded-b-lg border-4 border-x-0 border-[#0c4049] border-t-[#22899e] px-4">
+                            <!-- This is the header part -->
+                            <div class="flex justify-between m-4">
+                                <h1 class="text-2xl font-bold my-auto text-[#3EC3DE] drop-shadow-sm">
+                                    <span id="item-text" class="text-white">Items</span> |
+                                    <span id="base-text" class=""></span>Base</span>
+                                </h1>
+                                <!-- Buttons for categories -->
+                                <div>
+                                    <button id="items-menu-item"
+                                        class="bg-[#31afc9] border-[#0c4049] text-white text-sm px-2 py-1 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#3EC3DE] active:bg-[#5edfff] transition outline-2 outline-[#3EC3DE]">Items</button>
+                                    <button id="items-menu-base"
+                                        class="border-[#0c4049] text-white  px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Base</button>
+                                </div>
+                            </div>
+                            <hr class="border-2 border-[#026475] bg-[#026475] rounded-sm mx-4">
+                            <!-- Dynamically changing items -->
+                            <div id="items" class="flex-wrap flex m-2 mb-4 justify-center md:justify-start"></div>
+                        </div>
+                        <!-- Close button -->
+                        <div id="close-menu"
+                            class="bg-[#3EC3DE] mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#0c4049]">
+                            <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
                         </div>
                     </div>
-                    <hr class="border-2 border-[#026475] bg-[#026475] rounded-sm mx-4">
-                    <!-- Dynamically changing items -->
-                    <div id="items" class="flex-wrap flex m-2 mb-4 justify-center md:justify-start"></div>
-                </div>
-                <!-- Close button -->
-                <div id="close-menu"
-                    class="bg-[#3EC3DE] mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#0c4049]">
-                    <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
-                </div>
-            </div>
 
-            <!-- Achievements menu (Default hidden) -->
-            <div id="achievements-menu" class="hidden absolute top-0 z-100 w-full">
-                <div class="bg-[#22899e] rounded-b-lg border-4 border-x-0 border-t-[#22899e] px-4">
-                    <!-- This is the header part -->
-                    <div class="flex justify-between m-4">
-                        <h1 class="text-2xl font-bold my-auto text-white drop-shadow-sm">Achievements</h1>
+                    <!-- Achievements menu (Default hidden) -->
+                    <div id="achievements-menu"
+                        class="rotate-x-270 origin-top absolute top-0 z-100 w-full transition ease-out duration-400">
+                        <div class="bg-[#22899e] rounded-b-lg border-4 border-x-0 border-t-[#22899e] px-4">
+                            <!-- This is the header part -->
+                            <div class="flex justify-between m-4">
+                                <h1 class="text-2xl font-bold my-auto text-white drop-shadow-sm">Achievements</h1>
+                            </div>
+                            <hr class="border-2 border-[#026475] bg-[#026475] rounded-sm mx-4">
+                            <!-- Dynamically changing items -->
+                            <div class="h-60 my-4 mb-8 overflow-y-scroll rounded-sm mx-4"
+                                style="scrollbar-width: thin; scrollbar-color: #3EC3DE #026475;">
+                                <div id="achievements-container" class="mb-4 mr-4"></div>
+                            </div>
+                        </div>
+                        <!-- Close button -->
+                        <div id="close-menu-achievement"
+                            class="bg-[#3EC3DE] mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1">
+                            <i class="fa-solid fa-star fa-2xl my-auto mx-auto"></i>
+                        </div>
                     </div>
-                    <hr class="border-2 border-[#026475] bg-[#026475] rounded-sm mx-4">
-                    <!-- Dynamically changing items -->
-                    <div class="h-60 my-4 mb-8 overflow-y-scroll rounded-sm mx-4"
-                        style="scrollbar-width: thin; scrollbar-color: #3EC3DE #026475;">
-                        <div id="achievements-container" class="mb-4 mr-4"></div>
+
+
+                    <!-- This is to keep everything stuck to the bottom -->
+                    <div class="bottom-0 absolute z-0 w-full">
+                        <!-- Ami's window -->
+                        <div class="w-48 md:-translate-y-24 ml-auto mr-10 md:left-3/5 md:absolute">
+                            <img id="game-window" src="/images/game/weather/g-Clear.png" class="overflow-hidden">
+                        </div>
+                        <!-- Ami div -->
+                        <div id="ami" class="relative translate-y-4 w-36 mx-auto">
+                            <!-- Item Overlay -->
+                            <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                                src="" alt="">
+                            <!-- Expression Overlay -->
+                            <img id="ami-expression"
+                                class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                                src="/images/game/Ami-Expressions/default.png" alt="">
+                            <!-- Ami Base -->
+                            <img id="ami-base" class="select-none pointer-events-none"
+                                src="/images/game/Ami-Base/white.png" alt="">
+
+                        </div>
+                        <!-- Ground -->
+                        <div class="bg-blue-900 py-16"></div>
                     </div>
-                </div>
-                <!-- Close button -->
-                <div id="close-menu-achievement"
-                    class="bg-[#3EC3DE] mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1">
-                    <i class="fa-solid fa-star fa-2xl my-auto mx-auto"></i>
-                </div>
-            </div>
-
-            <div class=" w-48 -translate-y-24 ml-auto mr-16 md:left-3/5 md:absolute">
-                <img id="game-window" src="/images/game/weather/g-Clear.png" class="overflow-hidden">
-            </div>
-
-            <!-- This is to keep everything stuck to the bottom -->
-            <div class="bottom-0 absolute z-0 w-full">
-                <!-- Ami div -->
-                <div id="ami" class="relative translate-y-4 w-36 mx-auto">
-                    <!-- Item Overlay -->
-                    <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src=""
-                        alt="">
-                    <!-- Expression Overlay -->
-                    <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                        src="/images/game/Ami-Expressions/default.png" alt="">
-                    <!-- Ami Base -->
-                    <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
-                        alt="">
-
-                </div>
-                <!-- Ground -->
-                <div class="bg-blue-900 py-16"></div>
-    </section>
-
-
+        </section>
+    </div>
     <!-- Bottom Navigation -->
     <%- include('./partials/nav_bottom') %>
 
