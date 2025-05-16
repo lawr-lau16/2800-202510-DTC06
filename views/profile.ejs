@@ -16,103 +16,141 @@
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {-moz-appearance: textfield;
+        }
+    </style>
+
 </head>
 
-<body class="h-dvh flex flex-col font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+<body class="min-h-dvh flex flex-col font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
 
     <!-- Top Navigation -->
     <%- include('./partials/nav_top') %>
 
-    <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
-    <!-- There to show that bottom is sticky to the bottom -->
-    <section class="bg-slate-100 h-full relative z-100">
-        <!-- Game UI, this will always be on top -->
+        <!-- has h-dvh for now, but it depends on the page if you should keep it in -->
+        <!-- There to show that bottom is sticky to the bottom -->
+        <section class="h-full relative z-0 md:ml-14 my-8" id="content">
+            <!-- Game UI, this will always be on top -->
 
-        <div class="bottom-150 absolute z-0 w-full">
-            <!-- Ami div -->
-            <div class="relative translate-y-4 w-50 mx-auto">
-                <!-- Item Overlay -->
-                <img class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                    src="/images/game/Items/heart.png" alt="">
-                <!-- Expression Overlay -->
-                <img class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                    src="/images/game/Ami-Expressions/default.png" alt="">
-                <!-- Ami Base -->
-                <img class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png" alt="">
-            </div>
-        </div>
 
-        <!-- Profile card -->
-        <div class="bottom-60 absolute z-0 w-full flex justify-center">
-            <div class="relative translate-y-50 bg-white rounded-2xl shadow-lg p-5 w-96 text-center">
-                <h2 class="text-2xl font-bold">Profile</h2>
-
-                <div class="mt-4 text-left space-y-4">
-                    <!-- Name Field - should be populated with name from database -->
-                    <div class="relative group">
-                        <label for="name" class="text-xs uppercase block mb-1">Name</label>
-                        <input type="text" id="name" name="name"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your name here" />
-                        <button
-                            class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
-                            data-field="name">Save</button>
-                    </div>
-                    <!-- Password Field -->
-                    <div class="relative group">
-                        <label for="password" class="text-xs uppercase block mb-1">Password</label>
-                        <input type="password" id="password" name="password"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="*********" />
-                        <button
-                            class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
-                            data-field="password">Save</button>
-                    </div>
-                    <!-- Weekly Budget Field -->
-                    <div class="relative group">
-                        <label for="weeklyBudget" class="text-xs uppercase block mb-1">Weekly Budget</label>
-                        <input type="text" id="weeklyBudget" name="weeklyBudget"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your weeklyBudget here" />
-                        <button
-                            class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
-                            data-field="weeklyBudget">Save</button>
-                    </div>
-                    <!-- Monthly Budget Field -->
-                    <div class="relative group">
-                        <label for="monthlyBudget" class="text-xs uppercase block mb-1">Monthly Budget</label>
-                        <input type="text" id="monthlyBudget" name="monthlyBudget"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Your monthlyBudget here" />
-                        <button
-                            class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
-                            data-field="monthlyBudget">Save</button>
-                    </div>
-                    <!-- Customize Categories Dropdown - Add or remove categories-->
-                    <div>
-                        <form action="/auth/logout" method="POST">
-                            <button type="submit" class="bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
+            <div class="">
+                <!-- Ami div -->
+                <div id="ami" class="relative w-50 mx-auto">
+                    <!-- Item Overlay -->
+                    <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src=""
+                        alt="">
+                    <!-- Expression Overlay -->
+                    <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                        src="/images/game/Ami-Expressions/default.png" alt="">
+                    <!-- Ami Base -->
+                    <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
+                        alt="">
                 </div>
+            </div>
 
+            <!-- Profile card -->
+            <div class="w-full flex justify-center mt-8">
+                <div class="relative bg-white rounded-2xl drop-shadow-sm p-4 w-96 text-center">
+                    <h2 class="text-2xl font-bold">Profile</h2>
+
+                    <div class="mt-4 text-left space-y-4">
+                        <!-- Name Field - should be populated with name from database -->
+                        <div class="relative group">
+                            <label for="name" class="text-xs uppercase block mb-1">Name</label>
+                            <input type="text" id="name" name="name"
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                placeholder="Your name here" value="<%= user.username %>" />
+                            <button
+                                class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
+                                data-field="name">Save</button>
+                        </div>
+                        <!-- Password Field -->
+                        <div class="relative group">
+                            <label for="password" class="text-xs uppercase block mb-1">Password</label>
+                            <input type="password" id="password" name="password"
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                placeholder="*********" value="" />
+                            <button
+                                class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
+                                data-field="password">Save</button>
+                        </div>
+                        <!-- Weekly Budget Field -->
+                        <div class="relative group">
+                            <label for="weeklyBudget" class="text-xs uppercase block mb-1">Weekly Budget</label>
+                            <input type="number" min="0" step="0.01" id="weeklyBudget" name="weeklyBudget"
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                placeholder="Your weekly budget here" value="<%= user.budget?.weekly || '' %>" />
+                            <button
+                                class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
+                                data-field="weeklyBudget">Save</button>
+                        </div>
+                        <!-- Monthly Budget Field -->
+                        <div class="relative group">
+                            <label for="monthlyBudget" class="text-xs uppercase block mb-1">Monthly Budget</label>
+                            <input type="number" min="0" step="0.01" id="monthlyBudget" name="monthlyBudget"
+                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                placeholder="Your monthly budget here" value="<%= user.budget?.monthly || '' %>" />
+                            <button
+                                class="save-button absolute top-0 right-0 mt-8 mr-2 text-sm text-purple-600 font-bold opacity-0 group-focus-within:opacity-100 transition"
+                                data-field="monthlyBudget">Save</button>
+                        </div>
+                        <!-- Customize Categories Dropdown - Add or remove categories-->
+                        <div class="flex justify-center pt-4">
+                            <form action="/auth/logout" method="POST">
+                                <button type="submit"
+                                    class="border-[#de5158] text-[#de5158] bg-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#de5158] active:border-[#ffa4a4] hover:text-white active:bg-[#ffa4a4] transition">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm hidden">
+            <div class="bg-[#f5f2f0] rounded-lg p-6 max-w-sm text-center shadow-lg animate-fade-in-up">
+                <h1 class="text-2xl font-semibold mb-2">Confirm Save</h1>
+                <p id="confirmMessage" class="text-[#151723] mb-4">Are you sure you want to save?</p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="confirmSave()"
+                        class="bg-green-600 text-white px-4 py-2 rounded-xl font-bold border-4 border-green-700 hover:bg-green-700 hover:border-green-800">Yes</button>
+                    <button onclick="cancelConfirm()"
+                        class="bg-[#f5f2f0] active:bg-[#ffa4a4] text-[#de5158] hover:text-white px-4 py-2 rounded-xl font-bold border-4 border-[#de5158] hover:bg-[#de5158] hover:border-[#bb315f] active:border-[#ffa4a4]">Cancel</button>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Bottom Navigation -->
-    <%- include('./partials/nav_bottom') %>
+        <!-- Save Confirmation Modal -->
+        <div id="saveModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm hidden">
+            <div class="bg-[#f5f2f0] rounded-lg p-6 max-w-sm text-center shadow-lg animate-fade-in-up">
+                <h1 class="text-3xl font-medium my-4">Changes Saved!</h1>
+                <p id="saveModalMessage" class="text-[#151723]">Your update was successful.</p>
+                <button onclick="closeSaveModal()"
+                    class="bg-[#089ddd] border-[#0a67a0] text-white text-sm px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition">
+                    Close
+                </button>
+            </div>
+        </div>
 
-    <!-- Footer if we want would go here -->
+        <!-- Bottom Navigation -->
+        <%- include('./partials/nav_bottom') %>
 
-    <!-- Scripts -->
-    <script>
-        const user = <%- JSON.stringify(user) %>;
-    </script>
-    <script src="/scripts/profile.js"></script>
-
+            <!-- Scripts -->
+            <script src="/scripts/profile.js"></script>
+            <script src="/scripts/navigation.js"></script>
 </body>
 
 </html>

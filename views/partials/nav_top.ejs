@@ -1,6 +1,105 @@
-<nav class="sticky top-0 md:justify-between flex bg-[#3EC3DE] text-white p-4 z-999">
+<nav class="sticky top-0 flex bg-[#3EC3DE] text-white z-999 px-4 md:px-0">
+    <button class="hidden md:block hover:bg-[#1c9db7] transition mr-4 w-14 p-4 hover:cursor-pointer"
+        id="navigation_toggle"><i class="fa-solid fa-less-than fa-lg fa-flip-horizontal"></i></button>
     <form action="/home" method="get">
-        <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer">EconAmi</button>
+        <button class="font-[DynaPuff] font-semibold text-3xl drop-shadow-md hover:cursor-pointer py-4">EconAmi</button>
     </form>
-    <button class="hidden md:block" onclick=""><i class="fa-solid fa-bars fa-lg"></i></button>
+    <div class="ml-auto mr-0 md:mr-4 flex my-auto drop-shadow-md">
+        <div id="nav-coins"
+            class="text-[#0a67a0] rounded-lg border-[#026475] h-6 border-3 font-bold flex justify-between my-auto items-center select-none bg-[#3EC3DE]">
+            <img src="\images\navbar\coin.png" alt=""
+                class="size-6 bg-[#3EC3DE] outline-3 outline-[#026475] rounded-full p-0.5 -translate-x-2">
+            <p id="coin-stat" class="items-center px-1 pr-3 text-white tracking-wide drop-shadow-sm"></p>
+        </div>
+
+        <div id="nav-happiness"
+            class="text-[#0a67a0] rounded-lg border-[#026475] h-6 border-3 font-bold flex justify-between my-auto items-center ml-3 select-none bg-[#3EC3DE]">
+            <img src="\images\navbar\heart.png" alt=""
+                class="size-6 bg-[#3EC3DE] outline-3 outline-[#026475] rounded-full p-0.5 -translate-x-2">
+            <p id="happiness-stat" class="items-center px-1 pr-3 text-white tracking-wide drop-shadow-sm"></p>
+        </div>
+    </div>
 </nav>
+
+<!-- Sidebar -->
+<div class="fixed top-17 h-full bg-[#3EC3DE] text-white z-999 hidden md:flex md:flex-col" id="sidebar"
+    style="width:56px; transition: 0.3s;">
+    <div id="nav_highlight" class="flex flex-col text-center">
+        <form action="/home" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
+                <i class="fa-solid fa-house fa-lg mr-4 py-3"></i>
+                <p class="hide font-semibold hidden" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">Home
+                </p>
+            </button>
+        </form>
+
+        <form action="/game" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
+                <img src="\images\navbar\game-icon.png" alt="" class="size-5.5 ">
+                <p class="hide font-semibold hidden ml-4" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">
+                    Game
+                </p>
+            </button>
+        </form>
+
+        <form action="/transactions" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
+                <i class="fa-solid fa-table-list fa-lg mr-4 py-3"></i>
+                <p class="hide font-semibold hidden" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">
+                    Transactions</p>
+            </button>
+        </form>
+
+        <form action="/achievements" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
+                <i class="fa-solid fa-star fa-lg mr-4 py-3"></i>
+                <p class="hide font-semibold hidden" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">
+                    Achievements</p>
+                <div
+                id="achievementsNotification"
+                style="visibility: hidden;"
+                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
+                    1
+                </div>
+            </button>
+        </form>
+
+        <form action="/profile" method="get">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
+                <i class="fa-solid fa-circle-user fa-lg mr-4 py-3"></i>
+                <p class="hide font-semibold hidden" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">
+                    Profile</p>
+            </button>
+        </form>
+    </div>
+    <hr class="border border-white/40 mx-4 hide hidden">
+    <form action="/auth/logout" method="POST" class="hover:bg-[#1c9db7] transition">
+        <button type=" submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
+            <p class="hide font-semibold hidden" style="opacity: 0; transition-delay: 0.1s; transition: 0.1s;">Logout
+            </p>
+        </button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('/navbar')
+            .then(response => response.json())
+            .then(data => {
+                const achievements = data.achievements;
+                console.log(achievements)
+    
+                const redeemableAchievement = achievements.filter(achievement => achievement.progress === achievement.target).length;
+                if (redeemableAchievement) {
+                    document.getElementById('achievementsNotification').style.visibility = 'visible';
+                    document.getElementById('achievementsNotification').innerHTML = redeemableAchievement;
+                }
+                else {
+                    document.getElementById('achievementsNotification').style.visibility = 'hidden';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching achievements:', error);
+            });
+    });
+</script>

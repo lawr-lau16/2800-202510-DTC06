@@ -20,7 +20,7 @@
 
 <style>
     body {
-        background-image: url("https://i.redd.it/syya7v8uqb681.jpg");
+        background-image: url("/images/game/weather/m-Clear.jpg");
         background-repeat: no-repeat;
         background-size: 100%;
     }
@@ -29,24 +29,24 @@
 <body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
 
     <!-- Top Navigation -->
-    <%- include('./partials/nav_top') %>
+    <%- include('./partials/nav_top_non_user') %>
 
 
     <!-- PAGE CONTENT -->
 
-    <section class="h-dvh">
+    <section class="min-h-dvh">
 
         <!-- speech bubble -->
-        <div class="mx-auto max-w-[80%]">
+        <div class="drop-shadow-sm">
             <!-- bubble with text -->
-            <div class="mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
+            <div class="xl:max-w-screen-md flex-wrap mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
 
                 <p style="text-align: center;">Sign up or log in to play!</p>
 
             </div>
             <!-- bubble tail -->
             <div
-                class="ml-auto mr-8 border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+                class="ml-auto mr-[50%] border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
             </div>
         </div>
 
@@ -77,7 +77,7 @@
             </div>
             <div>
                 <img style="height: 200px;"
-                    src="https://pethelpful.com/.image/w_3840,q_auto:good,c_fill,ar_4:3/MTk3MDM5MzE5MTM3OTIwMzE5/bunny-care-guide-how-to-discipline-your-rabbit-2.jpg">
+                    src="/images/misc_assets/ami.png">
             </div>
         </div>
 
