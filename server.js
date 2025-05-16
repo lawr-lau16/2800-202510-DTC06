@@ -867,6 +867,24 @@ app.post("/auth/register", async (req, res) => {
   }
 });
 
+
+// get user achievements data for navbar notification
+app.get("/navbar", async (request, result) => {
+  try {
+    if (!request.session.uid) {
+      return result.redirect("/login");
+    }
+  const user = await users.findById(request.session.uid).populate("activeAchievements");
+  console.log(user)
+  result.json({
+    achievements: user.activeAchievements
+  });
+  } catch (err) {
+    console.log("Error fetching achievements data:", err.message);
+    result.status(500).json({ error: "Internal server error" });
+}});
+
+
 /**
  * Log's in a user.
  * If the user does not exist, an error message is returned.
