@@ -170,7 +170,7 @@ async function dynamicallyDisplayItems() {
     // Array must contain items by exact name of the images for items
     // May be replaced by db future on
 
-    const itemsAvailable = ["heart", "sprout", "star"];
+    const itemsAvailable = ["heart", "sprout", "star", "flower", "bow", "bowtie", "headband", "partyhat"];
     // itemsOwned = [];
 
     let itemsOwned = await getInventory()
@@ -186,16 +186,16 @@ async function dynamicallyDisplayItems() {
         // If they don't have the item, it will be locked in the menu
         if (itemsOwned.includes(item)) {
             eachItem.innerHTML = `<div class="relative flex size-full">
-            <img src="images/game/Items/${item}.png" class="absolute"></div>`
+            <img src="images/game/Items/i-${item}.png" class="absolute"></div>`
         } else {
             eachItem.classList.add("brightness-85")
             eachItem.innerHTML = `
             <div class="relative flex size-full">
                 <div class="size-full flex flex-col z-1">
                     <i class="mx-auto mt-auto fa-solid fa-lock fa-xl"></i>
-                    <p class="mx-auto mt-3">50</p>
+                    <p class="mx-auto mt-3">10</p>
                 </div>
-                <img src="images/game/Items/${item}.png" class="absolute">
+                <img src="images/game/Items/i-${item}.png" class="absolute">
             </div>
             `;
             eachItem.classList.add("locked")
@@ -236,7 +236,7 @@ async function dynamicallyDisplayItems() {
         if (eachItem.classList.contains("locked")) {
             eachItem.addEventListener("click", async () => {
 
-                price = 50
+                price = 10
                 console.log("locked")
                 const res = await fetch('/inventory', { method: 'POST' });
                 const { inventory, coins } = await res.json();
@@ -252,6 +252,7 @@ async function dynamicallyDisplayItems() {
                         body: JSON.stringify({ inventory: updatedInventory, coins: updatedCoins })
                     });
                     dynamicallyDisplayItems()
+                    navbarStats()
                 }
             })
         } else {
@@ -303,9 +304,13 @@ async function dynamicallyDisplayBase() {
         goldBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-gold.png" class="mx-auto"></div>`
     } else {
-        goldBase.innerHTML = `<div class="relative flex size-full">
-            <i class="z-2 my-auto mx-auto fa-solid fa-lock fa-xl"></i>
-            <img src="images/game/Ami-Base/i-gold.png" class="absolute size-full"></div>
+        goldBase.innerHTML = ` <div class="relative flex size-full">
+                <div class="size-full flex flex-col z-1">
+                    <i class="mx-auto mt-auto fa-solid fa-lock fa-xl"></i>
+                    <p class="mx-auto mt-3">999</p>
+                </div>
+                <img src="images/game/Ami-Base/i-gold.png" class="absolute size-full">
+            </div>
             `;
         goldBase.classList.add("locked")
     }
@@ -315,8 +320,26 @@ async function dynamicallyDisplayBase() {
         eachBase = document.getElementById(base);
 
         if (eachBase.classList.contains("locked")) {
-            eachBase.addEventListener("click", () => {
+            eachBase.addEventListener("click", async () => {
+
+                price = 999
                 console.log("locked")
+                const res = await fetch('/inventory', { method: 'POST' });
+                const { inventory, coins } = await res.json();
+                if (coins < price) {
+                    return alert("Not enough coins!");
+                }
+                if (window.confirm(`Buy ${base}?`)) {
+                    const updatedInventory = [...inventory, base];
+                    const updatedCoins = coins - price;
+                    await fetch('/inventory/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ inventory: updatedInventory, coins: updatedCoins })
+                    });
+                    dynamicallyDisplayBase()
+                    navbarStats()
+                }
             })
         } else {
             eachBase.addEventListener("click", async () => {
