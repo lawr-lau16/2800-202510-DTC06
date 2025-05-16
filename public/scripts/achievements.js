@@ -11,33 +11,39 @@ fetch('/achievements/data')
       const isClaimed = a.progress >= a.target && a.completed;
 
       const div = document.createElement('div');
-      div.className = 'flex items-center justify-between bg-gray-50 p-4 rounded-lg drop-shadow-sm mb-4';
+
+      div.className = 'flex justify-between items-start bg-grey-50 p-4 rounded-lg shadow-sm mb-4';
 
       div.innerHTML = `
-    <div class="flex items-center mr-2">
-      <img src="/images/achievements/${a.type.toLowerCase()}.png" class="size-10 mr-2" alt="${a.type}">
-      <div>
-        <p>${a.description}</p>
-        <div class="max-w-40 bg-gray-300 h-2 rounded mt-1">
-          <div class="bg-green-600 h-2 rounded" style="width: ${percent}%"></div>
+        <div class="flex items-start gap-3 w-full">
+          <!-- Achievement Icon -->
+          <img src="/images/achievements/${a.type.toLowerCase()}.png" class="size-10 mt-1" alt="${a.type}">
+
+          <!-- Achievement and Progress Bar -->
+          <div class="flex-1">
+            <p class="text-sm leading-snug">${a.description}</p>
+            <div class="bg-gray-300 h-2 rounded-full mt-2">
+              <div class="bg-green-600 h-2 rounded-full" style="width: ${percent}%"></div>
+            </div>
+          </div>
+
+          <!-- Reward / Coin Image and Button -->
+          <div class="flex flex-col items-end justify-between text-right min-w-[60px]">
+            <div class="flex items-center justify-end gap-1">
+              <span class="font-semibold">${a.reward}</span>
+              <img src="/images/achievements/coin.png" class="size-6" alt="Coin">
+            </div>
+            ${isCompleted
+              ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition mt-1" data-id="${a._id}">Redeem</button>`
+              : !isActive
+                ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition mt-1" data-id="${a._id}">Activate</button>`
+                : isClaimed
+                  ? `<span class="text-[10px] text-gray-400 mt-2 leading-tight text-right">Reward<br>claimed</span>`
+                  : ''
+            }
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="flex flex-col items-center justify-end">
-      <div class="flex items-center">
-        <span class="font-semibold m-1">${a.reward}</span>
-        <img src="/images/achievements/coin.png" class="size-6" alt="Coin">
-      </div>
-      ${isCompleted
-          ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition" data-id="${a._id}">Redeem</button>`
-          : !isActive
-            ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:cursor-pointer ml-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition" data-id="${a._id}">Activate</button>`
-            : isClaimed
-              ? `<span class="text-xs text-gray-400 mt-1">Reward claimed</span>`
-              : ''
-        }
-    </div>
-  `;
+      `;
       return div;
     };
 
