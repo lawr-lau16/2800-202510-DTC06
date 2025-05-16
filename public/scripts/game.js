@@ -179,14 +179,12 @@ async function itemSelected() {
     for (let child of document.getElementById("items").children) {
         if (child.classList.contains("border-[#3EC3DE]")) {
             currentItem.classList.replace("border-[#3EC3DE]", "border-black")
-            currentItem.classList.add("hover:border-[#026475]")
             currentItem.classList.remove("scale-105")
         }
     }
     if (pet.item == "") {
         currentItem = document.getElementById("no-item")
         currentItem.classList.replace("border-black", "border-[#3EC3DE]")
-        currentItem.classList.remove("hover:border-[#026475]")
         currentItem.classList.add("scale-105")
     } else {
         if (itemsDiv.classList.contains("items-tab"))
@@ -194,7 +192,6 @@ async function itemSelected() {
         else if (itemsDiv.classList.contains("base-tab"))
             currentItem = document.getElementById(pet.base)
         currentItem.classList.replace("border-black", "border-[#3EC3DE]")
-        currentItem.classList.remove("hover:border-[#026475]")
         currentItem.classList.add("scale-105")
     }
 }
@@ -212,10 +209,7 @@ async function dynamicallyDisplayItems() {
     itemsDiv.innerHTML = "";
 
     // Array must contain items by exact name of the images for items
-    // May be replaced by db future on
-
     const itemsAvailable = ["heart", "sprout", "star", "flower", "bow", "bowtie", "headband", "partyhat"];
-    // itemsOwned = [];
 
     let itemsOwned = await getInventory()
 
@@ -225,7 +219,7 @@ async function dynamicallyDisplayItems() {
         eachItem = document.createElement("div");
         eachItem.id = item;
         // Sets class list for each new div
-        eachItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition hover:scale-105";
+        eachItem.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black transition hover:scale-105";
         // Goes through which items the user owns
         // If they don't have the item, it will be locked in the menu
         if (itemsOwned.includes(item)) {
@@ -252,7 +246,7 @@ async function dynamicallyDisplayItems() {
 
     // Creates no item option
     blankItem = document.createElement("div");
-    blankItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer border-black hover:border-[#026475] transition hover:scale-105"
+    blankItem.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer border-black transition hover:scale-105"
     blankItem.id = "no-item"
     blankItem.innerHTML = `<div class="relative flex size-full">
             <img src="" class="absolute">
@@ -334,7 +328,7 @@ async function dynamicallyDisplayBase() {
     localStorage.setItem("tab-menu", "base");
 
     itemsDiv.innerHTML = "";
-    // May be replaced by db future on
+
     const baseAvailable = ["white", "black", "blue", "red", "green", "yellow", "camel"];
     const baseAll = ["white", "black", "blue", "red", "green", "yellow", "camel", "gold"];
     // used to see if user has gold
@@ -345,7 +339,7 @@ async function dynamicallyDisplayBase() {
         eachBase = document.createElement("div");
         eachBase.id = base;
         // Sets class list for each new div
-        eachBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition overflow-hidden hover:scale-105";
+        eachBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black transition overflow-hidden hover:scale-105";
         eachBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-${base}.png" class="mx-auto"></div>`
         itemsDiv.append(eachBase);
@@ -354,7 +348,7 @@ async function dynamicallyDisplayBase() {
     // Special gold base
     goldBase = document.createElement("div");
     goldBase.id = "gold"
-    goldBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition hover:scale-105";
+    goldBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black transition hover:scale-105";
     if (itemsOwned.includes("gold")) {
         goldBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-gold.png" class="mx-auto"></div>`
@@ -479,7 +473,6 @@ function fail() {
 setAmi()
 gameButtonPet()
 currentMenu()
-// dynamicallyDisplayBase()
 itemMenuItemTab()
 itemMenuBaseTab()
 gameButtonItems()
