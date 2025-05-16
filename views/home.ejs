@@ -59,7 +59,12 @@
           <div
             class="xl:max-w-screen-md flex-wrap mx-auto bg-white text-center text-xl font-semibold pt-8 px-12 rounded-full overflow-hidden relative"
           >
+          <div>
             Hi, <%= username %>!
+          </div>
+          <div id="speechBubble">
+            How's your day today?
+          </div>
             <!-- joke ai added here -->
             <% if (joke) { %>
             <br />
@@ -72,7 +77,7 @@
             <% } %>
             <form action="/joke" method="post">
               <button
-                class="flex absolute -bottom-2 -right-2 bg-blue-600 hover:bg-blue-400 rounded-xl shadow-gray-400 shadow-md pb-2 pr-2"
+                class="flex absolute -bottom-2 -right-2 bg-blue-600 hover:bg-blue-400 rounded-xl shadow-gray-400 shadow-md pb-4 pr-6"
                 type="submit"
               >
                 <svg
