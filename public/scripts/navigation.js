@@ -80,7 +80,7 @@ async function navbarStats() {
         const response = await fetch('/inventory', { method: 'POST' });
         const { coins } = await response.json();
         coinsStat = document.getElementById("coin-stat")
-        coinsStat.innerHTML = 10
+        coinsStat.innerHTML = coins
 
     } catch (err) {
         console.error("Failed to load inventory:", err);

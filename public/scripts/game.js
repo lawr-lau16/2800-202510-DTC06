@@ -40,6 +40,25 @@ async function getPetData() {
     }
 }
 
+async function navbarStats() {
+    try {
+        const response = await fetch('/inventory', { method: 'POST' });
+        const { coins } = await response.json();
+        coinsStat = document.getElementById("coin-stat")
+        coinsStat.innerHTML = 10
+
+    } catch (err) {
+        console.error("Failed to load inventory:", err);
+    } try {
+        const response = await fetch('/pet', { method: 'POST' });
+        const { pet } = await response.json();
+        happinessStat = document.getElementById("happiness-stat")
+        happinessStat.innerHTML = pet.happiness
+    } catch (err) {
+        console.error("Error loading pet:", err);
+    }
+}
+
 async function updatePetData(updatedPet) {
     try {
         const response = await fetch('/user/pet', {
@@ -54,6 +73,8 @@ async function updatePetData(updatedPet) {
         }
         const updatedPetFromServer = await response.json();
         console.log('Updated pet data:', updatedPetFromServer);
+        happinessStat = document.getElementById("happiness-stat")
+        happinessStat.innerHTML = pet.happiness
     } catch (err) {
         console.error(err);
     }
@@ -85,7 +106,6 @@ function amiPetHappy() {
     console.log("Happiness +1 after pet", pet.happiness)
 
     // Live replace the happy value with the new one
-    document.getElementById("happy").innerText = pet.happiness;
     updatePetData(pet);
 
 }
