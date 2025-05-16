@@ -89,10 +89,10 @@
                 const achievements = data.achievements;
                 console.log(achievements)
     
-                const redeemableAchievement = achievements.find(achievement => achievement.progress === achievement.target);
+                const redeemableAchievement = achievements.filter(achievement => achievement.progress === achievement.target).length;
                 if (redeemableAchievement) {
                     document.getElementById('achievementsNotification').style.visibility = 'visible';
-                    // document.getElementById('achievementsNotification').innerHTML = number of progress === target
+                    document.getElementById('achievementsNotification').innerHTML = redeemableAchievement;
                 }
                 else {
                     document.getElementById('achievementsNotification').style.visibility = 'hidden';
