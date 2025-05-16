@@ -179,23 +179,23 @@ async function itemSelected() {
     for (let child of document.getElementById("items").children) {
         if (child.classList.contains("border-[#3EC3DE]")) {
             currentItem.classList.replace("border-[#3EC3DE]", "border-black")
-            currentItem.classList.remove("outline-1", "outline-[#3EC3DE]")
             currentItem.classList.add("hover:border-[#026475]")
+            currentItem.classList.remove("scale-105")
         }
     }
     if (pet.item == "") {
         currentItem = document.getElementById("no-item")
         currentItem.classList.replace("border-black", "border-[#3EC3DE]")
-        currentItem.classList.add("outline-1", "outline-[#3EC3DE]")
         currentItem.classList.remove("hover:border-[#026475]")
+        currentItem.classList.add("scale-105")
     } else {
         if (itemsDiv.classList.contains("items-tab"))
             currentItem = document.getElementById(pet.item)
         else if (itemsDiv.classList.contains("base-tab"))
             currentItem = document.getElementById(pet.base)
         currentItem.classList.replace("border-black", "border-[#3EC3DE]")
-        currentItem.classList.add("outline-1", "outline-[#3EC3DE]")
         currentItem.classList.remove("hover:border-[#026475]")
+        currentItem.classList.add("scale-105")
     }
 }
 
@@ -225,19 +225,19 @@ async function dynamicallyDisplayItems() {
         eachItem = document.createElement("div");
         eachItem.id = item;
         // Sets class list for each new div
-        eachItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition";
+        eachItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition hover:scale-105";
         // Goes through which items the user owns
         // If they don't have the item, it will be locked in the menu
         if (itemsOwned.includes(item)) {
             eachItem.innerHTML = `<div class="relative flex size-full">
-            <img src="images/game/Items/i-${item}.png" class="absolute"></div>`
+            <img src="images/game/Items/i-${item}.png" class="absolute rounded-sm"></div>`
         } else {
             eachItem.classList.replace("bg-white", "bg-[#d9d9d9]")
             eachItem.innerHTML = `
             <div class="relative flex size-full">
                 <div class="size-full flex flex-col z-1">
-                    <i class="mx-auto mt-auto mb-2 fa-solid fa-lock fa-xl group-hover:opacity-80"></i>
-                    <div class="text-[#0a67a0] rounded-lg border-[#026475] h-6 w-12 mx-auto border-3 font-bold flex items-center justify-center select-none bg-[#2eafc9] translate-y-4">
+                    <i class="mx-auto mt-auto mb-2 fa-solid fa-lock fa-xl transition group-hover:opacity-80 group-hover:scale-110"></i>
+                    <div class="text-[#0a67a0] rounded-lg border-[#026475] h-6 w-12 mx-auto border-3 font-bold flex items-center justify-center select-none bg-[#3EC3DE] translate-y-4 transition group-hover:scale-105">
                         <img src="/images/navbar/coin.png" alt="" class="size-4 mx-1">
                         <p class="items-center text-white tracking-wide drop-shadow-sm mr-1">10</p>
                     </div>
@@ -252,7 +252,7 @@ async function dynamicallyDisplayItems() {
 
     // Creates no item option
     blankItem = document.createElement("div");
-    blankItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer border-black hover:border-[#026475] transition"
+    blankItem.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer border-black hover:border-[#026475] transition hover:scale-105"
     blankItem.id = "no-item"
     blankItem.innerHTML = `<div class="relative flex size-full">
             <img src="" class="absolute">
@@ -345,7 +345,7 @@ async function dynamicallyDisplayBase() {
         eachBase = document.createElement("div");
         eachBase.id = base;
         // Sets class list for each new div
-        eachBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition overflow-hidden";
+        eachBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition overflow-hidden hover:scale-105";
         eachBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-${base}.png" class="mx-auto"></div>`
         itemsDiv.append(eachBase);
@@ -354,7 +354,7 @@ async function dynamicallyDisplayBase() {
     // Special gold base
     goldBase = document.createElement("div");
     goldBase.id = "gold"
-    goldBase.classList = "bg-white size-18 m-2 border-4 rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition";
+    goldBase.classList = "bg-white size-18 m-2 border-4 outline-2 outline-white rounded-lg hover:cursor-pointer group border-black hover:border-[#026475] transition hover:scale-105";
     if (itemsOwned.includes("gold")) {
         goldBase.innerHTML = `<div class="relative flex size-full">
             <img src="images/game/Ami-Base/i-gold.png" class="mx-auto"></div>`
@@ -362,17 +362,21 @@ async function dynamicallyDisplayBase() {
         goldBase.innerHTML = `
             <div class="relative flex size-full">
                 <div class="size-full flex flex-col z-1">
-                    <i class="mx-auto mt-auto mb-2 fa-solid fa-lock fa-xl group-hover:opacity-80"></i>
-                    <div class="text-[#0a67a0] rounded-lg border-[#026475] h-6 w-15 mx-auto border-3 font-bold flex items-center justify-center select-none bg-[#2eafc9] translate-y-4">
+                    <i class="mx-auto mt-auto mb-2 fa-solid fa-lock fa-xl group-hover:opacity-80 transition group-hover:scale-110"></i>
+                    <div class="text-[#0a67a0] rounded-lg border-[#026475] outline-2 outline-white h-6 w-15 mx-auto border-3 font-bold flex items-center justify-center select-none bg-[#3EC3DE] translate-y-4 transition group-hover:scale-105">
                         <img src="/images/navbar/coin.png" alt="" class="size-4 mx-1">
                         <p class="items-center text-white drop-shadow-sm mr-1">999</p>
                     </div>
                 </div>
-                <img src="images/game/Ami-Base/i-gold.png" class="size-full absolute brightness-85 group-hover:brightness-100 transition">
+                <img src="images/game/Ami-Base/i-gold.png" class="rounded-sm size-full absolute brightness-85 group-hover:brightness-100 transition">
             </div>
             `;
         goldBase.classList.add("locked")
     }
+
+
+
+
     itemsDiv.append(goldBase);
     itemSelected()
     baseAll.forEach(base => {
