@@ -30,20 +30,22 @@
 
                 <div class="flex justify-between">
                     <!-- Buttons -->
-                    <div class="z-10">
+                    <div class="z-10 opacity-100 transition m-2" id="menu-buttons">
+                        <div class="flex">
+                            <button id="game-items"
+                                class="size-18 bg-[#089ddd] rounded-lg border-4 border-[#0a67a0] block m-2 hover:cursor-pointer">
+                                <!-- Placeholder for items -->
+                                <i class="fa-solid fa-coins fa-2xl"></i>
+                            </button>
+                            <button id="game-achievements"
+                                class="size-18 bg-[#089ddd] rounded-lg border-4 border-[#0a67a0] block m-2 hover:cursor-pointer">
+                                <!-- Placeholder for items -->
+                                <i class="fa-solid fa-star fa-2xl"></i>
+                            </button>
+                        </div>
                         <button id="game-pet"
-                            class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
+                            class="size-18 bg-[#089ddd] rounded-lg border-4 border-[#0a67a0] block m-2 hover:cursor-pointer">
                             <i class="fa-regular fa-hand fa-2xl"></i>
-                        </button>
-                        <button id="game-items"
-                            class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                            <!-- Placeholder for items -->
-                            <i class="fa-solid fa-coins fa-2xl"></i>
-                        </button>
-                        <button id="game-achievements"
-                            class="size-18 bg-blue-300 rounded-lg border-4 border-blue-400 block m-4 hover:cursor-pointer">
-                            <!-- Placeholder for items -->
-                            <i class="fa-solid fa-star fa-2xl"></i>
                         </button>
                     </div>
 
@@ -51,19 +53,19 @@
                     <div id="items-menu"
                         class="rotate-x-270 origin-top absolute top-0 z-100 w-full transition ease-out duration-400">
                         <div
-                            class="bg-[#22899e] rounded-b-lg border-4 border-x-0 border-[#0c4049] border-t-[#22899e] px-4">
+                            class="bg-[#22899e] rounded-b-lg border-4 border-x-0 border-[#0c4049] border-t-[#22899e] px-4 h-full">
                             <!-- This is the header part -->
                             <div class="flex justify-between m-4">
                                 <h1 class="text-2xl font-bold my-auto text-[#3EC3DE] drop-shadow-sm">
-                                    <span id="item-text" class="text-white">Items</span> |
-                                    <span id="base-text" class=""></span>Base</span>
+                                    <span id="item-text" class="">Items</span> |
+                                    <span id="base-text" class="">Base</span>
                                 </h1>
                                 <!-- Buttons for categories -->
                                 <div>
                                     <button id="items-menu-item"
-                                        class="bg-[#31afc9] border-[#0c4049] text-white text-sm px-2 py-1 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#3EC3DE] active:bg-[#5edfff] transition outline-2 outline-[#3EC3DE]">Items</button>
+                                        class="border-[#0c4049] text-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Items</button>
                                     <button id="items-menu-base"
-                                        class="border-[#0c4049] text-white  px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Base</button>
+                                        class="border-[#0c4049] text-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition">Base</button>
                                 </div>
                             </div>
                             <hr class="border-2 border-[#026475] bg-[#026475] rounded-sm mx-4">
@@ -71,9 +73,20 @@
                             <div id="items" class="flex-wrap flex m-2 mb-4 justify-center md:justify-start"></div>
                         </div>
                         <!-- Close button -->
-                        <div id="close-menu"
-                            class="bg-[#3EC3DE] mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#0c4049]">
-                            <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
+                        <div class="flex mx-2">
+                            <div
+                                class="bg-[#3EC3DE] mx-2 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#0c4049]">
+                                <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
+                            </div>
+                            <div id="items-to-achievement-tab"
+                                class="bg-[#026475] mx-2 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1"
+                                onclick="openAchievemntsFromItems()">
+                                <i class="fa-solid fa-star fa-2xl my-auto mx-auto"></i>
+                            </div>
+                            <div id="close-menu"
+                                class="bg-[#22899e] text-white mx-2 ml-auto flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#151723] justify-end">
+                                <i class="fa-solid fa-xmark fa-2xl my-auto mx-auto"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -93,9 +106,20 @@
                             </div>
                         </div>
                         <!-- Close button -->
-                        <div id="close-menu-achievement"
-                            class="bg-[#3EC3DE] mx-4 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1">
-                            <i class="fa-solid fa-star fa-2xl my-auto mx-auto"></i>
+                        <div class="flex mx-2">
+                            <div id="achievement-to-items-tab"
+                                class="bg-[#026475] mx-2 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#151723]"
+                                onclick="openItemsFromAchievemnts()">
+                                <i class="fa-solid fa-coins fa-2xl my-auto mx-auto"></i>
+                            </div>
+                            <div
+                                class="bg-[#3EC3DE] mx-2 flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#151723]">
+                                <i class="fa-solid fa-star fa-2xl my-auto mx-auto"></i>
+                            </div>
+                            <div id="close-menu-achievement"
+                                class="bg-[#22899e] text-white mx-2 ml-auto flex size-18 rounded-b-lg cursor-pointer border-4 border-t-0 -translate-y-1 border-[#151723] justify-end">
+                                <i class="fa-solid fa-xmark fa-2xl my-auto mx-auto"></i>
+                            </div>
                         </div>
                     </div>
 
