@@ -32,71 +32,77 @@
     <%- include('./partials/nav_top_non_user') %>
 
 
-    <!-- PAGE CONTENT -->
+        <!-- PAGE CONTENT -->
 
-    <section class="min-h-dvh">
+        <section class="min-h-dvh">
 
-        <!-- speech bubble -->
-        <div class="drop-shadow-sm">
-            <!-- bubble with text -->
-            <div class="xl:max-w-screen-md flex-wrap mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
+            <!-- speech bubble -->
+            <div class="drop-shadow-sm">
+                <!-- bubble with text -->
+                <div class="xl:max-w-screen-md flex-wrap mx-auto bg-white text-center text-lg p-8 px-12 rounded-full">
 
-                <p style="text-align: center;">Sign up or log in to play!</p>
+                    <p style="text-align: center;">Sign up or log in to play!</p>
 
+                </div>
+                <!-- bubble tail -->
+                <div
+                    class="ml-auto mr-[50%] border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+                </div>
             </div>
-            <!-- bubble tail -->
-            <div
-                class="ml-auto mr-[50%] border-white size-0 border-30 border-r-transparent border-l-0 border-b-transparent">
+
+            <!-- login and Ami -->
+            <div style="display: flex; justify-content: center; margin: 20px;">
+                <div style="display: flex; flex-direction: column; margin: 10px;">
+
+                    <form action="/auth/login" method="POST">
+                        <label for="username">Username:</label>
+                        <div class="flex">
+                            <input type="text" id="username" name="username"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 float-left"
+                                placeholder="Username" required>
+                            <p class="text-red-600 float-right">*</p>
+                        </div>
+                        <!-- # When making these forms you MUST use the same id values. The server finds the input for those id values. -->
+                        <br>
+                        <label for="password">Password:</label>
+                        <div class="flex">
+                            <input type="password" id="password" name="password"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 float-left"
+                                placeholder="•••••••••" required>
+                            <p class="text-red-600 float-right">*</p>
+                        </div>
+                        <br>
+                        <button type="submit"
+                            class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Login</button>
+                        <button type="submit" formaction="/auth/register"
+                            class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Sign Up</button>
+                        <!-- # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form. -->
+                    </form>
+                    <!-- Here is the conditional message for loging in and signup errors -->
+                    <% if (message) { %>
+                        <br>
+                        <br>
+                        <p class="text-red-600">
+                            <%= message %>
+                        </p>
+                        <br>
+                        <br>
+                        <% } %>
+                </div>
+                <div>
+                    <img style="height: 200px;" src="/images/misc_assets/ami.png">
+                </div>
             </div>
-        </div>
 
-        <!-- login and Ami -->
-
-        <div style="display: flex; justify-content: center; margin: 20px;">
-            <div style="display: flex; flex-direction: column; margin: 10px;">
-
-                <form action="/auth/login" method="POST">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Username" required>
-                    <!-- # When making these forms you MUST use the same id values. The server finds the input for those id values. -->
-                    <br>
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="•••••••••" required>
-                    <br>
-                    <button type="submit"
-                        class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Login</button>
-                    <button type="submit" formaction="/auth/register"
-                        class="daily bg-blue-200 px-2 py-1 rounded hover:bg-blue-300 transition">Sign Up</button>
-                    <!-- # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form. -->
-                </form>
-                <!-- Here is the conditional message for loging in and signup errors -->
-                <% if (message) { %>
-                    <br>
-                    <br>
-                    <p class="text-red-600"><%= message %></p>
-                    <br>
-                    <br>
-                <% } %>
-            </div>
-            <div>
-                <img style="height: 200px;"
-                    src="/images/misc_assets/ami.png">
-            </div>
-        </div>
-
-    </section>
+        </section>
 
 
 
 
-    <!-- BOTTOM NAV -->
+        <!-- BOTTOM NAV -->
 
 
-    <!-- Footer if we want would go here -->
+        <!-- Footer if we want would go here -->
 
 </body>
 
