@@ -48,96 +48,135 @@
           </button>
         </form>
 
-        <div class="flex flex-wrap gap-3 mb-3">
-          <form action="/transactions" method="GET">
-            <input type="hidden" name="category" value="" />
-            <input type="hidden" name="openPanel" value="true" />
-            <button type="submit" class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400">
-              All
+          <div class="flex flex-wrap gap-3 mb-3">
+            <form action="/transactions" method="GET">
+              <input type="hidden" name="category" value="" />
+              <input type="hidden" name="openPanel" value="true" />
+              <button
+                type="submit"
+                class="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                All
+              </button>
+            </form>
+            <button
+              onclick="showDropdown('income')"
+              class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
+            >
+              Income
+            </button>
+            <button
+              onclick="showDropdown('expense')"
+              class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
+            >
+              Expense
+            </button>
+          </div>
+          <form
+            action="/transactions"
+            method="GET"
+            id="incomeDropdown"
+            class="hidden"
+          >
+            <input type="hidden" name="type" value="income" />
+            <select
+              name="category"
+              class="border border-gray-400 p-2 rounded mb-2"
+            >
+              <option value="">All</option>
+              <option value="Salary">Salary</option>
+              <option value="Freelance">Freelance</option>
+              <option value="Bonus">Bonus</option>
+              <option value="Interest/Dividends">Interest/Dividends</option>
+              <option value="Refunds/Reimbursements">
+                Refunds/Reimbursements
+              </option>
+              <option value="Other Income">Other Income</option>
+            </select>
+            <button
+              type="submit"
+              class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Filter
             </button>
           </form>
-          <button onclick="showDropdown('income')" class="px-4 py-1 bg-green-200 rounded hover:bg-green-300">
-            Income
-          </button>
-          <button onclick="showDropdown('expense')" class="px-4 py-1 bg-red-200 rounded hover:bg-red-300">
-            Expense
-          </button>
+          <form
+            action="/transactions"
+            method="GET"
+            id="expenseDropdown"
+            class="hidden"
+          >
+            <input type="hidden" name="type" value="expense" />
+            <select
+              name="category"
+              class="border border-gray-400 p-2 rounded mb-2"
+            >
+              <option value="">All</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Home & Utilities">Home & Utilities</option>
+              <option value="Entertainment & Lifestyle">
+                Entertainment & Lifestyle
+              </option>
+              <option value="Personal & Health">Personal & Health</option>
+              <option value="Bills & Fees">Bills & Fees</option>
+              <option value="Pet">Pet</option>
+              <option value="Car">Car</option>
+              <option value="Shopping & Gifts">Shopping & Gifts</option>
+              <option value="Work & Education">Work & Education</option>
+              <option value="Travel">Travel</option>
+              <option value="Other">Other</option>
+            </select>
+            <button
+              type="submit"
+              class="ml-2 px-4 py-1 bg-blue-500 text-white rounded"
+            >
+              Filter
+            </button>
+          </form>
         </div>
-        <form action="/transactions" method="GET" id="incomeDropdown" class="hidden">
-          <input type="hidden" name="type" value="income" />
-          <select name="category" class="border border-gray-400 p-2 rounded mb-2">
-            <option value="">All</option>
-            <option value="Salary">Salary</option>
-            <option value="Freelance">Freelance</option>
-            <option value="Bonus">Bonus</option>
-            <option value="Interest/Dividends">Interest/Dividends</option>
-            <option value="Refunds/Reimbursements">
-              Refunds/Reimbursements
-            </option>
-            <option value="Other Income">Other Income</option>
-          </select>
-          <button type="submit" class="ml-2 px-4 py-1 bg-blue-500 text-white rounded">
-            Filter
-          </button>
-        </form>
-        <form action="/transactions" method="GET" id="expenseDropdown" class="hidden">
-          <input type="hidden" name="type" value="expense" />
-          <select name="category" class="border border-gray-400 p-2 rounded mb-2">
-            <option value="">All</option>
-            <option value="Food & Dining">Food & Dining</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Home & Utilities">Home & Utilities</option>
-            <option value="Entertainment & Lifestyle">
-              Entertainment & Lifestyle
-            </option>
-            <option value="Personal & Health">Personal & Health</option>
-            <option value="Bills & Fees">Bills & Fees</option>
-            <option value="Pet">Pet</option>
-            <option value="Car">Car</option>
-            <option value="Shopping & Gifts">Shopping & Gifts</option>
-            <option value="Work & Education">Work & Education</option>
-            <option value="Travel">Travel</option>
-            <option value="Other">Other</option>
-          </select>
-          <button type="submit" class="ml-2 px-4 py-1 bg-blue-500 text-white rounded">
-            Filter
-          </button>
-        </form>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-xs text-left text-gray-700">
-          <thead class="bg-blue-100 text-blue-800">
-            <tr>
-              <th class="px-2 py-1">Name</th>
-              <th class="px-2 py-1">Category</th>
-              <th class="px-1 py-1">Date</th>
-              <th class="px-2 py-1">Amount</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% transactions.forEach(transaction => { %>
-            <tr class="hover:bg-blue-50">
-              <td class="px-2 py-1">
-                <strong><%= transaction.name %></strong>
-              </td>
-              <td class="px-2 py-1"><%= transaction.category %></td>
-              <td class="px-2 py-1">
-                <%= transaction.date.toDateString() %>
-              </td>
-              <td class="px-3 py-1 text-blue-600 font-semibold">
-                $<%= transaction.amount %>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-      <div class="bg-white p-6 rounded-2xl shadow-lg mb-10">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-          <div>
-            <h2 class="text-xl font-bold text-blue-800">Monthly Budget</h2>
-            <p class="text-sm mt-2 text-gray-500">
-              <strong class="text-black">Budget: $<%= budget.monthly
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left text-gray-700">
+            <thead class="bg-blue-100 text-blue-800">
+              <tr>
+                <th class="px-2 py-1">Name</th>
+                <th class="px-2 py-1">Category</th>
+                <th class="px-1 py-1">Date</th>
+                <th class="px-2 py-1">Amount</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <% transactions.forEach(transaction => { %>
+              <tr class="hover:bg-blue-50">
+                <td class="px-2 py-1">
+                  <strong><%= transaction.name %></strong>
+                </td>
+                <td class="px-2 py-1"><%= transaction.category %></td>
+                <td class="px-2 py-1">
+  <%= new Date(transaction.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC"
+  }) %>
+</td>
+
+                <td class="px-3 py-1 text-blue-600 font-semibold">
+                  $<%= transaction.amount %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-lg mb-10">
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4"
+          >
+            <div>
+              <h2 class="text-xl font-bold text-blue-800">Monthly Budget</h2>
+              <p class="text-sm mt-2 text-gray-500">
+                <strong class="text-black">Budget: $<%= budget.monthly
                 %> | <strong class="text-black">Spent:</strong> $<%=
                 spentThisMonth %>
             </p>

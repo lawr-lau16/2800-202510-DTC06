@@ -188,7 +188,7 @@ app.get("/login", (request, result) => {
   if (request.session.uid) {
     return result.redirect("/home");
   }
-  result.render("login", { message: "" } );
+  result.render("login", { message: "" });
 });
 
 // happiness decay
@@ -586,6 +586,31 @@ app.get("/home", async (req, res) => {
     await checkMonthlyBudgetAchievement(user);
     // Check for coffee achievement
     await checkCoffeeAchievement(user);
+    const now = new Date();
+
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Monday
+
+    const spentThisWeek = userTransactions
+      .filter((t) => t.type === "expense" && t.date >= startOfWeek)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const spentThisMonth = userTransactions
+      .filter(
+        (t) =>
+          t.type === "expense" &&
+          t.date >= new Date(now.getFullYear(), now.getMonth(), 1)
+      )
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const weeklyBudget = user.budget.weekly || 1;
+    const monthlyBudget = user.budget.monthly || 1;
+
+    const weeklyPercent = Math.min(100, (spentThisWeek / weeklyBudget) * 100);
+    const monthlyPercent = Math.min(
+      100,
+      (spentThisMonth / monthlyBudget) * 100
+    );
 
     const totalIncome = userTransactions
       .filter((t) => t.type === "income")
@@ -608,6 +633,12 @@ app.get("/home", async (req, res) => {
       expenses: userTransactions,
       five: topFive,
       joke: req.session.joke,
+      spentThisWeek,
+      spentThisMonth,
+      weeklyPercent,
+      monthlyPercent,
+      weeklyBudget,
+      monthlyBudget,
     });
   } catch (err) {
     console.error("Error loading home:", err.message);
@@ -638,7 +669,9 @@ app.post("/auth/register", async (req, res) => {
     const password = req.body.password;
     const existingUser = await users.findOne({ username });
     if (existingUser) {
-      return res.render('login', { message: 'User already exists, please make another username!' } );
+      return res.render("login", {
+        message: "User already exists, please make another username!",
+      });
     }
     // Active Achievements
     const defaultActiveAchievements = [
@@ -867,23 +900,24 @@ app.post("/auth/register", async (req, res) => {
   }
 });
 
-
 // get user achievements data for navbar notification
 app.get("/navbar", async (request, result) => {
   try {
     if (!request.session.uid) {
       return result.redirect("/login");
     }
-  const user = await users.findById(request.session.uid).populate("activeAchievements");
-  console.log(user)
-  result.json({
-    achievements: user.activeAchievements
-  });
+    const user = await users
+      .findById(request.session.uid)
+      .populate("activeAchievements");
+    console.log(user);
+    result.json({
+      achievements: user.activeAchievements,
+    });
   } catch (err) {
     console.log("Error fetching achievements data:", err.message);
     result.status(500).json({ error: "Internal server error" });
-}});
-
+  }
+});
 
 /**
  * Log's in a user.
@@ -898,11 +932,15 @@ app.post("/auth/login", async (request, result) => {
     const { username, password } = request.body;
     const user = await users.findOne({ username });
     if (!user) {
-      return result.render('login', { message: 'Please input a valid username and password!' } );
+      return result.render("login", {
+        message: "Please input a valid username and password!",
+      });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-       return result.render('login', { message: 'Wrong password please try again!' } );
+      return result.render("login", {
+        message: "Wrong password please try again!",
+      });
     }
 
     // Tracking for login streak achievement
@@ -1045,7 +1083,7 @@ app.get("/transactions", async (req, res) => {
     if (type) filter.type = type;
     if (category) filter.category = category;
 
-    let sortOption = { date: -1 };
+    let sortOption = { date: -1, _id: -1 };
     if (sort === "date_asc") sortOption = { date: 1 };
     else if (sort === "amount_desc") sortOption = { amount: -1 };
     else if (sort === "amount_asc") sortOption = { amount: 1 };
@@ -1115,40 +1153,55 @@ app.post("/transactions/fetch", async (request, result) => {
   }
 });
 
+
+
+
 app.get("/transactions/chart-data", async (req, res) => {
   if (!req.session.uid) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   try {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const user = await users.findById(req.session.uid);
     const allTransactions = await transactions.find({
       _id: { $in: user.transactions },
       type: "expense",
+      date: { $gte: startOfMonth, $lte: now },
     });
 
     const categoryTotals = {};
     const monthlyTotals = {};
     const weeklyTotals = {};
+    const weeklyCategoryTotal = {}; // NEW
+
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Monday
+    startOfWeek.setHours(0, 0, 0, 0);
 
     allTransactions.forEach((t) => {
+      // Monthly & category processing
       categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
 
-      // Format month as short string (e.g., Jan, Feb)
       const dateObj = new Date(t.date);
       const month = dateObj.toLocaleString("default", { month: "short" });
       monthlyTotals[month] = (monthlyTotals[month] || 0) + t.amount;
 
-      // Group by week number in month (Week 1 to Week 5)
-      // Weekly Totals: Monday-Sunday grouping
       const day = dateObj.getDay();
       const diffToMonday = (day === 0 ? -6 : 1) - day;
       const monday = new Date(dateObj);
       monday.setDate(dateObj.getDate() + diffToMonday);
-
       const weekKey = `Week of ${monday.toISOString().slice(0, 10)}`;
       weeklyTotals[weekKey] = (weeklyTotals[weekKey] || 0) + t.amount;
+
+      // Weekly category breakdown for this week's donut chart
+      if (dateObj >= startOfWeek && dateObj <= now) {
+        weeklyCategoryTotal[t.category] =
+          (weeklyCategoryTotal[t.category] || 0) + t.amount;
+      }
     });
+
 
     // Sort monthly totals by calendar month order
     const monthOrder = [
@@ -1194,6 +1247,7 @@ app.get("/transactions/chart-data", async (req, res) => {
         labels: weeklyLabels,
         values: weeklyValues,
       },
+      weeklyCategory: weeklyCategoryTotal,
     });
   } catch (err) {
     console.error("Error fetching chart data:", err.message);
@@ -1334,8 +1388,8 @@ app.post("/delete-expense/:id", async (req, res) => {
 // Handle form submission and save to MongoDB
 app.post("/add-expense", async (req, res) => {
   if (!req.session.uid) {
-    res.redirect('/login');
-  };
+    res.redirect("/login");
+  }
 
   const user = await users.findById(req.session.uid);
   const { type, name, amount, category, date } = req.body;
