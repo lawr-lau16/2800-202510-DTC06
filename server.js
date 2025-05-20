@@ -1565,7 +1565,8 @@ app.post("/inventory/update", async (req, res) => {
 
 // Redirect inncorrect GET requests to a nice 404 page.
 app.use((req, res) => {
-  res.status(404).render('404');
+  const user = req.session.uid
+  res.status(404).render('404', { user });
 });
 
 // Start's the server and listens on the specified port.
