@@ -13,6 +13,7 @@ async function setAmi() {
     } catch (err) {
         console.error("Error loading pet:", err);
     }
+    amiSad()
 }
 
 // Add pet button functionality
@@ -40,25 +41,7 @@ async function getPetData() {
     }
 }
 
-async function navbarStats() {
-    try {
-        const response = await fetch('/inventory', { method: 'POST' });
-        const { coins } = await response.json();
-        coinsStat = document.getElementById("coin-stat")
-        coinsStat.innerHTML = 10
-
-    } catch (err) {
-        console.error("Failed to load inventory:", err);
-    } try {
-        const response = await fetch('/pet', { method: 'POST' });
-        const { pet } = await response.json();
-        happinessStat = document.getElementById("happiness-stat")
-        happinessStat.innerHTML = pet.happiness
-    } catch (err) {
-        console.error("Error loading pet:", err);
-    }
-}
-
+// updates data in 
 async function updatePetData(updatedPet) {
     try {
         const response = await fetch('/user/pet', {
@@ -82,7 +65,8 @@ async function updatePetData(updatedPet) {
 
 // Function to be executed when pet button is selected
 function clickPetButton() {
-    petButton.classList.toggle("border-[#3EC3DE]");
+    petButton.classList.toggle("border-[#22899e]");
+    petButton.classList.toggle("border-[#5edfff]");
     petButton.classList.toggle("scale-105");
     ami.classList.toggle("hover:cursor-pointer");
     // Ami becomes interactable
@@ -95,7 +79,14 @@ function clickPetButton() {
 function amiPetHappy() {
     amiExpression.src = "images/game/Ami-Expressions/happy.png";
     setTimeout(() => {
-        amiExpression.src = "images/game/Ami-Expressions/default.png";
+        if (pet.happiness < 25) {
+            amiExpression.src = "/images/game/Ami-Expressions/sad.png";
+            gameButton.classList.add("animate-[wiggle_1s_ease-in-out_infinite]")
+        }
+        else {
+            amiExpression.src = "/images/game/Ami-Expressions/default.png"
+            gameButton.classList.remove("animate-[wiggle_1s_ease-in-out_infinite]")
+        }
     }, 700);
     pet.happiness += 1;
 
@@ -108,7 +99,22 @@ function amiPetHappy() {
 
     // Live replace the happy value with the new one
     updatePetData(pet);
+}
 
+// if Ami's happiness is below 30, they become sad :( 
+async function amiSad() {
+    const response = await fetch('/pet', { method: 'POST' });
+    const { pet } = await response.json();
+    amiExpression = document.getElementById("ami-expression");
+    gameButton = document.getElementById("game-pet");
+    if (pet.happiness < 25) {
+        amiExpression.src = "/images/game/Ami-Expressions/sad.png";
+        gameButton.classList.add("animate-[wiggle_1s_ease-in-out_infinite]")
+    }
+    else {
+        amiExpression.src = "/images/game/Ami-Expressions/default.png"
+        gameButton.classList.remove("animate-[wiggle_1s_ease-in-out_infinite]")
+    }
 }
 
 // Function to remove Ami clickability
@@ -156,7 +162,6 @@ function clickItemCloseButton() {
     showButtons()
 }
 
-
 // Tab to change Ami's colour
 function itemMenuBaseTab() {
     itemBaseTab.addEventListener("click", currentBaseTab)
@@ -192,7 +197,6 @@ function currentItemTab() {
     itemText.classList = "text-white"
     dynamicallyDisplayItems()
 }
-
 
 async function getInventory() {
     try {

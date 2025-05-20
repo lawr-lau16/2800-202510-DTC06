@@ -16,6 +16,18 @@
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        @keyframes wiggle {
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+    </style>
 </head>
 
 <body class="h-dvh flex flex-col bg-[#f5f2f0] text-[#151723] font-[Quicksand] mx-auto">
@@ -33,19 +45,19 @@
                     <div class="z-10 opacity-100 transition m-2" id="menu-buttons">
                         <div class="flex">
                             <button id="game-items"
-                                class="size-18 bg-[#22899e] rounded-lg border-4 border-[#0c4049] block m-2 hover:cursor-pointer outline-4 outline-white drop-shadow-sm transition hover:scale-105">
+                                class="size-18 bg-[#3EC3DE] rounded-lg border-4 border-[#22899e] block m-2 hover:cursor-pointer outline-4 outline-white drop-shadow-sm transition hover:scale-105">
                                 <!-- Placeholder for items -->
                                 <img src="/images/game/other/ami-blank.png" alt="" class="mx-auto">
                             </button>
                             <button id="game-achievements"
-                                class="size-18 bg-[#22899e] rounded-lg border-4 border-[#0c4049] block m-2 hover:cursor-pointer outline-4 outline-white drop-shadow-sm transition hover:scale-105">
+                                class="size-18 bg-[#3EC3DE] rounded-lg border-4 border-[#22899e] block m-2 hover:cursor-pointer outline-4 outline-white drop-shadow-sm transition hover:scale-105">
                                 <!-- Placeholder for items -->
                                 <img src="/images/game/other/star.png" alt="" class="mx-auto">
 
                             </button>
                         </div>
                         <button id="game-pet"
-                            class="size-18 bg-[#22899e] rounded-lg border-4 border-[#0c4049] block m-2 hover:cursor-pointer outline-4 outline-white drop-shadow-sm transition hover:scale-105">
+                            class="size-18 bg-[#3EC3DE] rounded-lg border-4 border-[#22899e] block m-2 hover:cursor-pointer outline-4 outline-white drop-shadow-sm transition hover:scale-105">
                             <img src="/images/game/other/pet.png" alt="" class="mx-auto">
                         </button>
                     </div>
