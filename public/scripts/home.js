@@ -24,7 +24,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const { pet } = await response.json();
     amiBase = document.querySelectorAll("#ami-base");
     amiItem = document.querySelectorAll("#ami-item");
-    console.log(amiItem[0])
     for (i in amiBase) {
       try {
         amiBase[i].src = `/images/game/Ami-Base/${pet.base}.png`;
@@ -32,7 +31,6 @@ window.addEventListener("DOMContentLoaded", () => {
           amiItem[i].src = ``;
         } else {
           amiItem[i].src = `/images/game/Items/${pet.item}.png`;
-          console.log(amiItem[0])
         }
       }
       catch (err) {
@@ -40,8 +38,6 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-
-
 
   // budget donut
   // const canvas = document.getElementById("canvas");
