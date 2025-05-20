@@ -183,11 +183,25 @@ function updateProgressBar(used, total, period) {
   const budgetText = document.getElementById("budgetUsedText");
   const spentVsBudget = document.getElementById("spentVsBudget");
 
+  // Remove existing color classes
+  progressFill.classList.remove("bg-green-500", "bg-yellow-500", "bg-red-500");
+
+  // Add color based on percentage
+  if (percent < 50) {
+    progressFill.classList.add("bg-green-500");
+  } else if (percent < 90) {
+    progressFill.classList.add("bg-yellow-500");
+  } else {
+    progressFill.classList.add("bg-red-500");
+  }
+
+  // Animate and update width
   progressFill.style.setProperty("--progress-width", percent + "%");
   progressFill.classList.remove("progress-fill");
-  void progressFill.offsetWidth;
+  void progressFill.offsetWidth; // force reflow to trigger animation
   progressFill.classList.add("progress-fill");
 
+  // Update text
   budgetText.textContent = `${percent}% of ${period} budget used`;
   spentVsBudget.innerHTML = `$${used} / $${total}`;
 }
