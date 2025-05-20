@@ -490,7 +490,7 @@ app.get("/profile", async (req, res) => {
 
 // Post changes to mongoDB
 app.post("/profile/update", async (req, res) => {
-  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
+  if (!req.session.uid) return res.redirect('/login')
 
   const { username, password, weekly, monthly } = req.body;
 
@@ -807,22 +807,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -837,11 +837,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -1558,6 +1558,11 @@ app.post("/inventory/update", async (req, res) => {
     console.error("Error updating inventory:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+// Redirect inncorrect GET requests to a nice 404 page.
+app.use((req, res) => {
+  res.status(404).render('404');
 });
 
 // Start's the server and listens on the specified port.
