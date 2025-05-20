@@ -12,7 +12,7 @@ fetch('/achievements/data')
 
       const div = document.createElement('div');
 
-      div.className = 'flex justify-between items-start bg-grey-50 p-4 rounded-lg shadow-sm mb-4';
+      div.className = 'flex justify-between items-start bg-white p-4 rounded-lg shadow-sm mb-4';
 
       div.innerHTML = `
         <div class="flex items-start gap-3 w-full">
@@ -34,13 +34,13 @@ fetch('/achievements/data')
               <img src="/images/achievements/coin.png" class="size-6" alt="Coin">
             </div>
             ${isCompleted
-              ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition mt-1" data-id="${a._id}">Redeem</button>`
-              : !isActive
-                ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition mt-1" data-id="${a._id}">Activate</button>`
-                : isClaimed
-                  ? `<span class="text-[10px] text-gray-400 mt-2 leading-tight text-right">Reward<br>claimed</span>`
-                  : ''
-            }
+          ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition mt-1" data-id="${a._id}">Redeem</button>`
+          : !isActive
+            ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition mt-1" data-id="${a._id}">Activate</button>`
+            : isClaimed
+              ? `<span class="text-[10px] text-gray-400 mt-2 leading-tight text-right">Reward<br>claimed</span>`
+              : ''
+        }
           </div>
         </div>
       `;
@@ -51,6 +51,7 @@ fetch('/achievements/data')
     const activeHeader = document.createElement('h2');
     activeHeader.textContent = 'Active Achievements';
     activeHeader.className = 'text-xl font-bold mb-2';
+
     container.appendChild(activeHeader);
 
     // If there are no active active achievements, show a card reminding user to active a new one
@@ -82,6 +83,13 @@ fetch('/achievements/data')
       card.classList.add('opacity-50');
       container.appendChild(card);
     });
+
+    // Change header colour to white for achievements game page
+    if (window.location.href.includes("game")) {
+      document.querySelectorAll("h2").forEach(header => {
+        header.classList.add("text-white")
+      });
+    }
 
     // Add click listener to activate buttons
     document.querySelectorAll('.activate-btn').forEach(btn => {
