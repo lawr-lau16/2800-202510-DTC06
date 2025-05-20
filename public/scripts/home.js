@@ -16,7 +16,6 @@ window.addEventListener("DOMContentLoaded", () => {
       console.error('Error fetching achievements:', error);
     });
 
-
   // Set Ami customization based on user settings
   async function setAmi() {
 
