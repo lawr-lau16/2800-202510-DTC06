@@ -82,7 +82,8 @@ async function updatePetData(updatedPet) {
 
 // Function to be executed when pet button is selected
 function clickPetButton() {
-    petButton.classList.toggle("border-blue-400");
+    petButton.classList.toggle("border-[#3EC3DE]");
+    petButton.classList.toggle("scale-105");
     ami.classList.toggle("hover:cursor-pointer");
     // Ami becomes interactable
     ami.addEventListener("click", amiPetHappy);
