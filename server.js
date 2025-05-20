@@ -620,8 +620,11 @@ app.get("/home", async (req, res) => {
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpenses;
 
+    // Reverse the transactions list before sorting to get the most recent transactions in the day
+    const userTransactionsReversed = userTransactions.reverse();
+
     // Sorts the transactions and slices out the most recent 5 to send to the view
-    const topFive = userTransactions
+    const topFive = userTransactionsReversed
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 5);
 
