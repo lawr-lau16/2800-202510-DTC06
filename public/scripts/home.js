@@ -1,41 +1,47 @@
 window.addEventListener("DOMContentLoaded", () => {
 
-// First time user message
-        fetch('/navbar')
-            .then(response => response.json())
-            .then(data => {
-                const achievements = data.achievements;
-                console.log(achievements)
+  // First time user message
+  fetch('/navbar')
+    .then(response => response.json())
+    .then(data => {
+      const achievements = data.achievements;
+      console.log(achievements)
 
-                const welcomeAchievement = achievements.find(achievement => achievement.type === "welcome" && achievement.completed === false);
-                if (welcomeAchievement) {
-                    document.getElementById('speechBubble').textContent = 'Please take a look at the achievements page ★ to redeem some coins!';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching achievements:', error);
-            });
+      const welcomeAchievement = achievements.find(achievement => achievement.type === "welcome" && achievement.completed === false);
+      if (welcomeAchievement) {
+        document.getElementById('speechBubble').textContent = 'Please take a look at the achievements page ★ to redeem some coins!';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching achievements:', error);
+    });
 
 
   // Set Ami customization based on user settings
   async function setAmi() {
-    try {
-      const response = await fetch("/pet", { method: "POST" });
-      const { pet } = await response.json();
-      document.getElementById(
-        "ami-base"
-      ).src = `/images/game/Ami-Base/${pet.base}.png`;
-      if (pet.item === "") {
-        document.getElementById("ami-item").src = ``;
-      } else {
-        document.getElementById(
-          "ami-item"
-        ).src = `/images/game/Items/${pet.item}.png`;
+
+    const response = await fetch("/pet", { method: "POST" });
+    const { pet } = await response.json();
+    amiBase = document.querySelectorAll("#ami-base");
+    amiItem = document.querySelectorAll("#ami-item");
+    console.log(amiItem[0])
+    for (i in amiBase) {
+      try {
+        amiBase[i].src = `/images/game/Ami-Base/${pet.base}.png`;
+        if (pet.item === "") {
+          amiItem[i].src = ``;
+        } else {
+          amiItem[i].src = `/images/game/Items/${pet.item}.png`;
+          console.log(amiItem[0])
+        }
       }
-    } catch (err) {
-      console.error("Error loading pet:", err);
+      catch (err) {
+        console.error("Error loading pet:", err);
+      }
     }
   }
+
+
 
   // budget donut
   // const canvas = document.getElementById("canvas");
