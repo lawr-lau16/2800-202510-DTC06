@@ -173,8 +173,14 @@
                 </td>
                 <td class="px-2 py-1"><%= transaction.category %></td>
                 <td class="px-2 py-1">
-                  <%= transaction.date.toDateString() %>
-                </td>
+  <%= new Date(transaction.date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC"
+  }) %>
+</td>
+
                 <td class="px-3 py-1 text-blue-600 font-semibold">
                   $<%= transaction.amount %>
                 </td>
