@@ -38,8 +38,8 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // budget donut
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+  // const canvas = document.getElementById("canvas");
+  // const ctx = canvas.getContext("2d");
 
   function drawAnimatedChart(values, duration = 500) {
     const colors = ["#e66f6f", "#8ce66f"];

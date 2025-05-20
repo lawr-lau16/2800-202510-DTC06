@@ -13,6 +13,7 @@ async function setAmi() {
     } catch (err) {
         console.error("Error loading pet:", err);
     }
+    amiSad()
 }
 
 // Add pet button functionality
@@ -40,25 +41,7 @@ async function getPetData() {
     }
 }
 
-async function navbarStats() {
-    try {
-        const response = await fetch('/inventory', { method: 'POST' });
-        const { coins } = await response.json();
-        coinsStat = document.getElementById("coin-stat")
-        coinsStat.innerHTML = 10
-
-    } catch (err) {
-        console.error("Failed to load inventory:", err);
-    } try {
-        const response = await fetch('/pet', { method: 'POST' });
-        const { pet } = await response.json();
-        happinessStat = document.getElementById("happiness-stat")
-        happinessStat.innerHTML = pet.happiness
-    } catch (err) {
-        console.error("Error loading pet:", err);
-    }
-}
-
+// updates data in 
 async function updatePetData(updatedPet) {
     try {
         const response = await fetch('/user/pet', {
@@ -82,7 +65,9 @@ async function updatePetData(updatedPet) {
 
 // Function to be executed when pet button is selected
 function clickPetButton() {
-    petButton.classList.toggle("border-blue-400");
+    petButton.classList.toggle("border-[#22899e]");
+    petButton.classList.toggle("border-[#5edfff]");
+    petButton.classList.toggle("scale-105");
     ami.classList.toggle("hover:cursor-pointer");
     // Ami becomes interactable
     ami.addEventListener("click", amiPetHappy);
@@ -94,7 +79,14 @@ function clickPetButton() {
 function amiPetHappy() {
     amiExpression.src = "images/game/Ami-Expressions/happy.png";
     setTimeout(() => {
-        amiExpression.src = "images/game/Ami-Expressions/default.png";
+        if (pet.happiness < 25) {
+            amiExpression.src = "/images/game/Ami-Expressions/sad.png";
+            gameButton.classList.add("animate-[wiggle_1s_ease-in-out_infinite]")
+        }
+        else {
+            amiExpression.src = "/images/game/Ami-Expressions/default.png"
+            gameButton.classList.remove("animate-[wiggle_1s_ease-in-out_infinite]")
+        }
     }, 700);
     pet.happiness += 1;
 
@@ -107,7 +99,22 @@ function amiPetHappy() {
 
     // Live replace the happy value with the new one
     updatePetData(pet);
+}
 
+// if Ami's happiness is below 30, they become sad :( 
+async function amiSad() {
+    const response = await fetch('/pet', { method: 'POST' });
+    const { pet } = await response.json();
+    amiExpression = document.getElementById("ami-expression");
+    gameButton = document.getElementById("game-pet");
+    if (pet.happiness < 25) {
+        amiExpression.src = "/images/game/Ami-Expressions/sad.png";
+        gameButton.classList.add("animate-[wiggle_1s_ease-in-out_infinite]")
+    }
+    else {
+        amiExpression.src = "/images/game/Ami-Expressions/default.png"
+        gameButton.classList.remove("animate-[wiggle_1s_ease-in-out_infinite]")
+    }
 }
 
 // Function to remove Ami clickability
@@ -128,10 +135,23 @@ function gameButtonItems() {
     itemsCloseMenu.addEventListener("click", clickItemCloseButton);
 }
 
+// hide buttons
+function hideButtons() {
+    menuButtons = document.getElementById("menu-buttons")
+    menuButtons.classList.replace("opacity-100", "opacity-0")
+}
+
+// show buttons
+function showButtons() {
+    menuButtons = document.getElementById("menu-buttons")
+    menuButtons.classList.replace("opacity-0", "opacity-100")
+}
+
 // Open Items menu
 function clickItemButton() {
     itemsMenu.classList.replace("rotate-x-270", "rotate-x-0");
     itemsMenu.classList.replace("ease-in", "ease-out");
+    hideButtons()
 }
 
 // Close Items menu
@@ -139,18 +159,43 @@ function clickItemCloseButton() {
     itemsMenu.classList.replace("rotate-x-0", "rotate-x-270");
     itemsMenu.classList.replace("ease-in", "ease-out");
     itemsMenu.classList.replace("ease-out", "ease-in");
+    showButtons()
 }
 
 // Tab to change Ami's colour
 function itemMenuBaseTab() {
+    itemBaseTab.addEventListener("click", currentBaseTab)
+}
+
+// sets current item tab + styling to base tab
+function currentBaseTab() {
     itemBaseTab = document.getElementById("items-menu-base");
-    itemBaseTab.addEventListener("click", dynamicallyDisplayBase)
+    itemItemsTab = document.getElementById("items-menu-item");
+    itemText = document.getElementById("item-text")
+    baseText = document.getElementById("base-text")
+    itemBaseTab.classList = "bg-[#31afc9] border-[#0c4049] text-white text-sm px-2 py-1 rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#3EC3DE] active:bg-[#5edfff] transition outline-2 outline-[#3EC3DE]"
+    itemItemsTab.classList = "border-[#0c4049] text-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
+    itemText.classList = "text-current"
+    baseText.classList = "text-white"
+    dynamicallyDisplayBase()
 }
 
 // Tab to change Ami's item
 function itemMenuItemTab() {
+    itemItemsTab.addEventListener("click", currentItemTab)
+}
+
+// sets current item tab + styling to items tab
+function currentItemTab() {
+    itemBaseTab = document.getElementById("items-menu-base");
     itemItemsTab = document.getElementById("items-menu-item");
-    itemItemsTab.addEventListener("click", dynamicallyDisplayItems)
+    itemText = document.getElementById("item-text")
+    baseText = document.getElementById("base-text")
+    itemItemsTab.classList = "bg-[#31afc9] border-[#0c4049] text-white text-sm px-2 py-1 rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#3EC3DE] active:bg-[#5edfff] transition outline-2 outline-[#3EC3DE]"
+    itemBaseTab.classList = "border-[#0c4049] text-white px-2 py-1 text-sm rounded-xl border-4 font-bold hover:cursor-pointer m-1 hover:bg-[#31afc9]/50 active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition"
+    baseText.classList = "text-current"
+    itemText.classList = "text-white"
+    dynamicallyDisplayItems()
 }
 
 async function getInventory() {
@@ -169,34 +214,34 @@ function currentMenu() {
     currentTab = localStorage.getItem("tab-menu");
     console.log(currentTab)
     if (currentTab === null || currentTab === "item")
-        dynamicallyDisplayItems()
+        currentItemTab()
     else if (currentTab === "base")
-        dynamicallyDisplayBase()
+        currentBaseTab()
 }
 
 // Function to select current item/base
 async function itemSelected() {
+    // Gets user item/base from db
     const response = await fetch('/pet', { method: 'POST' });
     const { pet } = await response.json();
     itemsDiv = document.getElementById("items");
+    // Makes sure all the options are unselected before styling the active button
     for (let child of document.getElementById("items").children) {
         if (child.classList.contains("border-[#3EC3DE]")) {
             currentItem.classList.replace("border-[#3EC3DE]", "border-black")
             currentItem.classList.remove("scale-105")
         }
     }
-    if (pet.item == "") {
-        currentItem = document.getElementById("no-item")
-        currentItem.classList.replace("border-black", "border-[#3EC3DE]")
-        currentItem.classList.add("scale-105")
-    } else {
-        if (itemsDiv.classList.contains("items-tab"))
+    // Style active button
+    if (itemsDiv.classList.contains("items-tab"))
+        if (pet.item === '')
+            currentItem = document.getElementById("no-item")
+        else
             currentItem = document.getElementById(pet.item)
-        else if (itemsDiv.classList.contains("base-tab"))
-            currentItem = document.getElementById(pet.base)
-        currentItem.classList.replace("border-black", "border-[#3EC3DE]")
-        currentItem.classList.add("scale-105")
-    }
+    else if (itemsDiv.classList.contains("base-tab"))
+        currentItem = document.getElementById(pet.base)
+    currentItem.classList.replace("border-black", "border-[#3EC3DE]")
+    currentItem.classList.add("scale-105")
 }
 
 // Populates Items menu with available items 
@@ -371,9 +416,6 @@ async function dynamicallyDisplayBase() {
         goldBase.classList.add("locked")
     }
 
-
-
-
     itemsDiv.append(goldBase);
     itemSelected()
     baseAll.forEach(base => {
@@ -437,13 +479,33 @@ function gameButtonAchievement() {
 function clickAchievementButton() {
     achievementMenu.classList.replace("rotate-x-270", "rotate-x-0");
     achievementMenu.classList.replace("ease-in", "ease-out");
+    hideButtons()
 }
 
 // Close Items menu
 function clickAchievementCloseButton() {
     achievementMenu.classList.replace("rotate-x-0", "rotate-x-270");
     achievementMenu.classList.replace("ease-out", "ease-in");
+    showButtons()
 }
+
+
+// Open items from achievements tab
+function openItemsFromAchievemnts() {
+    clickAchievementCloseButton()
+    setTimeout(() => {
+        clickItemButton()
+    }, 100)
+}
+
+// Open items from achievements tab
+function openAchievemntsFromItems() {
+    clickItemCloseButton()
+    setTimeout(() => {
+        clickAchievementButton()
+    }, 100)
+}
+
 
 // For the weather
 function getLocation() {

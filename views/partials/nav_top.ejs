@@ -34,8 +34,8 @@
         </form>
 
         <form action="/game" method="get">
-            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full">
-                <img src="\images\navbar\game-icon.png" alt="" class="size-5.5 ">
+            <button type="submit" class="hover:cursor-pointer p-4 drop-shadow-md flex w-full h-[57px]">
+                <img src="\images\navbar\game-icon.png" alt="" class="size-[22.5px] min-w-[22.5px]">
                 <p class="hide font-semibold hidden ml-4" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">
                     Game
                 </p>
@@ -55,10 +55,8 @@
                 <i class="fa-solid fa-star fa-lg mr-4 py-3"></i>
                 <p class="hide font-semibold hidden" style="opacity: 0; transition-delay: 0.3s; transition: 0.3s;">
                     Achievements</p>
-                <div
-                id="achievementsNotification"
-                style="visibility: hidden;"
-                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
+                <div id="achievementsNotification" style="visibility: hidden;"
+                    class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
                     1
                 </div>
             </button>
@@ -82,13 +80,13 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         fetch('/navbar')
             .then(response => response.json())
             .then(data => {
                 const achievements = data.achievements;
                 console.log(achievements)
-    
+
                 const redeemableAchievement = achievements.filter(achievement => achievement.progress === achievement.target).length;
                 if (redeemableAchievement) {
                     document.getElementById('achievementsNotification').style.visibility = 'visible';
