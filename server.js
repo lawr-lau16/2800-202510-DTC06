@@ -845,7 +845,7 @@ app.post("/auth/register", async (req, res) => {
       },
       inventory: [],
       pet: {
-        base: "White",
+        base: "white",
         item: "",
         happiness: 80,
         lastPetted: new Date(),
