@@ -1,135 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EconAmi | Home</title>
-    <link rel="icon" type="image/png" href="/images/favicon.png" />
-    <!-- Tailwind -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- External libraries -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      src="https://kit.fontawesome.com/f0fa2c9149.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-      /* Custom animations and styles */
-      @keyframes floatUpDown {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
 
-        50% {
-          transform: translateY(-10px);
-        }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EconAmi | Home</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png" />
+  <!-- Tailwind -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- External libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+    rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Custom animations and styles */
+    @keyframes floatUpDown {
+
+      0%,
+      100% {
+        transform: translateY(0);
       }
 
-      .float-ami {
-        animation: floatUpDown 2s ease-in-out infinite;
+      50% {
+        transform: translateY(-10px);
       }
+    }
 
-      .joke-text {
-        font-size: clamp(1rem, 1.5vw, 1.2rem);
-        line-height: 1.4;
-      }
+    .float-ami {
+      animation: floatUpDown 2s ease-in-out infinite;
+    }
 
-      /* Custom scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
+    .joke-text {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      line-height: 1.4;
+    }
 
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-      }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
 
-      ::-webkit-scrollbar-thumb {
-        background: #089ddd;
-        border-radius: 10px;
-      }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
 
-      ::-webkit-scrollbar-thumb:hover {
-        background: #067db1;
-      }
+    ::-webkit-scrollbar-thumb {
+      background: #089ddd;
+      border-radius: 10px;
+    }
 
-      /* Slide up panel animation */
-      .slide-up-enter {
-        transform: translateY(100%);
+    ::-webkit-scrollbar-thumb:hover {
+      background: #067db1;
+    }
+
+    /* Slide up panel animation */
+    .slide-up-enter {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    .slide-up-enter-active {
+      transform: translateY(0);
+      opacity: 1;
+      transition: all 300ms ease-out;
+    }
+
+    .slide-up-exit {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .slide-up-exit-active {
+      transform: translateY(100%);
+      opacity: 0;
+      transition: all 300ms ease-in;
+    }
+
+    /* Custom transitions */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
         opacity: 0;
       }
 
-      .slide-up-enter-active {
-        transform: translateY(0);
-        opacity: 1;
-        transition: all 300ms ease-out;
-      }
-
-      .slide-up-exit {
-        transform: translateY(0);
+      100% {
         opacity: 1;
       }
+    }
 
-      .slide-up-exit-active {
-        transform: translateY(100%);
-        opacity: 0;
-        transition: all 300ms ease-in;
+    /* Glass effect for cards */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Budget progress bar animation */
+    @keyframes fillProgress {
+      from {
+        width: 0;
       }
 
-      /* Custom transitions */
-      .fade-in {
-        animation: fadeIn 0.3s ease-in-out;
+      to {
+        width: var(--progress-width);
       }
+    }
 
-      @keyframes fadeIn {
-        0% {
-          opacity: 0;
-        }
+    .progress-fill {
+      animation: fillProgress 1.5s ease-out forwards;
+    }
+  </style>
+</head>
 
-        100% {
-          opacity: 1;
-        }
-      }
-
-      /* Glass effect for cards */
-      .glass-card {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      /* Budget progress bar animation */
-      @keyframes fillProgress {
-        from {
-          width: 0;
-        }
-
-        to {
-          width: var(--progress-width);
-        }
-      }
-
-      .progress-fill {
-        animation: fillProgress 1.5s ease-out forwards;
-      }
-    </style>
-  </head>
-
-  <body
-    class="font-[Quicksand] bg-gradient-to-br from-[#f0f9ff] to-[#e1f0ff] text-[#151723] min-h-screen flex flex-col"
-  >
-    <!-- Top Navigation -->
-    <%- include('./partials/nav_top') %>
+<body class="font-[Quicksand] bg-gradient-to-br from-[#f0f9ff] to-[#e1f0ff] text-[#151723] min-h-screen flex flex-col">
+  <!-- Top Navigation -->
+  <%- include('./partials/nav_top') %>
 
     <div class="md:ml-14 flex-1 overflow-y-auto" id="content">
       <main class="container mx-auto px-4 py-6 max-w-8xl">
@@ -138,34 +134,21 @@
           <!-- Atmospheric Background with Weather -->
           <div
             class="bg-gradient-to-r from-[#a1c4fd] to-[#c2e9fb] p-6 relative bg-[url(/images/game/weather/m-Clear.jpg)] bg-cover md:h-70 lg:h-70"
-            id="main-card"
-          >
+            id="main-card">
             <div class="glass-card p-6 rounded-xl">
               <!-- Greeting and Joke Section -->
               <div class="flex flex-col md:flex-row items-center gap-4">
-                <div class="relative w-26 h-26 md:w-38 md:h-38">
+                <div class="relative w-26 h-26 md:w-38 md:h-38 -translate-y-10">
                   <div id="ami" class="float-ami">
                     <!-- Expression Overlay -->
-                    <img
-                      id="ami-expression"
-                      class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                      src="/images/game/Ami-Expressions/talk.png"
-                      alt="Ami expression"
-                    />
+                    <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                      src="/images/game/Ami-Expressions/talk.png" alt="Ami expression" />
                     <!-- Item Overlay -->
-                    <img
-                      id="ami-item"
-                      class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                      src=""
-                      alt=""
-                    />
+                    <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src=""
+                      alt="" />
                     <!-- Ami Base -->
-                    <img
-                      id="ami-base"
-                      class="select-none pointer-events-none"
-                      src="/images/game/Ami-Base/white.png"
-                      alt="Ami character"
-                    />
+                    <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
+                      alt="Ami character" />
                   </div>
                 </div>
                 <div class="flex-1">
@@ -173,60 +156,37 @@
                     Hello, <%= username %>!
                   </h1>
                   <% if (joke) { %>
-                  <div
-                    class="joke-text text-[#2e3559] italic bg-white/70 p-3 rounded-lg border-l-4 border-[#089ddd] mt-2"
-                  >
-                    "<%= joke %>"
-                    <form action="/joke" method="post" class="inline ml-2">
-                      <button
-                        class="bg-[#089ddd] hover:bg-[#067aaa] text-white p-1 rounded-lg transition-colors"
-                        type="submit"
-                        title="Get a new joke"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-6 h-6"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                          />
-                        </svg>
-                      </button>
-                    </form>
-                  </div>
-                  <% } else { %>
-                  <p id="speechBubble" class="text-[#2e3559]">
-                    Ready to manage your finances today?
-                  </p>
-                  <form action="/joke" method="post" class="mt-2">
-                    <button
-                      class="bg-[#089ddd] hover:bg-[#067aaa] text-white px-3 py-1 rounded-lg transition-colors flex items-center gap-2"
-                      type="submit"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="w-5 h-5"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"
-                        />
-                      </svg>
-                      Get a joke
-                    </button>
-                  </form>
-                  <% } %>
+                    <div
+                      class="joke-text text-[#2e3559] italic bg-white/70 p-3 rounded-lg border-l-4 border-[#089ddd] mt-2">
+                      "<%= joke %>"
+                        <form action="/joke" method="post" class="inline ml-2">
+                          <button class="bg-[#089ddd] hover:bg-[#067aaa] text-white p-1 rounded-lg transition-colors"
+                            type="submit" title="Get a new joke">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                              stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                          </button>
+                        </form>
+                    </div>
+                    <% } else { %>
+                      <p id="speechBubble" class="text-[#2e3559]">
+                        Ready to manage your finances today?
+                      </p>
+                      <form action="/joke" method="post" class="mt-2">
+                        <button
+                          class="bg-[#089ddd] hover:bg-[#067aaa] text-white px-3 py-1 rounded-lg transition-colors flex items-center gap-2"
+                          type="submit">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+                          </svg>
+                          Get a joke
+                        </button>
+                      </form>
+                      <% } %>
                 </div>
               </div>
             </div>
@@ -240,78 +200,45 @@
             <div class="flex justify-between items-center mb-4">
               <h2 class="text-xl font-bold text-[#2e3559]">Budget Overview</h2>
               <div class="flex space-x-2">
-                <button
-                  id="weeklyButton"
+                <button id="weeklyButton"
                   class="bg-[#089ddd] text-white px-4 py-1 rounded-lg font-medium hover:bg-[#067aaa] transition-colors"
-                  type="button"
-                >
+                  type="button">
                   Weekly
                 </button>
-                <button
-                  id="monthlyButton"
+                <button id="monthlyButton"
                   class="bg-white text-[#089ddd] border border-[#089ddd] px-4 py-1 rounded-lg font-medium hover:bg-[#e1f0ff] transition-colors"
-                  type="button"
-                >
+                  type="button">
                   Monthly
                 </button>
               </div>
             </div>
 
             <!-- Visualization Area -->
-            <div
-              class="relative mb-6 h-[400px] flex items-center justify-center"
-            >
-              <canvas
-                id="canvas"
-                class="w-full h-full max-w-[400px] max-h-[400px]"
-              ></canvas>
+            <div class="relative mb-6 h-[400px] flex items-center justify-center">
+              <canvas id="canvas" class="w-full h-full max-w-[400px] max-h-[400px]"></canvas>
 
               <!-- Ami character in the center -->
               <!-- <div class=" border overflow-hidden rounded-full"> -->
-              <div
-                id="ami"
-                class="absolute z-10 size-35 flex items-center justify-center border-4 overflow-hidden rounded-full"
-              >
-                <img
-                  id="ami-expression"
-                  class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                  src="/images/game/Ami-Expressions/default.png"
-                  alt="Ami expression"
-                />
+              <div id="ami"
+                class="absolute z-10 size-35 flex items-center justify-center border-4 overflow-hidden rounded-full">
+                <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                  src="/images/game/Ami-Expressions/default.png" alt="Ami expression" />
                 <!-- Item Overlay -->
-                <img
-                  id="ami-item"
-                  class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                  src=""
-                  alt=""
-                />
+                <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src="" alt="" />
                 <!-- Ami Base -->
-                <img
-                  id="ami-base"
-                  class="select-none pointer-events-none"
-                  src="/images/game/Ami-Base/white.png"
-                  alt="Ami character"
-                />
+                <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
+                  alt="Ami character" />
               </div>
               <!-- </div> -->
             </div>
 
             <!-- Budget Percentage -->
             <div class="mb-4">
-              <div
-                id="spentVsBudget"
-                class="flex justify-between text-lg font-medium mb-2"
-              ></div>
+              <div id="spentVsBudget" class="flex justify-between text-lg font-medium mb-2"></div>
               <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                <div
-                  class="bg-[#089ddd] h-4 progress-fill"
-                  style="--progress-width: 56%"
-                ></div>
+                <div class="bg-[#089ddd] h-4 progress-fill" style="--progress-width: 56%"></div>
               </div>
-              <div
-                id="budgetUsedText"
-                class="text-right text-sm text-gray-600 mt-1"
-              ></div>
+              <div id="budgetUsedText" class="text-right text-sm text-gray-600 mt-1"></div>
             </div>
           </section>
 
@@ -321,23 +248,12 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-col gap-3 mb-6">
-              <button
-                id="openSlideUp"
-                class="bg-[#de5158] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#c23941] transition-colors flex items-center justify-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-5 h-5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
+              <button id="openSlideUp"
+                class="bg-[#de5158] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#c23941] transition-colors flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
                 Add Expense
               </button>
@@ -345,47 +261,35 @@
 
             <!-- Financial Summary -->
             <div class="bg-white/50 rounded-xl p-4 flex-1">
-              <h3
-                class="font-bold text-[#2e3559] border-b border-gray-200 pb-2 mb-3"
-              >
+              <h3 class="font-bold text-[#2e3559] border-b border-gray-200 pb-2 mb-3">
                 Financial Summary
               </h3>
 
               <div class="grid grid-cols-2 gap-2 mb-3">
                 <div class="bg-green-100 p-3 rounded-lg">
                   <p class="text-sm text-green-800">Total Income</p>
-                  <p class="font-semibold text-lg">$<%= totalIncome %></p>
+                  <p class="font-semibold text-lg">$<%= totalIncome %>
+                  </p>
                 </div>
                 <div class="bg-red-100 p-3 rounded-lg">
                   <p class="text-sm text-red-800">Total Expenses</p>
-                  <p class="font-semibold text-lg">$<%= totalExpenses %></p>
+                  <p class="font-semibold text-lg">$<%= totalExpenses %>
+                  </p>
                 </div>
               </div>
 
               <div class="bg-blue-100 p-3 rounded-lg mb-3">
                 <p class="text-sm text-blue-800">Current Balance</p>
-                <p class="font-semibold text-lg">$<%= balance %></p>
+                <p class="font-semibold text-lg">$<%= balance %>
+                </p>
               </div>
 
-              <button
-                id="toggleBudgetBtn"
-                class="w-full bg-[#089ddd] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#067aaa] transition-colors flex items-center justify-center gap-2"
-              >
+              <button id="toggleBudgetBtn"
+                class="w-full bg-[#089ddd] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#067aaa] transition-colors flex items-center justify-center gap-2">
                 <span>Show Transactions</span>
-                <svg
-                  id="arrowIcon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 transition-transform duration-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
+                <svg id="arrowIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-300"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
             </div>
@@ -393,10 +297,8 @@
         </div>
 
         <!-- Transactions Panel (Hidden by Default) -->
-        <section
-          id="budgetOverview"
-          class="glass-card rounded-2xl shadow-lg mt-6 transition-all duration-500 overflow-hidden max-h-0 opacity-0"
-        >
+        <section id="budgetOverview"
+          class="glass-card rounded-2xl shadow-lg mt-6 transition-all duration-500 overflow-hidden max-h-0 opacity-0">
           <div class="p-6">
             <h2 class="text-xl font-bold text-[#2e3559] mb-4">
               Recent Transactions
@@ -414,46 +316,34 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% five.forEach(e => { %>
-                  <tr class="border-b hover:bg-gray-50">
-                    <td class="py-3 px-4"><%= e.name %></td>
-                    <td
-                      class="py-3 px-4 <%= e.type === 'income' ? 'text-green-600' : 'text-red-600' %>"
-                    >
-                      <%= e.type === 'income' ? '+' : '-' %>$<%= e.amount %>
-                    </td>
-                    <!-- <td class="py-3 px-4"><%= e.type === 'income' ? 'Income' : 'Expense' %></td> -->
-                    <td class="py-3 px-4">
-                      <span
-                        class="px-2 py-1 text-sm <%= e.type === 'income' ? ' text-green-800' : ' text-red-800' %>"
-                      >
-                        <%= e.category %>
-                      </span>
-                    </td>
-                    <td class="py-3 px-4">
-                      <form action="/delete-expense/<%= e._id %>" method="POST">
-                        <button
-                          class="text-red-600 hover:text-red-800 focus:outline-none"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-5 h-5"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                            />
-                          </svg>
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                  <% }) %>
+                  <% five.forEach(e=> { %>
+                    <tr class="border-b hover:bg-gray-50">
+                      <td class="py-3 px-4">
+                        <%= e.name %>
+                      </td>
+                      <td class="py-3 px-4 <%= e.type === 'income' ? 'text-green-600' : 'text-red-600' %>">
+                        <%= e.type==='income' ? '+' : '-' %>$<%= e.amount %>
+                      </td>
+                      <!-- <td class="py-3 px-4"><%= e.type === 'income' ? 'Income' : 'Expense' %></td> -->
+                      <td class="py-3 px-4">
+                        <span
+                          class="px-2 py-1 text-sm <%= e.type === 'income' ? ' text-green-800' : ' text-red-800' %>">
+                          <%= e.category %>
+                        </span>
+                      </td>
+                      <td class="py-3 px-4">
+                        <form action="/delete-expense/<%= e._id %>" method="POST">
+                          <button class="text-red-600 hover:text-red-800 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                              stroke="currentColor" class="w-5 h-5">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                    <% }) %>
                 </tbody>
               </table>
             </div>
@@ -465,75 +355,45 @@
     <!-- Bottom Navigation -->
     <%- include('./partials/nav_bottom') %>
 
-    <!-- Sliding Panel -->
-    <div
-      id="overlay"
-      class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden z-40 transition duration-300 ]"
-    ></div>
+      <!-- Sliding Panel -->
+      <div id="overlay" class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden z-40 transition duration-300 ]"></div>
 
-    <div
-      id="slideUpPanel"
-      class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh] md:bottom-auto md:top-1/2 md:left-1/2 md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-xl md:w-full md:rounded-xl md:shadow-2xl"
-    >
-      <button
-        id="closeSlideUp"
-        class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-
-      <div id="addExpenseContent">
-        <button
-          id="backToDashboard"
-          class="text-[#089ddd] font-bold mb-4 flex items-center gap-1"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-5 h-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
+      <div id="slideUpPanel"
+        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh] md:bottom-auto md:top-1/2 md:left-1/2 md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-xl md:w-full md:rounded-xl md:shadow-2xl">
+        <button id="closeSlideUp" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
-          Back
         </button>
-        <div id="dynamicFormContainer" class="mt-2"></div>
+
+        <div id="addExpenseContent">
+          <button id="backToDashboard" class="text-[#089ddd] font-bold mb-4 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            Back
+          </button>
+          <div id="dynamicFormContainer" class="mt-2"></div>
+        </div>
       </div>
-    </div>
 
-    <!-- Scripts -->
-    <script>
-      window.EconAmiData = {
-        spentThisMonth: <%= spentThisMonth %>,
-        monthlyBudget: <%= monthlyBudget %>,
-        spentThisWeek: <%= spentThisWeek %>,
-        weeklyBudget: <%= weeklyBudget %>
+      <!-- Scripts -->
+      <script>
+        window.EconAmiData = {
+          spentThisMonth: <%= spentThisMonth %>,
+          monthlyBudget: <%= monthlyBudget %>,
+            spentThisWeek: <%= spentThisWeek %>,
+              weeklyBudget: <%= weeklyBudget %>
       };
-    </script>
+      </script>
 
-    <!-- Your existing scripts -->
-    <script src="/scripts/home.js"></script>
-    <script src="/scripts/home_charts.js"></script>
-    <script src="/scripts/navigation.js"></script>
-    <script src="/scripts/script.js"></script>
-  </body>
+      <!-- Your existing scripts -->
+      <script src="/scripts/home.js"></script>
+      <script src="/scripts/home_charts.js"></script>
+      <script src="/scripts/navigation.js"></script>
+      <script src="/scripts/script.js"></script>
+</body>
+
 </html>
