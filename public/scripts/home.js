@@ -223,15 +223,15 @@ window.addEventListener("DOMContentLoaded", () => {
   //     selectedButton("daily");
   // })
 
-  buttons.weekly.addEventListener("click", () => {
-    updateSpending("weekly");
-    selectedButton("weekly");
-  });
+  // buttons.weekly.addEventListener("click", () => {
+  //   updateSpending("weekly");
+  //   selectedButton("weekly");
+  // });
 
-  buttons.monthly.addEventListener("click", () => {
-    updateSpending("monthly");
-    selectedButton("monthly");
-  });
+  // buttons.monthly.addEventListener("click", () => {
+  //   updateSpending("monthly");
+  //   selectedButton("monthly");
+  // });
 
   function selectedButton(selected) {
     for (const key in buttons) {
