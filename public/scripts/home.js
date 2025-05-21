@@ -44,6 +44,8 @@ window.addEventListener("DOMContentLoaded", () => {
   // const ctx = canvas.getContext("2d");
 
   function drawAnimatedChart(values, duration = 500) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     const colors = ["#e66f6f", "#8ce66f"];
     const start = performance.now();
     const img = new Image();
@@ -187,9 +189,9 @@ window.addEventListener("DOMContentLoaded", () => {
         total = sumAmounts(transactions, weeklyTransactions);
       }
 
-      if (timeframe === "monthly") {
-        total = sumAmounts(transactions, monthlyTransactions);
-      }
+      // if (timeframe === "monthly") {
+      //   total = sumAmounts(transactions, monthlyTransactions);
+      // }
 
       // document.getElementById(
       //   "spentVsBudget"
@@ -200,6 +202,10 @@ window.addEventListener("DOMContentLoaded", () => {
         ((selectedBudget - total) / selectedBudget) * 100,
       ];
       drawAnimatedChart(values);
+      updateProgressBar(total, selectedBudget, timeframe);
+
+      // Re-style buttons (optional if already handled)
+      styleToggleButtons(timeframe);
     } catch (err) {
       console.error("Error:", err);
       document.getElementById("spentVsBudget").innerHTML =
@@ -210,7 +216,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const buttons = {
     // daily: document.getElementById("dailyButton"),
     weekly: document.getElementById("weeklyButton"),
-    monthly: document.getElementById("monthlyButton"),
+    // monthly: document.getElementById("monthlyButton"),
   };
   // buttons.daily.addEventListener('click', () => {
   //     updateSpending("daily");
@@ -295,6 +301,34 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function fail() {
     alert("Weather for your location not available at this time.");
+  }
+  function updateProgressBar(used, total, period) {
+    const percent = Math.min(100, ((used / total) * 100).toFixed(0));
+    const progressFill = document.querySelector(".progress-fill");
+    const budgetText = document.getElementById("budgetUsedText");
+    const spentVsBudget = document.getElementById("spentVsBudget");
+
+    progressFill.classList.remove(
+      "bg-green-500",
+      "bg-yellow-500",
+      "bg-red-500"
+    );
+
+    if (percent < 50) {
+      progressFill.classList.add("bg-green-500");
+    } else if (percent < 90) {
+      progressFill.classList.add("bg-yellow-500");
+    } else {
+      progressFill.classList.add("bg-red-500");
+    }
+
+    progressFill.style.setProperty("--progress-width", percent + "%");
+    progressFill.classList.remove("progress-fill");
+    void progressFill.offsetWidth; // force reflow
+    progressFill.classList.add("progress-fill");
+
+    budgetText.textContent = `${percent}% of ${period} budget used`;
+    spentVsBudget.innerHTML = `$${used} / $${total}`;
   }
 
   setAmi();
