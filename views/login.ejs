@@ -24,76 +24,77 @@
     <%- include('./partials/nav_top_non_user') %>
 
 
-    <!-- PAGE CONTENT -->
+        <!-- PAGE CONTENT -->
 
-    <section class="min-h-dvh">
-        <section
-            class="relative md:border-4 border-white rounded-2xl lg:max-w-screen-lg md:max-w-screen-md drop-shadow-sm mx-auto mt-8">
-            <!-- speech bubble -->
-            <div class="drop-shadow-sm m-4 ">
-                <!-- bubble with text -->
-                <div
-                    class="lg:max-w-screen-sm md:max-w-screen-sm flex-wrap mx-auto bg-white text-center text-lg p-8 px-12 rounded-4xl ">
-                    <p class="font-semibold text-center text-xl md:text-2xl hover:cursor-default">Sign up or log in to
-                        play!</p>
-                </div>
-                <!-- bubble tail -->
-                <div
-                    class="ml-auto mr-[15%] -translate-x-40 border-white size-0 border-30 border-l-transparent border-r-0 border-b-transparent">
-                </div>
-            </div>
-
-            <!-- Ami -->
-            <img src="/images/misc_assets/ami-3.png" class="w-36 mx-auto absolute right-[15%] -translate-y-24">
-
-            <!-- login -->
+        <section class="min-h-dvh">
             <section
-                class="lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl mt-20 p-6 flex justify-center relative z-100">
-                <div class="flex flex-col w-full lg:w-[80%]">
-
-                    <form action="/auth/login" method="POST">
-                        <label for="username">Username: <span class="text-red-600">*</span></label>
-                        <div class="flex">
-                            <input type="text" id="username" name="username"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Username" required>
-
-                        </div>
-                        <!-- # When making these forms you MUST use the same id values. The server finds the input for those id values. -->
-                        <br>
-                        <label for="password">Password: <span class="text-red-600">*</span></label>
-                        <div class="flex">
-                            <input type="password" id="password" name="password"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="•••••••••" required>
-
-                        </div>
-                        <br>
-                        <button type="submit" formaction="/auth/register"
-                            class="bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition w-25">
-                            Sign Up</button>
-                        <button type="submit"
-                            class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition w-25">
-                            Login</button>
-                        <!-- # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form. -->
-                    </form>
-                    <!-- Here is the conditional message for loging in and signup errors -->
-                    <% if (message) { %>
-                    <br>
-                    <br>
-                    <p class="text-red-600">
-                        <%= message %>
-                    </p>
-                    <br>
-                    <br>
-                    <% } %>
+                class="relative md:border-4 border-white rounded-2xl lg:max-w-screen-lg md:max-w-screen-md drop-shadow-sm mx-auto mt-8">
+                <!-- speech bubble -->
+                <div class="drop-shadow-sm m-4 ">
+                    <!-- bubble with text -->
+                    <div
+                        class="lg:max-w-screen-sm md:max-w-screen-sm flex-wrap mx-auto bg-white text-center text-lg p-8 px-12 rounded-4xl ">
+                        <p class="font-semibold text-center text-xl md:text-2xl hover:cursor-default">Sign up or log in
+                            to
+                            play!</p>
+                    </div>
+                    <!-- bubble tail -->
+                    <div
+                        class="ml-auto mr-[15%] -translate-x-40 border-white size-0 border-30 border-l-transparent border-r-0 border-b-transparent">
+                    </div>
                 </div>
 
-                </div>
+                <!-- Ami -->
+                <img src="/images/misc_assets/ami-3.png" class="w-36 mx-auto absolute right-[15%] -translate-y-24">
 
+                <!-- login -->
+                <section
+                    class="lg:max-w-screen-lg md:max-w-screen-md md:mx-auto bg-white rounded-xl mt-20 p-6 flex justify-center relative z-100">
+                    <div class="flex flex-col w-full lg:w-[80%]">
+
+                        <form action="/auth/login" method="POST">
+                            <label for="username">Username: <span class="text-red-600">*</span></label>
+                            <div class="flex">
+                                <input type="text" id="username" name="username"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Username" required>
+
+                            </div>
+                            <!-- # When making these forms you MUST use the same id values. The server finds the input for those id values. -->
+                            <br>
+                            <label for="password">Password: <span class="text-red-600">*</span></label>
+                            <div class="flex">
+                                <input type="password" id="password" name="password"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="•••••••••" required>
+
+                            </div>
+                            <br>
+                            <button type="submit"
+                                class="border-[#089ddd] text-[#089ddd] bg-white px-4 py-2 rounded-xl border-4 font-bold hover:cursor-pointer m-2 hover:bg-[#089ddd] active:border-[#5edfff] hover:text-white active:bg-[#5edfff] transition w-25">
+                                Login</button>
+                            <button type="submit" formaction="/auth/register"
+                                class="bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition w-25">
+                                Sign Up</button>
+                            <!-- # Here we change the action for the form using formaction in order to shortcut the process of using a sign up page or an ugly second form. -->
+                        </form>
+                        <!-- Here is the conditional message for loging in and signup errors -->
+                        <% if (message) { %>
+                            <br>
+                            <br>
+                            <p class="text-red-600">
+                                <%= message %>
+                            </p>
+                            <br>
+                            <br>
+                            <% } %>
+                    </div>
+
+                    </div>
+
+                </section>
             </section>
-        </section>
-        <script src="/scripts/script.js"></script>
+            <script src="/scripts/script.js"></script>
 </body>
 
 </html>
