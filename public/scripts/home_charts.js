@@ -70,17 +70,17 @@ function initAddForm(defaultType = "expense") {
   if (!expenseBtn || !incomeBtn || !typeInput || !categorySelect) return;
 
   const expenseCategories = [
-    "Food & Dining",
-    "Transportation",
-    "Home & Utilities",
-    "Entertainment & Lifestyle",
-    "Personal & Health",
     "Bills & Fees",
-    "Pet",
     "Car",
+    "Entertainment & Lifestyle",
+    "Food & Dining",
+    "Home & Utilities",
+    "Personal & Health",
+    "Pet",
     "Shopping & Gifts",
-    "Work & Education",
+    "Transportation",
     "Travel",
+    "Work & Education",
     "Other",
   ];
 
