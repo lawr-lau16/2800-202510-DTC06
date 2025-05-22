@@ -22,20 +22,21 @@
 <body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
   <!-- Top Navigation -->
   <%- include('./partials/nav_top') %>
-  <!-- Put your things in the section please -->
+  <!-- Page content starts -->
   <div class="md:ml-14 min-h-dvh" id="content">
 
+<!-- Transactions section wrapper -->
     <section class="max-w-7xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
       <h1 class="text-2xl font-bold text-center text-blue-800 mb-6">
         Your Transactions
       </h1>
-
+<!-- Sorting & filtering form -->
       <div class="mb-6">
         <form action="/transactions" method="GET" class="mb-4 flex gap-3 items-center">
-          <!-- Keep filter parameters if needed -->
+         <!-- Hidden inputs to retain filter state -->
           <input type="hidden" name="type" value="<%= type || '' %>" />
           <input type="hidden" name="category" value="<%= category || '' %>" />
-
+<!-- Sort dropdown -->
           <label for="sort" class="font-medium">Sort by:</label>
           <select name="sort" id="sort" class="border border-gray-400 p-2 rounded">
             <option value="date_desc">Date: Newest First</option>
@@ -43,12 +44,16 @@
             <option value="amount_desc">Amount: High to Low</option>
             <option value="amount_asc">Amount: Low to High</option>
           </select>
+           <!-- Apply sorting button -->
           <button type="submit" class="px-4 py-1 rounded-xl bg-[#089ddd] border-[#0a67a0] border-4 text-white">
             Apply
           </button>
         </form>
+<!-- Transaction type buttons -->
 
           <div class="flex flex-wrap gap-3 mb-3">
+<!-- All categories -->
+
             <form action="/transactions" method="GET">
               <input type="hidden" name="category" value="" />
               <input type="hidden" name="openPanel" value="true" />
@@ -59,19 +64,28 @@
                 All
               </button>
             </form>
+            
+            <!-- Income dropdown toggle -->
+
             <button
               onclick="showDropdown('income')"
               class="px-4 py-1 bg-green-200 rounded hover:bg-green-300"
             >
               Income
             </button>
-            <button
+
+          <!-- Expense dropdown toggle -->
+            
+          <button
               onclick="showDropdown('expense')"
               class="px-4 py-1 bg-red-200 rounded hover:bg-red-300"
             >
               Expense
             </button>
           </div>
+
+                  <!-- Income category filter dropdown -->
+
           <form
             action="/transactions"
             method="GET"
@@ -100,6 +114,7 @@
               Filter
             </button>
           </form>
+          <!-- Expense category filter dropdown -->
           <form
             action="/transactions"
             method="GET"
@@ -135,6 +150,8 @@
             </button>
           </form>
         </div>
+              <!-- Transaction table -->
+
         <div class="overflow-x-auto">
           <table class="min-w-full text-xs text-left text-gray-700">
             <thead class="bg-blue-100 text-blue-800">
@@ -166,6 +183,7 @@
                   $<%= transaction.amount %>
                 </td>
                 <td class="flex justify-end px-2 py-1">
+                      <!-- Delete transaction form -->
                   <form action="/delete-expense/<%= transaction._id %>" method="POST"
                       onsubmit="return confirm('Are you sure you want to delete this transaction?');">
                         <button
@@ -197,6 +215,7 @@
           <div
             class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4"
           >
+             <!-- Monthly budget summary with progress bar -->
             <div>
               <h2 class="text-xl font-bold text-blue-800">Monthly Budget</h2>
               <p class="text-sm mt-2 text-gray-500">
@@ -209,13 +228,14 @@
             <%= percent.toFixed(1) %>% of budget used
           </p>
         </div>
+<!-- Progress bar visual indicator -->
 
         <div class="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
           <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-blue-700 h-full transition-all duration-500">
           </div>
         </div>
       </div>
-
+    <!-- Chart visualizations -->
       <div class="flex justify-center">
         <canvas id="transactionsPieChart" class="w-[400px] h-[400px] mb-8"></canvas>
       </div>
@@ -228,111 +248,22 @@
       </div>
     </section>
   </div>
+  <!-- Data passed from server to JS via HTML dataset -->
+  <div id="budget-data"
+     data-spent="<%= spentThisMonth %>"
+     data-budget="<%= budget.monthly %>"
+     data-percent="<%= percent %>">
+</div>
+
   <!-- Bottom Navigation -->
   <%- include('./partials/nav_bottom') %>
-  <script>
-    const spent = Number("<%= spentThisMonth %>");
-    const monthlyBudget = Number("<%= budget.monthly %>");
-    const percentUsed = Math.min((spent / monthlyBudget) * 100, 100);
-    document.getElementById("progressBar").style.width = "<%= percent %>%";
+    
+  <!-- JavaScript files -->
 
-    function showDropdown(type) {
-      const incomeDropdown = document.getElementById("incomeDropdown");
-      const expenseDropdown = document.getElementById("expenseDropdown");
+<script src="/scripts/transactions.js"></script> <!-- handles chart rendering and dropdown logic -->
+  <script src="/scripts/navigation.js"></script>   <!-- handles navigation highlighting or behavior -->
+  <script src="/scripts/script.js"></script>       <!-- additional global site logic -->
 
-      if (!incomeDropdown || !expenseDropdown) return;
-
-      incomeDropdown.classList.add("hidden");
-      expenseDropdown.classList.add("hidden");
-
-      if (type === "income") {
-        incomeDropdown.classList.remove("hidden");
-      } else if (type === "expense") {
-        expenseDropdown.classList.remove("hidden");
-      }
-    }
-    axios
-      .get("/transactions/chart-data")
-      .then((response) => {
-        const { category, monthly, weekly } = response.data;
-
-        new Chart(document.getElementById("transactionsPieChart"), {
-          type: "pie",
-          data: {
-            labels: category.labels,
-            datasets: [
-              {
-                data: category.values,
-                backgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#4BC0C0",
-                  "#9966FF",
-                  "#FF9F40",
-                  "#8E44AD",
-                  "#3498DB",
-                  "#1ABC9C",
-                  "#E74C3C",
-                  "#F39C12",
-                  "#2ECC71",
-                ],
-                hoverOffset: 25,
-              },
-            ],
-          },
-          options: { responsive: true, maintainAspectRatio: false },
-        });
-
-        new Chart(document.getElementById("monthlyBarChart"), {
-          type: "bar",
-          data: {
-            labels: monthly.labels,
-            datasets: [
-              {
-                label: "Expenses",
-                data: monthly.values,
-                backgroundColor: "#4BC0C0",
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { display: false },
-              title: { display: true, text: "Monthly Spending Overview" },
-            },
-          },
-        });
-
-        new Chart(document.getElementById("weeklyLineChart"), {
-          type: "line",
-          data: {
-            labels: weekly.labels,
-            datasets: [
-              {
-                label: "Weekly Expenses",
-                data: weekly.values,
-                borderColor: "#4BC0C0",
-                fill: false,
-                tension: 0.3,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: { display: true, text: "Weekly Expense Trend" },
-            },
-          },
-        });
-      })
-      .catch((error) => {
-        console.error("Error loading chart data:", error);
-      });
-  </script>
-  <script src="/scripts/navigation.js"></script>
-  <script src="/scripts/script.js"></script>
 
 </body>
 
