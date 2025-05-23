@@ -127,519 +127,274 @@
   <!-- Top Navigation -->
   <%- include('./partials/nav_top') %>
 
-  <div class="md:ml-14 flex-1 overflow-y-auto" id="content">
-    <main class="container mx-auto px-4 py-6 max-w-8xl">
-      <!-- Welcome Card -->
-      <section class="mb-2 glass-card rounded-2xl overflow-hidden shadow-lg">
-        <!-- Atmospheric Background with Weather -->
-        <div
-          class="bg-gradient-to-r from-[#a1c4fd] to-[#c2e9fb] p-6 relative bg-[url(/images/game/weather/m-Clear.jpg)] bg-cover md:h-70 lg:h-70">
-          <div class="glass-card p-6 rounded-xl">
-            <!-- Greeting and Joke Section -->
-            <div class="flex flex-col md:flex-row items-center gap-4">
-              <div class="relative w-26 h-26 md:w-38 md:h-38">
-                <div id="ami" class="float-ami">
-                  <!-- Expression Overlay -->
-                  <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                    src="/images/game/Ami-Expressions/talk.png" alt="Ami expression" />
-                  <!-- Item Overlay -->
-                  <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src=""
-                    alt="" />
-                  <!-- Ami Base -->
-                  <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
-                    alt="Ami character" />
+    <div class="md:ml-14 flex-1 overflow-y-auto" id="content">
+      <main class="container mx-auto px-4 py-6 max-w-8xl">
+        <!-- Welcome Card -->
+        <section class="mb-2 glass-card rounded-2xl overflow-hidden shadow-lg">
+          <!-- Atmospheric Background with Weather -->
+          <div
+            class="bg-gradient-to-r from-[#a1c4fd] to-[#c2e9fb] p-6 relative bg-[url(/images/game/weather/m-Clear.jpg)] bg-cover md:h-70 lg:h-70"
+            id="main-card">
+            <div class="glass-card p-6 rounded-xl">
+              <!-- Greeting and Joke Section -->
+              <div class="flex flex-col md:flex-row items-center gap-4">
+                <div class="relative w-26 h-26 md:w-38 md:h-38 -translate-y-10">
+                  <div id="ami" class="float-ami">
+                    <!-- Expression Overlay -->
+                    <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                      src="/images/game/Ami-Expressions/talk.png" alt="Ami expression" />
+                    <!-- Item Overlay -->
+                    <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src=""
+                      alt="" />
+                    <!-- Ami Base -->
+                    <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
+                      alt="Ami character" />
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <h1 class="text-xl md:text-3xl font-bold mb-2">
+                    Hello, <%= username %>!
+                  </h1>
+                  <% if (joke) { %>
+                    <div
+                      class="joke-text text-[#2e3559] italic bg-white/70 p-3 rounded-lg border-l-4 border-t-2 border-b-2 border-r-4 border-[#089ddd] mt-2">
+                      "<%= joke %>"
+                        <form action="/joke" method="post" class="inline ml-2">
+                          <button class="bg-[#089ddd] hover:bg-[#067aaa] text-white p-1 rounded-lg transition-colors"
+                            type="submit" title="Get a new joke">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                              stroke="currentColor" class="w-6 h-6">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                          </button>
+                        </form>
+                    </div>
+                    <% } else { %>
+                      <p id="speechBubble" class="text-[#2e3559]">
+                        Ready to manage your finances today?
+                      </p>
+                      <form action="/joke" method="post" class="mt-2">
+                        <button
+                          class="bg-[#089ddd] hover:bg-[#067aaa] text-white px-3 py-1 rounded-lg transition-colors flex items-center gap-2"
+                          type="submit">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+                          </svg>
+                          Get a joke
+                        </button>
+                      </form>
+                      <% } %>
                 </div>
               </div>
-              <div class="flex-1">
-                <h1 class="text-xl md:text-3xl font-bold mb-2">
-                  Hello, <%= username %>!
-                </h1>
-                <% if (joke) { %>
-                <div
-                  class="joke-text text-[#2e3559] italic bg-white/70 p-3 rounded-lg border-l-4 border-[#089ddd] mt-2">
-                  "<%= joke %>"
-                  <form action="/joke" method="post" class="inline ml-2">
-                    <button class="bg-[#089ddd] hover:bg-[#067aaa] text-white p-1 rounded-lg transition-colors"
-                      type="submit" title="Get a new joke">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                      </svg>
-                    </button>
-                  </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main Financial Dashboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Budget Overview Card -->
+          <section class="lg:col-span-2 glass-card rounded-2xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-bold text-[#2e3559]">Budget Overview</h2>
+              <div class="flex space-x-2">
+                <button id="weeklyButton"
+                  class="bg-[#089ddd] text-white px-4 py-1 rounded-lg font-medium hover:bg-[#067aaa] transition-colors"
+                  type="button">
+                  Weekly
+                </button>
+                <button id="monthlyButton"
+                  class="bg-white text-[#089ddd] border border-[#089ddd] px-4 py-1 rounded-lg font-medium hover:bg-[#e1f0ff] transition-colors"
+                  type="button">
+                  Monthly
+                </button>
+              </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="relative mb-6 h-[400px] flex items-center justify-center">
+              <canvas id="canvas" class="w-full h-full max-w-[400px] max-h-[400px]"></canvas>
+
+              <!-- Ami character in the center -->
+              <!-- <div class=" border overflow-hidden rounded-full"> -->
+              <div id="ami"
+                class="absolute z-10 size-35 flex items-center justify-center border-4 overflow-hidden rounded-full">
+                <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
+                  src="/images/game/Ami-Expressions/default.png" alt="Ami expression" />
+                <!-- Item Overlay -->
+                <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src="" alt="" />
+                <!-- Ami Base -->
+                <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
+                  alt="Ami character" />
+              </div>
+              <!-- </div> -->
+            </div>
+
+            <!-- Budget Percentage -->
+            <div class="mb-4">
+              <div id="spentVsBudget" class="flex justify-between text-lg font-medium mb-2"></div>
+              <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                <div class="bg-[#089ddd] h-4 progress-fill" style="--progress-width: 56%"></div>
+              </div>
+              <div id="budgetUsedText" class="text-right text-sm text-gray-600 mt-1"></div>
+            </div>
+          </section>
+
+          <!-- Quick Actions & Summary -->
+          <section class="glass-card rounded-2xl shadow-lg p-6 flex flex-col">
+            <h2 class="text-xl font-bold text-[#2e3559] mb-4">Quick Actions</h2>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3 mb-6">
+              <button id="openSlideUp"
+                class=" bg-[#de5158] border-[#a01242] border-4 text-white py-3 px-4 rounded-xl font-bold hover:bg-[#c23941] transition-colors flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                Add Expense
+              </button>
+            </div>
+
+            <!-- Financial Summary -->
+            <div class="bg-white/50 rounded-xl p-4 flex-1">
+              <h3 class="font-bold text-[#2e3559] border-b border-gray-200 pb-2 mb-3">
+                Financial Summary
+              </h3>
+
+              <div class="grid grid-cols-2 gap-2 mb-3">
+                <div class="bg-green-100 p-3 rounded-lg">
+                  <p class="text-sm text-green-800">Total Income</p>
+                  <p class="font-semibold text-lg">$<%= totalIncome %>
+                  </p>
                 </div>
-                <% } else { %>
-                <p id="speechBubble" class="text-[#2e3559]">
-                  Ready to manage your finances today?
+                <div class="bg-red-100 p-3 rounded-lg">
+                  <p class="text-sm text-red-800">Total Expenses</p>
+                  <p class="font-semibold text-lg">$<%= totalExpenses %>
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-blue-100 p-3 rounded-lg mb-3">
+                <p class="text-sm text-blue-800">Current Balance</p>
+                <p class="font-semibold text-lg">$<%= balance %>
                 </p>
-                <form action="/joke" method="post" class="mt-2">
-                  <button
-                    class="bg-[#089ddd] hover:bg-[#067aaa] text-white px-3 py-1 rounded-lg transition-colors flex items-center gap-2"
-                    type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                      stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
-                    </svg>
-                    Get a joke
-                  </button>
-                </form>
-                <% } %>
               </div>
+
+              <button id="toggleBudgetBtn"
+                class="w-full bg-[#089ddd] border-[#0a67a0] border-4 text-white py-3 px-4 rounded-lg font-medium hover:bg-[#067aaa] transition-colors flex items-center justify-center gap-2">
+                <span>Show Transactions</span>
+                <svg id="arrowIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-300"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
             </div>
-          </div>
+          </section>
         </div>
-      </section>
 
-      <!-- Main Financial Dashboard -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Budget Overview Card -->
-        <section class="lg:col-span-2 glass-card rounded-2xl shadow-lg p-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-[#2e3559]">Budget Overview</h2>
-            <div class="flex space-x-2">
-              <button id="weeklyButton"
-                class="bg-[#089ddd] text-white px-4 py-1 rounded-lg font-medium hover:bg-[#067aaa] transition-colors"
-                type="button">
-                Weekly
-              </button>
-              <button id="monthlyButton"
-                class="bg-white text-[#089ddd] border border-[#089ddd] px-4 py-1 rounded-lg font-medium hover:bg-[#e1f0ff] transition-colors"
-                type="button">
-                Monthly
-              </button>
+        <!-- Transactions Panel (Hidden by Default) -->
+        <section id="budgetOverview"
+          class="glass-card rounded-2xl shadow-lg mt-6 transition-all duration-500 overflow-hidden max-h-0 opacity-0">
+          <div class="p-6">
+            <h2 class="text-xl font-bold text-[#2e3559] mb-4">
+              Recent Transactions
+            </h2>
+
+            <!-- Transactions List -->
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="py-2 px-4 text-left">Name</th>
+                    <th class="py-2 px-4 text-left">Category</th>
+                    <th class="py-2 px-4 text-right">Amount</th>
+                    <th class="py-2 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% five.forEach(e=> { %>
+                    <tr class="border-b hover:bg-gray-50">
+                      <td class="py-3 px-4">
+                        <%= e.name %>
+                      </td>
+                      <!-- <td class="py-3 px-4"><%= e.type === 'income' ? 'Income' : 'Expense' %></td> -->
+                      <td class="py-3 px-4">
+                        <span
+                        class="px-2 py-1 text-sm <%= e.type === 'income' ? ' text-green-800' : ' text-red-800' %>">
+                        <%= e.category %>
+                      </span>
+                    </td>
+                    <td class="text-right py-3 px-4 <%= e.type === 'income' ? 'text-green-600' : 'text-red-600' %>">
+                      <%= e.type==='income' ? '+' : '-' %>$<%= e.amount %>
+                    </td>
+                      <td class="text-right py-3 px-4">
+                        <form action="/delete-expense/<%= e._id %>" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this transaction?');">
+                          <button class="text-red-600 hover:text-red-800 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                              stroke="currentColor" class="w-5 h-5">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                            </svg>
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+              </table>
             </div>
-          </div>
-
-          <!-- Visualization Area -->
-          <div class="relative mb-6 h-[400px] flex items-center justify-center">
-            <canvas id="canvas" class="w-full h-full max-w-[400px] max-h-[400px]"></canvas>
-
-            <!-- Ami character in the center -->
-            <!-- <div class=" border overflow-hidden rounded-full"> -->
-            <div id="ami"
-              class="absolute z-10 size-35 flex items-center justify-center border-4 overflow-hidden rounded-full">
-              <img id="ami-expression" class="select-none pointer-events-none absolute left-0 right-0 z-10"
-                src="/images/game/Ami-Expressions/default.png" alt="Ami expression" />
-              <!-- Item Overlay -->
-              <img id="ami-item" class="select-none pointer-events-none absolute left-0 right-0 z-10" src="" alt="" />
-              <!-- Ami Base -->
-              <img id="ami-base" class="select-none pointer-events-none" src="/images/game/Ami-Base/white.png"
-                alt="Ami character" />
-            </div>
-            <!-- </div> -->
-          </div>
-
-          <!-- Budget Percentage -->
-          <div class="mb-4">
-            <div id="spentVsBudget" class="flex justify-between text-lg font-medium mb-2"></div>
-            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-              <div class="bg-[#089ddd] h-4 progress-fill" style="--progress-width: 56%"></div>
-            </div>
-            <div id="budgetUsedText" class="text-right text-sm text-gray-600 mt-1"></div>
           </div>
         </section>
+      </main>
+    </div>
 
-        <!-- Quick Actions & Summary -->
-        <section class="glass-card rounded-2xl shadow-lg p-6 flex flex-col">
-          <h2 class="text-xl font-bold text-[#2e3559] mb-4">Quick Actions</h2>
+    <!-- Bottom Navigation -->
+    <%- include('./partials/nav_bottom') %>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-col gap-3 mb-6">
-            <button id="openSlideUp"
-              class="bg-[#de5158] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#c23941] transition-colors flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-              Add Expense
-            </button>
-          </div>
+      <!-- Sliding Panel -->
+      <div id="overlay" class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden z-40 transition duration-300 ]"></div>
 
-          <!-- Financial Summary -->
-          <div class="bg-white/50 rounded-xl p-4 flex-1">
-            <h3 class="font-bold text-[#2e3559] border-b border-gray-200 pb-2 mb-3">
-              Financial Summary
-            </h3>
+      <div id="slideUpPanel"
+        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh] md:bottom-auto md:top-1/2 md:left-1/2 md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-xl md:w-full md:rounded-xl md:shadow-2xl">
+        <button id="closeSlideUp" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
 
-            <div class="grid grid-cols-2 gap-2 mb-3">
-              <div class="bg-green-100 p-3 rounded-lg">
-                <p class="text-sm text-green-800">Total Income</p>
-                <p class="font-semibold text-lg">$<%= totalIncome %></p>
-              </div>
-              <div class="bg-red-100 p-3 rounded-lg">
-                <p class="text-sm text-red-800">Total Expenses</p>
-                <p class="font-semibold text-lg">$<%= totalExpenses %></p>
-              </div>
-            </div>
-
-            <div class="bg-blue-100 p-3 rounded-lg mb-3">
-              <p class="text-sm text-blue-800">Current Balance</p>
-              <p class="font-semibold text-lg">$<%= balance %></p>
-            </div>
-
-            <button id="toggleBudgetBtn"
-              class="w-full bg-[#089ddd] text-white py-2 px-4 rounded-lg font-medium hover:bg-[#067aaa] transition-colors flex items-center justify-center gap-2">
-              <span>Show Transactions</span>
-              <svg id="arrowIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform duration-300"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-          </div>
-        </section>
+        <div id="addExpenseContent">
+          <button id="backToDashboard" class="text-[#089ddd] font-bold mb-4 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            Back
+          </button>
+          <div id="dynamicFormContainer" class="mt-2"></div>
+        </div>
       </div>
 
-      <!-- Transactions Panel (Hidden by Default) -->
-      <section id="budgetOverview"
-        class="glass-card rounded-2xl shadow-lg mt-6 transition-all duration-500 overflow-hidden max-h-0 opacity-0">
-        <div class="p-6">
-          <h2 class="text-xl font-bold text-[#2e3559] mb-4">
-            Recent Transactions
-          </h2>
+      <!-- Scripts -->
+      <script>
+        window.EconAmiData = {
+          spentThisMonth: <%= spentThisMonth %>,
+          monthlyBudget: <%= monthlyBudget %>,
+            spentThisWeek: <%= spentThisWeek %>,
+              weeklyBudget: <%= weeklyBudget %>
+      };
+      </script>
 
-          <!-- Transactions List -->
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-100">
-                <tr>
-                  <th class="py-2 px-4 text-left">Name</th>
-                  <th class="py-2 px-4 text-left">Amount</th>
-                  <th class="py-2 px-4 text-left">Category</th>
-                  <th class="py-2 px-4 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% five.forEach(e => { %>
-                <tr class="border-b hover:bg-gray-50">
-                  <td class="py-3 px-4"><%= e.name %></td>
-                  <td class="py-3 px-4 <%= e.type === 'income' ? 'text-green-600' : 'text-red-600' %>">
-                    <%= e.type === 'income' ? '+' : '-' %>$<%= e.amount %>
-                  </td>
-                  <!-- <td class="py-3 px-4"><%= e.type === 'income' ? 'Income' : 'Expense' %></td> -->
-                  <td class="py-3 px-4">
-                    <span class="px-2 py-1 text-sm <%= e.type === 'income' ? ' text-green-800' : ' text-red-800' %>">
-                      <%= e.category %>
-                    </span>
-                  </td>
-                  <td class="py-3 px-4">
-                    <form action="/delete-expense/<%= e._id %>" method="POST">
-                      <button class="text-red-600 hover:text-red-800 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                          stroke="currentColor" class="w-5 h-5">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                        </svg>
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-                <% }) %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Bottom Navigation -->
-  <%- include('./partials/nav_bottom') %>
-
-  <!-- Sliding Panel -->
-  <div id="overlay" class="fixed inset-0 bg-black/30 backdrop-blur-sm hidden z-40 transition duration-300 ]"></div>
-
-  <div id="slideUpPanel"
-    class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6 translate-y-full opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-50 overflow-y-auto max-h-[92vh] md:bottom-auto md:top-1/2 md:left-1/2 md:translate-x-[-50%] md:translate-y-[-50%] md:max-w-xl md:w-full md:rounded-xl md:shadow-2xl">
-    <button id="closeSlideUp" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-        class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-      </svg>
-    </button>
-
-    <div id="addExpenseContent">
-      <button id="backToDashboard" class="text-[#089ddd] font-bold mb-4 flex items-center gap-1">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg>
-        Back
-      </button>
-      <div id="dynamicFormContainer" class="mt-2"></div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script>
-    // Sliding Panel Logic
-    const panel = document.getElementById("slideUpPanel");
-    const openBtn = document.getElementById("openSlideUp");
-    // const addIncomeBtn = document.getElementById("addIncomeBtn");
-    const closeBtn = document.getElementById("closeSlideUp");
-    const overlay = document.getElementById("overlay");
-    const dynamicFormContainer = document.getElementById(
-      "dynamicFormContainer"
-    );
-    const backBtn = document.getElementById("backToDashboard");
-
-    function openPanel() {
-      panel.classList.remove(
-        "translate-y-full",
-        "opacity-0",
-        "pointer-events-none"
-      );
-      panel.classList.add("translate-y-0", "opacity-100");
-
-      panel.classList.add("md:translate-y-[-50%]", "md:translate-x-[-50%]");
-      overlay.classList.remove("hidden");
-    }
-
-    function closePanel() {
-      panel.classList.remove("translate-y-0", "opacity-100");
-      panel.classList.add(
-        "translate-y-full",
-        "opacity-0",
-        "pointer-events-none"
-      );
-
-      // Also remove the desktop-specific transform override if open
-      panel.classList.remove(
-        "md:translate-y-[-50%]",
-        "md:translate-x-[-50%]"
-      );
-      overlay.classList.add("hidden");
-      dynamicFormContainer.innerHTML = "";
-    }
-
-    openBtn.onclick = () => {
-      openPanel();
-      loadAndShowAddForm("expense");
-    };
-
-    closeBtn.onclick = overlay.onclick = () => {
-      closePanel();
-      dynamicFormContainer.innerHTML = "";
-    };
-
-    backBtn.addEventListener("click", () => {
-      closePanel();
-      dynamicFormContainer.innerHTML = "";
-    });
-
-    async function loadAndShowAddForm(type = "expense") {
-      try {
-        const response = await fetch("/add-expense");
-        const html = await response.text();
-        dynamicFormContainer.innerHTML = html;
-        initAddForm(type);
-      } catch (err) {
-        console.error("Failed to load form:", err);
-      }
-    }
-
-    function initAddForm(defaultType = "expense") {
-      const expenseBtn = document.getElementById("expenseBtn");
-      const incomeBtn = document.getElementById("incomeBtn");
-      const typeInput = document.getElementById("typeInput");
-      const categorySelect = document.getElementById("categorySelect");
-
-      if (!expenseBtn || !incomeBtn || !typeInput || !categorySelect) return;
-
-      const expenseCategories = [
-        "Food & Dining",
-        "Transportation",
-        "Home & Utilities",
-        "Entertainment & Lifestyle",
-        "Personal & Health",
-        "Bills & Fees",
-        "Pet",
-        "Car",
-        "Shopping & Gifts",
-        "Work & Education",
-        "Travel",
-        "Other",
-      ];
-
-      const incomeCategories = [
-        "Salary",
-        "Freelance",
-        "Bonus",
-        "Interest/Dividends",
-        "Refunds/Reimbursements",
-        "Other Income",
-      ];
-
-      function populateCategories(categories) {
-        categorySelect.innerHTML =
-          '<option value="">Select a category</option>';
-        categories.forEach((cat) => {
-          const option = document.createElement("option");
-          option.value = cat;
-          option.textContent = cat;
-          categorySelect.appendChild(option);
-        });
-      }
-
-      expenseBtn.addEventListener("click", () => {
-        typeInput.value = "expense";
-        populateCategories(expenseCategories);
-        expenseBtn.classList.add("bg-black", "text-white");
-        expenseBtn.classList.remove("bg-white", "text-black");
-        incomeBtn.classList.add("bg-white", "text-black");
-        incomeBtn.classList.remove("bg-black", "text-white");
-      });
-
-      incomeBtn.addEventListener("click", () => {
-        typeInput.value = "income";
-        populateCategories(incomeCategories);
-        incomeBtn.classList.add("bg-black", "text-white");
-        incomeBtn.classList.remove("bg-white", "text-black");
-        expenseBtn.classList.add("bg-white", "text-black");
-        expenseBtn.classList.remove("bg-black", "text-white");
-      });
-
-      // Initialize with the default type
-      if (defaultType === "income") {
-        incomeBtn.click();
-      } else {
-        // Default to expense
-        expenseBtn.click();
-      }
-    }
-
-    // Budget Overview Toggle
-    function toggleBudget() {
-      const budget = document.getElementById("budgetOverview");
-      const arrow = document.getElementById("arrowIcon");
-      const toggleBtn = document.getElementById("toggleBudgetBtn");
-      const btnText = toggleBtn.querySelector("span");
-
-      const isOpen = !budget.classList.contains("max-h-0");
-
-      if (isOpen) {
-        budget.classList.remove("max-h-[1000px]", "opacity-100");
-        budget.classList.add("max-h-0", "opacity-0");
-        arrow.classList.remove("rotate-180");
-        btnText.textContent = "Show Transactions";
-      } else {
-        budget.classList.remove("max-h-0", "opacity-0");
-        budget.classList.add("max-h-[1000px]", "opacity-100");
-        arrow.classList.add("rotate-180");
-        btnText.textContent = "Hide Transactions";
-      }
-    }
-
-    document
-      .getElementById("toggleBudgetBtn")
-      .addEventListener("click", toggleBudget);
-
-    // Initialize Chart (placeholder - will be replaced by your actual chart logic)
-
-    async function fetchChartData() {
-      try {
-        const response = await fetch("/transactions/chart-data");
-        const data = await response.json();
-        return data.category;
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-        return { labels: [], values: [] };
-      }
-    }
-
-    function updateProgressBar(used, total) {
-      const percent = Math.min(100, ((used / total) * 100).toFixed(0));
-      const progressFill = document.querySelector(".progress-fill");
-      const budgetText = document.getElementById("budgetUsedText");
-      const spentVsBudget = document.getElementById("spentVsBudget");
-
-      progressFill.style.setProperty("--progress-width", percent + "%");
-      progressFill.classList.remove("progress-fill");
-      void progressFill.offsetWidth;
-      progressFill.classList.add("progress-fill");
-
-      budgetText.textContent = `${percent}% of budget used`;
-      spentVsBudget.innerHTML = `$${used} / $${total}`;
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const ctx = document.getElementById("canvas").getContext("2d");
-      const categoryData = await fetchChartData();
-
-      const chart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: categoryData.labels,
-          datasets: [
-            {
-              data: categoryData.values,
-              backgroundColor: [
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-                "#FF9F40",
-                "#8E44AD",
-                "#3498DB",
-                "#1ABC9C",
-                "#E74C3C",
-                "#F39C12",
-                "#2ECC71",
-              ],
-              borderWidth: 1,
-              hoverOffset: 25,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: "right",
-              display: false,
-            },
-          },
-        },
-      });
-
-      // Save to global if you want to update later
-      window.expenseChart = chart;
-
-      updateProgressBar(431, 500); // Optional initial budget usage
-
-      document
-        .getElementById("weeklyButton")
-        .addEventListener("click", async () => {
-          const data = await fetch("/transactions/chart-data").then((res) =>
-            res.json()
-          );
-          const weeklyData = data.weekly;
-
-          chart.data.labels = weeklyData.labels;
-          chart.data.datasets[0].data = weeklyData.values;
-          chart.update();
-          updateProgressBar(200, 500);
-        });
-
-      document
-        .getElementById("monthlyButton")
-        .addEventListener("click", async () => {
-          const categoryData = await fetchChartData();
-          chart.data.labels = categoryData.labels;
-          chart.data.datasets[0].data = categoryData.values;
-          chart.update();
-          updateProgressBar(431, 500);
-        });
-    });
-  </script>
-
-  <!-- Your existing scripts -->
-  <script src="/scripts/home.js"></script>
-  <script src="/scripts/navigation.js"></script>
+      <!-- Your existing scripts -->
+      <script src="/scripts/home.js"></script>
+      <script src="/scripts/home_charts.js"></script>
+      <script src="/scripts/navigation.js"></script>
+      <script src="/scripts/script.js"></script>
 </body>
 
 </html>

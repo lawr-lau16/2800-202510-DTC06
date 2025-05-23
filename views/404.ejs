@@ -1,0 +1,55 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EconAmi | Achievement</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- External libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f0fa2c9149.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="font-[Quicksand] bg-[#f5f2f0] text-[#151723]">
+
+    <% if (!user) { %>
+    <%- include('./partials/nav_top_non_user') %>
+    <% } else { %>
+    <%- include('./partials/nav_top') %>
+    <% } %>
+    <div class="my-4 mx-4 justify-center flex">
+        <section class="lg:max-w-screen-xl bg-white rounded-xl p-6 drop-shadow-sm flex flex-col w-full " id="content">
+            <div class="md:mx-8 md:my-8 mx-0">
+                <div class="p-4 rounded-xl bg-[#089ddd] text-white mb-8">
+                    <h1 class="font-[dynapuff] text-8xl text-center my-4">404</h1>
+                    <h1 class="md:text-4xl text-2xl font-bold my-4 text-center">Whoopsies! <br>Page Not
+                        Found.</h1>
+                </div>
+                <div class="flex flex-col">
+                    <p class="text-xl basis-1/3 md:mx-auto text-center m-4">Seems like this page doesn't
+                        exist!<br>Don't
+                        worry,
+                        Ami will
+                        help you get back
+                        to
+                        the
+                        homepage.</p>
+                    <div class="relative mx-auto md:translate-x-36 translate-x-20">
+                        <form action="/home" method="get">
+                            <button
+                                class="absolute bg-[#089ddd] border-[#0a67a0] text-white px-4 py-2 rounded-xl border-4 font-semibold hover:cursor-pointer m-2 hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition w-40 -translate-x-38 translate-y-22">Back
+                                to Home</button>
+                        </form>
+                        <img src="/images/misc_assets/ami-2.png" alt="" class="w-36">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="/scripts/navigation.js"></script>
+</body>

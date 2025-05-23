@@ -1,39 +1,41 @@
 window.addEventListener("DOMContentLoaded", () => {
+  // First time user message
+  fetch("/navbar")
+    .then((response) => response.json())
+    .then((data) => {
+      const achievements = data.achievements;
+      console.log(achievements);
 
-// First time user message
-        fetch('/navbar')
-            .then(response => response.json())
-            .then(data => {
-                const achievements = data.achievements;
-                console.log(achievements)
-
-                const welcomeAchievement = achievements.find(achievement => achievement.type === "welcome" && achievement.completed === false);
-                if (welcomeAchievement) {
-                    document.getElementById('speechBubble').textContent = 'Please take a look at the achievements page ★ to redeem some coins!';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching achievements:', error);
-            });
-
+      const welcomeAchievement = achievements.find(
+        (achievement) =>
+          achievement.type === "welcome" && achievement.completed === false
+      );
+      if (welcomeAchievement) {
+        document.getElementById("speechBubble").textContent =
+          "Please take a look at the achievements page ★ to redeem some coins!";
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching achievements:", error);
+    });
 
   // Set Ami customization based on user settings
   async function setAmi() {
-    try {
-      const response = await fetch("/pet", { method: "POST" });
-      const { pet } = await response.json();
-      document.getElementById(
-        "ami-base"
-      ).src = `/images/game/Ami-Base/${pet.base}.png`;
-      if (pet.item === "") {
-        document.getElementById("ami-item").src = ``;
-      } else {
-        document.getElementById(
-          "ami-item"
-        ).src = `/images/game/Items/${pet.item}.png`;
+    const response = await fetch("/pet", { method: "POST" });
+    const { pet } = await response.json();
+    amiBase = document.querySelectorAll("#ami-base");
+    amiItem = document.querySelectorAll("#ami-item");
+    for (i in amiBase) {
+      try {
+        amiBase[i].src = `/images/game/Ami-Base/${pet.base}.png`;
+        if (pet.item === "") {
+          amiItem[i].src = ``;
+        } else {
+          amiItem[i].src = `/images/game/Items/${pet.item}.png`;
+        }
+      } catch (err) {
+        console.error("Error loading pet:", err);
       }
-    } catch (err) {
-      console.error("Error loading pet:", err);
     }
   }
 
@@ -42,6 +44,8 @@ window.addEventListener("DOMContentLoaded", () => {
   // const ctx = canvas.getContext("2d");
 
   function drawAnimatedChart(values, duration = 500) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     const colors = ["#e66f6f", "#8ce66f"];
     const start = performance.now();
     const img = new Image();
@@ -185,19 +189,23 @@ window.addEventListener("DOMContentLoaded", () => {
         total = sumAmounts(transactions, weeklyTransactions);
       }
 
-      if (timeframe === "monthly") {
-        total = sumAmounts(transactions, monthlyTransactions);
-      }
+      // if (timeframe === "monthly") {
+      //   total = sumAmounts(transactions, monthlyTransactions);
+      // }
 
-      document.getElementById(
-        "spentVsBudget"
-      ).innerHTML = `$${total} / $${selectedBudget}`;
+      // document.getElementById(
+      //   "spentVsBudget"
+      // ).innerHTML = `$${total} / $${selectedBudget}`;
 
       const values = [
         (total / selectedBudget) * 100,
         ((selectedBudget - total) / selectedBudget) * 100,
       ];
       drawAnimatedChart(values);
+      updateProgressBar(total, selectedBudget, timeframe);
+
+      // Re-style buttons (optional if already handled)
+      styleToggleButtons(timeframe);
     } catch (err) {
       console.error("Error:", err);
       document.getElementById("spentVsBudget").innerHTML =
@@ -208,22 +216,22 @@ window.addEventListener("DOMContentLoaded", () => {
   const buttons = {
     // daily: document.getElementById("dailyButton"),
     weekly: document.getElementById("weeklyButton"),
-    monthly: document.getElementById("monthlyButton"),
+    // monthly: document.getElementById("monthlyButton"),
   };
   // buttons.daily.addEventListener('click', () => {
   //     updateSpending("daily");
   //     selectedButton("daily");
   // })
 
-  buttons.weekly.addEventListener("click", () => {
-    updateSpending("weekly");
-    selectedButton("weekly");
-  });
+  // buttons.weekly.addEventListener("click", () => {
+  //   updateSpending("weekly");
+  //   selectedButton("weekly");
+  // });
 
-  buttons.monthly.addEventListener("click", () => {
-    updateSpending("monthly");
-    selectedButton("monthly");
-  });
+  // buttons.monthly.addEventListener("click", () => {
+  //   updateSpending("monthly");
+  //   selectedButton("monthly");
+  // });
 
   function selectedButton(selected) {
     for (const key in buttons) {
@@ -294,9 +302,35 @@ window.addEventListener("DOMContentLoaded", () => {
   function fail() {
     alert("Weather for your location not available at this time.");
   }
+  function updateProgressBar(used, total, period) {
+    const percent = Math.min(100, ((used / total) * 100).toFixed(0));
+    const progressFill = document.querySelector(".progress-fill");
+    const budgetText = document.getElementById("budgetUsedText");
+    const spentVsBudget = document.getElementById("spentVsBudget");
+
+    progressFill.classList.remove(
+      "bg-green-500",
+      "bg-yellow-500",
+      "bg-red-500"
+    );
+
+    if (percent < 50) {
+      progressFill.classList.add("bg-green-500");
+    } else if (percent < 90) {
+      progressFill.classList.add("bg-yellow-500");
+    } else {
+      progressFill.classList.add("bg-red-500");
+    }
+
+    progressFill.style.setProperty("--progress-width", percent + "%");
+    progressFill.classList.remove("progress-fill");
+    void progressFill.offsetWidth; // force reflow
+    progressFill.classList.add("progress-fill");
+
+    budgetText.textContent = `${percent}% of ${period} budget used`;
+    spentVsBudget.innerHTML = `$${used} / $${total}`;
+  }
 
   setAmi();
-  updateSpending("weekly");
-  selectedButton("weekly");
   getLocation();
 });

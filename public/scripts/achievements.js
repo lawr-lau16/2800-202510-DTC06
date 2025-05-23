@@ -34,9 +34,9 @@ fetch('/achievements/data')
               <img src="/images/achievements/coin.png" class="size-6" alt="Coin">
             </div>
             ${isCompleted
-          ? `<button class="redeem-btn bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition mt-1" data-id="${a._id}">Redeem</button>`
+          ? `<button class="redeem-btn hover:cursor-pointer bg-yellow-400 border-yellow-500 text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-yellow-300 hover:border-yellow-400 active:bg-yellow-200 transition mt-1" data-id="${a._id}">Redeem</button>`
           : !isActive
-            ? `<button class="activate-btn bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition mt-1" data-id="${a._id}">Activate</button>`
+            ? `<button class="activate-btn hover:cursor-pointer bg-[#089ddd] border-[#0a67a0] text-white text-sm px-2 py-1 rounded-xl border-4 font-semibold hover:bg-[#44bcf0] hover:border-[#0c79bf] active:bg-[#5edfff] transition mt-1" data-id="${a._id}">Activate</button>`
             : isClaimed
               ? `<span class="text-[10px] text-gray-400 mt-2 leading-tight text-right">Reward<br>claimed</span>`
               : ''

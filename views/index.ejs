@@ -51,10 +51,10 @@
 
   <body class="font-sans antialiased text-gray-800">
     <!-- Top Navigation -->
-    <!-- <%- include('./partials/nav_top_non_user') %> -->
+    <%- include('./partials/nav_top_non_user') %>
 
     <!-- PAGE CONTENT -->
-    <nav class="bg-white shadow-sm">
+    <!-- <nav class="bg-white shadow-sm">
       <div class="bg-[#3EC3DE] text-white w-full px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
           <div class="flex items-center">
@@ -102,10 +102,10 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Mobile menu -->
-      <div class="hidden sm:hidden" id="mobile-menu">
+      <!-- <div class="hidden sm:hidden" id="mobile-menu">
         <div class="pt-2 pb-3 space-y-1">
           <a
             href="#features"
@@ -134,7 +134,7 @@
           </div>
         </div>
       </div>
-    </nav>
+    </nav> -->
 
     <!-- Hero Section -->
     <div class="hero-gradient">
@@ -467,7 +467,7 @@
           <p class="text-gray-400 text-sm">
             &copy; 2023 EconAmi. All rights reserved.
           </p>
-          <div class="flex space-x-6">
+          <!-- <div class="flex space-x-6">
             <a href="#" class="text-gray-400 hover:text-white text-sm"
               >Privacy Policy</a
             >
@@ -477,7 +477,7 @@
             <a href="#" class="text-gray-400 hover:text-white text-sm"
               >Cookie Policy</a
             >
-          </div>
+          </div> -->
     </footer>
 
     <!-- <section class="min-h-dvh"> -->
@@ -526,12 +526,12 @@
     <!-- Footer if we want would go here -->
     <script>
       // Mobile menu toggle
-      document
-        .getElementById("mobile-menu-button")
-        .addEventListener("click", function () {
-          const menu = document.getElementById("mobile-menu");
-          menu.classList.toggle("hidden");
-        });
+      // document
+      //   .getElementById("mobile-menu-button")
+      //   .addEventListener("click", function () {
+      //     const menu = document.getElementById("mobile-menu");
+      //     menu.classList.toggle("hidden");
+      //   });
 
       // Smooth scrolling for anchor links
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {

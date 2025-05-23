@@ -101,3 +101,15 @@ function closeSaveModal() {
     modal.classList.add("hidden");
     window.location.reload();
 }
+
+document.getElementById('weeklyBudget').addEventListener('keypress', function (event) {
+    if (event.key === '-' || event.key === 'e') {
+        event.preventDefault();
+    }
+});
+
+document.getElementById('monthlyBudget').addEventListener('keypress', function (event) {
+    if (event.key === '-' || event.key === 'e') {
+        event.preventDefault();
+    }
+});
