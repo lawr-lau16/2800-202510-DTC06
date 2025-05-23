@@ -4,9 +4,9 @@ EconAmi
 
 ---
 
-## Overview
+## Project Description
 
-Econami is a gamified budget management web app that turns saving into a fun, goal-driven experience. It supports a better world by promoting financial wellness and empowering users to build healthy money habits.
+Econami is a gamified budget management web app that turns saving into a fun, goal-driven experience which supports a better world by promoting financial wellness and empowering users to build healthy money habits.
 
 ---
 
@@ -182,6 +182,33 @@ Team Members:
 - Gurpreet Singh
 - Tin Trinh
 - Alexander Ingles
+
+---
+
+## Technologies
+
+# Frontend
+
+- HTML 5
+- Tailwind CSS
+- EJS
+- JavaScript
+- chart.js
+
+# Backend
+
+- Node.js
+- Express.js
+
+# Database
+
+- MongoDB
+
+# APIs
+
+- ChatGPT API
+- HTML Geolocation API
+- OpenWeather API
 
 ---
 
