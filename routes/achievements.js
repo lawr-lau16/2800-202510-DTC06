@@ -1,7 +1,9 @@
+// Import necessary modules and set up router instance
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
+// Import Mongoose models for achievements and users
 const achievements = mongoose.model("achievements");
 const users = mongoose.model("users");
 
@@ -16,20 +18,27 @@ router.get("/", async (req, res) => {
   if (!req.session.uid) return res.redirect("/login");
 
   try {
+    // Retrieve the logged-in user from the database
     const user = await users.findById(req.session.uid);
+
+    // Find all active achievements based on IDs in the user's record
     const activeAchievements = await achievements.find({
       _id: { $in: user.activeAchievements },
     });
+
+    // Find all inactive achievements similarly
     const inactiveAchievements = await achievements.find({
       _id: { $in: user.inactiveAchievements },
     });
 
+    // Render the achievements page and pass user data and achievements
     res.render("achievements", {
       user,
       activeAchievements,
       inactiveAchievements,
     });
   } catch (err) {
+    // Log error and return a 500 Internal Server Error response
     console.error("Error loading achievements:", err);
     res.status(500).send("Server error");
   }
@@ -38,20 +47,23 @@ router.get("/", async (req, res) => {
 
 // Route to get achievement data
 router.get("/data", async (req, res) => {
+  // Ensure user is authenticated
   if (!req.session.uid) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   const user = await users.findById(req.session.uid);
 
-  // Fetch active and inactive achievements
+  // Fetch active and inactive achievements from DB using IDs stored in user record
   const allActive = await Promise.all(user.activeAchievements.map(id => achievements.findById(id)));
   const allInactive = await Promise.all(user.inactiveAchievements.map(id => achievements.findById(id)));
 
+  // Filter to only include incomplete achievements from active list
   const active = allActive.filter(a => a && !a.completed);
+  // Filter to include only completed achievements from the active list
   const completedFromActive = allActive.filter(a => a && a.completed);
 
-  // Create a set of IDs that are already included
+  // Collect IDs of achievements that are already known
   const knownIds = new Set([
     ...user.activeAchievements.map(id => id.toString()),
     ...user.inactiveAchievements.map(id => id.toString()),
@@ -64,13 +76,16 @@ router.get("/data", async (req, res) => {
     _id: { $nin: Array.from(knownIds) }
   });
 
+  // Merge the two sources of completed achievements
   const completed = [...completedFromActive, ...extraCompleted];
 
-  // Removes the joke when loading
+  // Reset joke session variable
   req.session.joke = "";
 
+  // Send structured JSON containing categorized achievements
   res.json({
     active,
+    // remove any nulls from DB misses
     inactive: allInactive.filter(Boolean),
     completed
   });
@@ -85,16 +100,26 @@ router.get("/data", async (req, res) => {
  */
 router.post("/", async (request, result) => {
   try {
+    // Ensure user is authenticated
     if (!request.session.uid) {
       return result.redirect("/login");
     }
+
+    // Find the user by their session ID
     const user = await users.findById(request.session.uid);
+
+    // Retrieve all achievements associated with this user
     const userAchievements = await achievements.find({
       _id: { $in: user.achievements },
     });
+
+    // Log the retrieved data for debugging purposes
     console.log("Fetched Achievements:", userAchievements);
+
+    // Send the user data and their achievements back as JSON
     result.json({ achievements: userAchievements, user: user });
   } catch (err) {
+    // Log and respond with server error if something goes wrong
     console.log("Error fetching achievements:", err.message);
     result.status(500).json({ error: "Internal server error" });
   }
@@ -108,9 +133,12 @@ router.post("/", async (request, result) => {
  */
 router.post("/update", async (request, result) => {
   try {
+    // Ensure user is authenticated
     if (!request.session.uid) {
       return result.redirect("/login");
     }
+
+    // Extract fields from request body
     const achievementId = request.body.achievementId;
     const progress = request.body.progress;
     const completed = request.body.completed;
@@ -136,15 +164,19 @@ router.post("/update", async (request, result) => {
       previousDate.getMinutes() + previousDate.getTimezoneOffset()
     );
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    // Update the specified achievement in the database
     await achievements.findByIdAndUpdate(achievementId, {
       progress,
       completed,
       date,
       previousDate,
     });
+
     console.log("Updated Achievement:", achievementId);
     result.json({ message: "Achievement updated successfully" });
   } catch (err) {
+    // Handle errors gracefully
     console.log("Error updating achievement:", err.message);
     result.status(500).json({ error: "Internal server error" });
   }
@@ -203,30 +235,43 @@ router.post("/replace", async (request, result) => {
       reward,
     });
     await newAchievement.save();
+
+    // Add new achievement to user's list
     await users.findByIdAndUpdate(request.session.uid, {
       $push: { achievements: newAchievement._id },
     });
+
+    // Find and delete old achievement
     const oldReward = await achievements.findById(oldID);
     await achievements.findByIdAndDelete(oldID);
+
+    // Remove old achievement from user's record
     await users.findByIdAndUpdate(request.session.uid, {
       $pull: { achievements: oldID },
     });
     console.log("Replaced and achievement with:", newAchievement);
+
+    // Respond with the reward of the old achievement
     result.json({ reward: oldReward.reward });
   } catch (err) {
+
+    // Log and return server error on failure
     console.log("Error replacing achievement:", err.message);
     result.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.post("/activate", async (req, res) => {
-  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
+router.post("/activate", async (req, res) => {
+  // Ensure user is logged in
+  if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
   const { id } = req.body;
 
   try {
+    // Retrieve the logged-in user
     const user = await users.findById(req.session.uid);
 
+    // Enforce maximum of 4 active achievements
     if (user.activeAchievements.length >= 4) {
       return res.status(400).json({ error: "You can only have 4 active achievements." });
     }
@@ -257,18 +302,27 @@ router.post("/activate", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
+
+    // Handle unexpected errors
     console.error("Error activating achievement:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
+
+// Ensure user is authenticated
 router.get("/templates", async (req, res) => {
   if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
   try {
+    // Fetch all achievement templates from the database
     const templates = await achievementTemplates.find({});
+
+    // Return the templates in JSON format
     res.json({ templates });
   } catch (err) {
+
+    // Log and return error if fetch fails
     console.error("Error fetching templates:", err.message);
     res.status(500).json({ error: "Failed to load templates" });
   }
@@ -277,26 +331,27 @@ router.get("/templates", async (req, res) => {
 
 // Route to redeem achievement
 router.post("/redeem", async (req, res) => {
+  // Check if user is authenticated
   if (!req.session.uid) {
     return result.redirect("/login");
   }
   const { id } = req.body;
 
   try {
-    // Fetch user
+    // Fetch user and the achievement to be redeemed
     const user = await users.findById(req.session.uid);
-
-    // Fetch achievement
     const achievement = await achievements.findById(id);
+
+    // Handle case where achievement doesn't exist
     if (!achievement) {
       return res.status(404).json({ error: "Achievement not found" });
     }
 
-    // Add userID to achievement
+    // Associate the achievement with the user if it isn't already
     if (!achievement.userId) {
       achievement.userId = req.session.uid;
     }
-    
+
     // Set achievement as completed
     achievement.completed = true;
     await achievement.save();
@@ -310,8 +365,11 @@ router.post("/redeem", async (req, res) => {
     user.coins += achievement.reward;
     await user.save();
 
+    // Respond with the reward amount
     res.json({ reward: achievement.reward });
   } catch (err) {
+
+    // Log and respond to any server errors
     console.error("Error redeeming achievement:", err.message);
     res.status(500).json({ error: "Could not redeem reward" });
   }
@@ -320,11 +378,12 @@ router.post("/redeem", async (req, res) => {
 
 // Check if the user stayed within their weekly budget over the last 7 days (starting from when 'weekly_budget' achievement was activated)
 router.post("/track-weekly-budget", async (req, res) => {
+  // Check if user is authenticated
   if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
   try {
+    // Fetch user and their active 'weekly_budget' achievement
     const user = await users.findById(req.session.uid);
-    // Find user's active 'weekly_budget' achievement that is not completed
     const achievement = await achievements.findOne({
       _id: { $in: user.activeAchievements },
       type: "weekly_budget",
@@ -336,14 +395,13 @@ router.post("/track-weekly-budget", async (req, res) => {
       return res.json({ success: false, message: "No active weekly budget achievement." });
     }
 
-    // Get start date
+    // Define the 7-day date range
     const start = new Date(achievement.date);
-    // Define end of 7 day period
     const end = new Date(start);
     end.setDate(start.getDate() + 7);
     end.setHours(23, 59, 59, 999);
 
-    // Get all user expenses from 7 day period
+    // Retrieve all user expenses within that period
     const expenses = await mongoose.model("transactions").find({
       _id: { $in: user.transactions },
       type: "expense",
@@ -353,9 +411,8 @@ router.post("/track-weekly-budget", async (req, res) => {
     // Calculate total amount from 7 day period
     const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
 
-    // If user spent <= their weekly budget (and their budget is set > 0)
+    // If the total spent is within budget, increment progress
     if (totalSpent <= user.budget.weekly && user.budget.weekly > 0) {
-      // Increment achievement progress by 1
       if (achievement.progress < achievement.target) {
         achievement.progress += 1;
         await achievement.save();
@@ -363,8 +420,10 @@ router.post("/track-weekly-budget", async (req, res) => {
       }
     }
 
+    // Budget not met or already at target
     res.json({ success: false, message: "Weekly budget goal not met yet." });
   } catch (err) {
+    // Handle server errors
     console.error("Error tracking weekly budget:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -373,11 +432,12 @@ router.post("/track-weekly-budget", async (req, res) => {
 
 // Check if the user stayed within their weekly budget over the last 7 days (starting from when 'weekly_budget' achievement was activated)
 router.post("/track-monthly-budget", async (req, res) => {
+    // Check if user is authenticated
   if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
   try {
+    // Retrieve user and their active monthly budget achievement
     const user = await users.findById(req.session.uid);
-    // Find user's active 'monthly_budget' achievement that is not completed
     const achievement = await achievements.findOne({
       _id: { $in: user.activeAchievements },
       type: "monthly_budget",
@@ -389,14 +449,13 @@ router.post("/track-monthly-budget", async (req, res) => {
       return res.json({ success: false, message: "No active monthly budget achievement." });
     }
 
-    // Get start date
+    // Define a 30-day period from the achievement's start date
     const start = new Date(achievement.date);
-    // Define end of 30 day period
     const end = new Date(start);
     end.setDate(start.getDate() + 30);
     end.setHours(23, 59, 59, 999);
 
-    // Get all user expenses from 30 day period
+    // Fetch all user expenses during this period
     const expenses = await mongoose.model("transactions").find({
       _id: { $in: user.transactions },
       type: "expense",
@@ -408,7 +467,6 @@ router.post("/track-monthly-budget", async (req, res) => {
 
     // If user spent <= their monthly budget (and their budget is set > 0)
     if (totalSpent <= user.budget.monthly && user.budget.monthly > 0) {
-      // Increment achievement progress by 1
       if (achievement.progress < achievement.target) {
         achievement.progress += 1;
         await achievement.save();
@@ -418,6 +476,7 @@ router.post("/track-monthly-budget", async (req, res) => {
 
     res.json({ success: false, message: "Monthly budget goal not met yet." });
   } catch (err) {
+    // Handle server-side error
     console.error("Error tracking monthly budget:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
@@ -426,11 +485,12 @@ router.post("/track-monthly-budget", async (req, res) => {
 
 // Check if the user has any expenses named coffee for coffee achievement
 router.post("/track-coffee", async (req, res) => {
+  // Check if user is authenticated
   if (!req.session.uid) return res.status(401).json({ error: "Unauthorized" });
 
   try {
+    // Get the user and their active, incomplete "coffee" achievement
     const user = await users.findById(req.session.uid);
-    // Find user's active 'coffee' achievement that is not completed
     const achievement = await achievements.findOne({
       _id: { $in: user.activeAchievements },
       type: "coffee",
@@ -496,6 +556,7 @@ router.post("/track-coffee", async (req, res) => {
     // If nothing changed
     res.json({ success: false, message: "No progress made." });
   } catch (err) {
+    // Error handling
     console.error("Error tracking coffee achievement:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }

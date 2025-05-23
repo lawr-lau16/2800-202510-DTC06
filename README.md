@@ -4,9 +4,9 @@ EconAmi
 
 ---
 
-## Overview
+## Project Description
 
-Econami is a gamified budget management web app that turns saving into a fun, goal-driven experience. It supports a better world by promoting financial wellness and empowering users to build healthy money habits.
+Econami is a gamified budget management web app that turns saving into a fun, goal-driven experience which supports a better world by promoting financial wellness and empowering users to build healthy money habits.
 
 ---
 
@@ -22,19 +22,13 @@ Econami is a gamified budget management web app that turns saving into a fun, go
 
 ---
 
-## Technologies Used
-
-- HTML 5, CSS, Tailwind
-- JavaScript
-- MongoDB
-
----
-
 ## Project Structure
+
+```
 
 EconAmi/
 ├── .vscode
-│   └──settings.json
+│   └── settings.json
 ├── archive
 │   ├── about.html
 │   ├── achievements.html
@@ -171,6 +165,8 @@ EconAmi/
 ├── style_guide.html
 └── tailwind.config.js
 
+```
+
 ---
 
 ## About Us
@@ -185,11 +181,59 @@ Team Members:
 
 ---
 
+## Technologies
+
+- EJS view engine
+- MongoDB
+- Mongoose
+- BCrypt
+- Express
+- Express Session
+- Serve Favicon
+- OpenAi (The Chat Gpt API)
+- Axios
+
+# Frontend
+
+- HTML 5
+- Tailwind CSS
+- EJS
+- JavaScript
+- chart.js
+
+# Backend
+
+- Node.js
+- Express.js
+
+# Database
+
+- MongoDB
+
+# APIs
+
+- ChatGPT API
+- HTML Geolocation API
+- OpenWeather API
+
+---
+
 ## Attributions
 
 <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Good Ware - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/star" title="star icons">Star icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/open-hands" title="open hands icons">Open hands icons created by Icon Mart - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by Good Ware - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/goal" title="goal icons">Goal icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/phone" title="phone icons">Phone icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/happy" title="happy icons">Happy icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/7-days" title="7 days icons">7 days icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/month" title="month icons">Month icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/friendship" title="friendship icons">Friendship icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/accounting" title="accounting icons">Accounting icons created by Eucalyp - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/food" title="food icons">Food icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/welcome" title="welcome icons">Welcome icons created by bearicons - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/select" title="select icons">Select icons created by Freepik - Flaticon</a>
 
 ---
 
@@ -197,3 +241,16 @@ Team Members:
 
 - users cannot currently add their own categories for their transactions
 - there are no accessibility accomodations (eg. dark mode)
+
+---
+
+##
+- For the API we used the chatgpt api forums for the request and learning how to implement it, because of which we have attributed our modified versions to OpenAI!
+- When using generative tools for our production we made sure that generated content was properly identified and credited in our code, mostly however we used AI as a teacher or a resource for learning rather than just copying and pasting, because of this almost all code is our own!
+
+## Contact Us!
+- Lawrence @ llau66@my.bcit.ca
+- Tiffany @ twong402@my.bcit.ca
+- Tin @ ttrinh25@my.bcit.ca
+- Gurpreet @ gsingh739@my.bcit.ca
+- Alex @ aingles@my.bcit.ca
