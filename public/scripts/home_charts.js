@@ -106,19 +106,31 @@ function initAddForm(defaultType = "expense") {
   expenseBtn.addEventListener("click", () => {
     typeInput.value = "expense";
     populateCategories(expenseCategories);
-    expenseBtn.classList.add("bg-black", "text-white");
+
+    expenseBtn.classList.add(
+      "bg-[#089ddd]",
+      "text-white",
+      "border-[#0a67a0]",
+      "border-2"
+    );
     expenseBtn.classList.remove("bg-white", "text-black");
     incomeBtn.classList.add("bg-white", "text-black");
-    incomeBtn.classList.remove("bg-black", "text-white");
+    incomeBtn.classList.remove("bg-[#089ddd]", "text-white");
   });
 
   incomeBtn.addEventListener("click", () => {
     typeInput.value = "income";
     populateCategories(incomeCategories);
-    incomeBtn.classList.add("bg-black", "text-white");
+
+    incomeBtn.classList.add(
+      "bg-[#089ddd]",
+      "text-white",
+      "border-[#0a67a0]",
+      "border-2"
+    );
     incomeBtn.classList.remove("bg-white", "text-black");
     expenseBtn.classList.add("bg-white", "text-black");
-    expenseBtn.classList.remove("bg-black", "text-white");
+    expenseBtn.classList.remove("bg-[#089ddd]", "text-white");
   });
 
   // Initialize with the default type
