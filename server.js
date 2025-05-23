@@ -810,22 +810,22 @@ app.post("/auth/register", async (req, res) => {
     for (let i = 0; i < defaultActiveAchievements.length; i++) {
       defaultActiveAchievements[i].date.setMinutes(
         defaultActiveAchievements[i].date.getMinutes() +
-          defaultActiveAchievements[i].date.getTimezoneOffset()
+        defaultActiveAchievements[i].date.getTimezoneOffset()
       );
       defaultActiveAchievements[i].previousDate.setMinutes(
         defaultActiveAchievements[i].previousDate.getMinutes() +
-          defaultActiveAchievements[i].previousDate.getTimezoneOffset()
+        defaultActiveAchievements[i].previousDate.getTimezoneOffset()
       );
     }
 
     for (const achievementData of defaultInactiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -840,11 +840,11 @@ app.post("/auth/register", async (req, res) => {
     for (const achievementData of defaultActiveAchievements) {
       achievementData.date.setMinutes(
         achievementData.date.getMinutes() +
-          achievementData.date.getTimezoneOffset()
+        achievementData.date.getTimezoneOffset()
       );
       achievementData.previousDate.setMinutes(
         achievementData.previousDate.getMinutes() +
-          achievementData.previousDate.getTimezoneOffset()
+        achievementData.previousDate.getTimezoneOffset()
       );
 
       const newAchievement = new achievements({
@@ -1165,21 +1165,12 @@ app.get("/transactions/chart-data", async (req, res) => {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const user = await users.findById(req.session.uid);
-    // Fetch all transactions (used for bar + weekly)
     const allTransactions = await transactions.find({
       _id: { $in: user.transactions },
       type: "expense",
     });
-    // Separate current month transactions (used for donut chart only)
-    const currentMonthTransactions = allTransactions.filter(
-      (t) => new Date(t.date) >= startOfMonth
-    );
 
     const categoryTotals = {};
-    currentMonthTransactions.forEach((t) => {
-      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
-    });
-
     const monthlyTotals = {};
     const weeklyTotals = {};
     const weeklyCategoryTotal = {}; // NEW
@@ -1189,6 +1180,9 @@ app.get("/transactions/chart-data", async (req, res) => {
     startOfWeek.setHours(0, 0, 0, 0);
 
     allTransactions.forEach((t) => {
+      // Monthly & category processing
+      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+
       const dateObj = new Date(t.date);
       const month = dateObj.toLocaleString("default", { month: "short" });
       monthlyTotals[month] = (monthlyTotals[month] || 0) + t.amount;

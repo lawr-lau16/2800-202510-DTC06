@@ -22,19 +22,13 @@ Econami is a gamified budget management web app that turns saving into a fun, go
 
 ---
 
-## Technologies Used
-
-- HTML 5, CSS, Tailwind
-- JavaScript
-- MongoDB
-
----
-
 ## Project Structure
+
+```
 
 EconAmi/
 ├── .vscode
-│   └──settings.json
+│   └── settings.json
 ├── archive
 │   ├── about.html
 │   ├── achievements.html
@@ -171,6 +165,8 @@ EconAmi/
 ├── style_guide.html
 └── tailwind.config.js
 
+```
+
 ---
 
 ## About Us
@@ -186,6 +182,16 @@ Team Members:
 ---
 
 ## Technologies
+
+- EJS view engine
+- MongoDB
+- Mongoose
+- BCrypt
+- Express
+- Express Session
+- Serve Favicon
+- OpenAi (The Chat Gpt API)
+- Axios
 
 # Frontend
 
