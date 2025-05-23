@@ -198,6 +198,7 @@ function currentItemTab() {
     dynamicallyDisplayItems()
 }
 
+// Gets inventory from db
 async function getInventory() {
     try {
         const response = await fetch('/inventory', { method: 'POST' });
@@ -320,9 +321,11 @@ async function dynamicallyDisplayItems() {
         itemSelected()
     })
 
+    // adds the button function
     itemsAvailable.forEach(item => {
         eachItem = document.getElementById(item);
 
+        // adds the locked item function
         if (eachItem.classList.contains("locked")) {
             eachItem.addEventListener("click", async () => {
 
@@ -346,6 +349,7 @@ async function dynamicallyDisplayItems() {
                 }
             })
         } else {
+            // Adds the unlocked items
             eachItem.addEventListener("click", async () => {
                 const response = await fetch('/pet', { method: 'POST' });
                 const { pet } = await response.json();
@@ -421,6 +425,7 @@ async function dynamicallyDisplayBase() {
     baseAll.forEach(base => {
         eachBase = document.getElementById(base);
 
+        // Adds locked base function
         if (eachBase.classList.contains("locked")) {
             eachBase.addEventListener("click", async () => {
 
@@ -444,6 +449,7 @@ async function dynamicallyDisplayBase() {
                 }
             })
         } else {
+            // Adds unlocked base function
             eachBase.addEventListener("click", async () => {
                 const response = await fetch('/pet', { method: 'POST' });
                 const { pet } = await response.json();
@@ -516,6 +522,7 @@ function getLocation() {
     }
 }
 
+// Gets user location and fetches the weather
 async function success(position) {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
@@ -523,6 +530,7 @@ async function success(position) {
     try {
         const response = await axios.get(`/weather?lat=${lat}&lon=${lon}`);
         const weatherData = response.data.weather[0].main;
+        // changes the image depending on the weather
         gameWindow.src = `/images/game/weather/g-${weatherData}.png`
         console.log(weatherData)
     }
