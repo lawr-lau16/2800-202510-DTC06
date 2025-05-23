@@ -196,15 +196,15 @@ Team Members:
 # Frontend
 
 - HTML 5
-- Tailwind CSS
-- EJS
-- JavaScript
-- chart.js
+- Tailwind CSS 3.4.3
+- EJS 3.1.9
+- JavaScript 
+- chart.js 4.4.3
 
 # Backend
 
-- Node.js
-- Express.js
+- Node.js 20.12.2
+- Express.js 4.19.2
 
 # Database
 
