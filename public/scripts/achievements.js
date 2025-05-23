@@ -1,19 +1,23 @@
+// Fetch achievement data from the server
 fetch('/achievements/data')
   .then(res => res.json())
   .then(data => {
+    // Get the container where achievements will be displayed
     const container = document.getElementById('achievements-container');
     container.innerHTML = '';
 
     // Create redeem button on completed achievements
     const createAchievementElement = (a, isActive) => {
+      // Calculate completion percentage, capped at 100%
       const percent = Math.min(Math.round((a.progress / a.target) * 100), 100);
+      // Determine if it's ready to redeem (complete but not yet claimed)
       const isCompleted = a.progress >= a.target && !a.completed;
+      // Determine if it's already claimed
       const isClaimed = a.progress >= a.target && a.completed;
-
+      // Create outer card element
       const div = document.createElement('div');
-
       div.className = 'flex justify-between items-start bg-white p-4 rounded-lg shadow-sm mb-4';
-
+      // Fill in card content
       div.innerHTML = `
         <div class="flex items-start gap-3 w-full">
           <!-- Achievement Icon -->
@@ -61,6 +65,7 @@ fetch('/achievements/data')
       emptyCard.textContent = 'You have no active achievements right now. Go ahead and pick a goal for yourself!';
       container.appendChild(emptyCard);
     } else {
+      // Render each active achievement card
       data.active.forEach(a => container.appendChild(createAchievementElement(a, true)));
     }
 
@@ -95,15 +100,18 @@ fetch('/achievements/data')
     document.querySelectorAll('.activate-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const achievementId = btn.dataset.id;
+        // Send activation request to backend
         const response = await fetch('/achievements/activate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: achievementId })
         });
         const result = await response.json();
+        // On success, reload the page to refresh achievement status
         if (result.success) {
-          location.reload(); // refresh to update sections
+          location.reload();
         } else {
+          // On error, alert the user with error message
           alert(result.error || 'Failed to activate');
         }
       });
@@ -117,12 +125,14 @@ fetch('/achievements/data')
         const id = e.target.dataset.id;
 
         try {
+          // Send POST request to server to redeem the achievement
           const res = await fetch('/achievements/redeem', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id }),
           });
 
+          // If request failed, notify user
           if (!res.ok) {
             const errorText = await res.text();
             console.error("Server error:", errorText);
@@ -142,6 +152,7 @@ fetch('/achievements/data')
           }
 
         } catch (err) {
+          // Handle network or runtime errors
           console.error('Redeem failed:', err);
           alert('Redeem failed. Try again.');
         }
