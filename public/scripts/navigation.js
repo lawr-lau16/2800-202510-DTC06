@@ -1,3 +1,4 @@
+// makes current page indicated in the navbar
 function navigationCurrent() {
     let current = window.location.pathname;
     document.querySelectorAll("#nav_highlight form").forEach(function (elem) {

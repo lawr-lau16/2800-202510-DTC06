@@ -223,6 +223,17 @@ Team Members:
 <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Good Ware - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/star" title="star icons">Star icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/open-hands" title="open hands icons">Open hands icons created by Icon Mart - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by Good Ware - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/goal" title="goal icons">Goal icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/phone" title="phone icons">Phone icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/happy" title="happy icons">Happy icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/7-days" title="7 days icons">7 days icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/month" title="month icons">Month icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/friendship" title="friendship icons">Friendship icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/accounting" title="accounting icons">Accounting icons created by Eucalyp - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/food" title="food icons">Food icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/welcome" title="welcome icons">Welcome icons created by bearicons - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/select" title="select icons">Select icons created by Freepik - Flaticon</a>
 
 ---
 

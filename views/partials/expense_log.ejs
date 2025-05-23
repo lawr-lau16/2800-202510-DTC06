@@ -1,22 +1,20 @@
+<!-- Form for submitting a new expense or income -->
+
 <form action="/add-expense" method="POST" class="space-y-4 mt-6">
+  <!-- Buttons to toggle between expense and income types -->
+
   <div class="flex justify-center gap-2 mb-2">
-    <button
-      type="button"
-      id="expenseBtn"
-      class="bg-black text-white px-4 py-2 rounded"
-    >
+    <button type="button" id="expenseBtn" class="px-4 py-2 rounded-xl">
       Expense
     </button>
-    <button
-      type="button"
-      id="incomeBtn"
-      class="bg-white text-black px-4 py-2 rounded border"
-    >
+    <button type="button" id="incomeBtn" class="px-4 py-2 rounded-xl">
       Income
     </button>
   </div>
-
+  <!-- Hidden input to track the selected type (expense or income) -->
   <input type="hidden" name="type" id="typeInput" value="expense" />
+
+  <!-- Input field for the name/description of the transaction -->
 
   <input
     name="name"
@@ -24,6 +22,8 @@
     placeholder="Name"
     class="w-full border p-2 rounded"
   />
+
+  <!-- Input field for the amount (must be a non-negative number) -->
   <input
     name="amount"
     type="number"
@@ -33,20 +33,23 @@
     step="0.01"
     class="w-full border p-2 rounded"
   />
+  <!-- Input field to select the transaction date -->
   <input name="date" type="date" required class="w-full border p-2 rounded" />
 
+  <!-- Dropdown for selecting a category (e.g., Food, Rent, etc.) -->
   <select
     id="categorySelect"
     name="category"
     required
     class="w-full border p-2 rounded"
   >
+    <!-- Categories are likely populated dynamically via JavaScript -->
     <option value="">Select a category</option>
   </select>
-
+  <!-- Submit button to save the transaction -->
   <button
     type="submit"
-    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 mb-10 rounded"
+    class="w-full bg-[#089ddd] border-[#0a67a0] border-4 hover:bg-[#44bcf0] text-white py-2 mb-10 rounded-xl"
   >
     Save
   </button>

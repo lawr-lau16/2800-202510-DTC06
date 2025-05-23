@@ -370,37 +370,45 @@ async function checkWeeklyBudgetAchievement(user) {
 
 // Check if the user stayed within their monthly budget over the last 30 days (from achievement start date)
 async function checkMonthlyBudgetAchievement(user) {
+  // Find the user's active, incomplete "monthly_budget" achievement
   const achievement = await achievements.findOne({
     _id: { $in: user.activeAchievements },
     type: "monthly_budget",
     completed: false,
   });
 
+  // Exit if no such achievement exists
   if (!achievement) {
     return;
   }
 
+  // Get the achievement's start date and current date
   const start = new Date(achievement.date);
   const now = new Date();
 
   // Fix timezone
   now.setMinutes(now.getMinutes() + now.getTimezoneOffset());
 
+  // Check if 30 full days have passed since achievement started
   const daysSince = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   if (daysSince < 30) return;
 
+  // Define the 30-day date range for tracking expenses
   const end = new Date(start);
   end.setDate(start.getDate() + 30);
   end.setHours(23, 59, 59, 999);
 
+  // Fetch all user expenses within that date range
   const expenses = await transactions.find({
     _id: { $in: user.transactions },
     type: "expense",
     date: { $gte: start, $lte: end },
   });
 
+  // Calculate total spending over 30 days
   const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
 
+  // If user stayed within budget and has a positive budget, increment progress
   if (totalSpent <= user.budget.monthly && user.budget.monthly > 0) {
     const progress = achievement.progress;
     const target = achievement.target;
