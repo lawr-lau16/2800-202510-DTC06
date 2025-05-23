@@ -241,3 +241,16 @@ Team Members:
 
 - users cannot currently add their own categories for their transactions
 - there are no accessibility accomodations (eg. dark mode)
+
+---
+
+##
+- For the API we used the chatgpt api forums for the request and learning how to implement it, because of which we have attributed our modified versions to OpenAI!
+- When using generative tools for our production we made sure that generated content was properly identified and credited in our code, mostly however we used AI as a teacher or a resource for learning rather than just copying and pasting, because of this almost all code is our own!
+
+## Contact Us!
+- Lawrence @ llau66@my.bcit.ca
+- Tiffany @ twong402@my.bcit.ca
+- Tin @ ttrinh25@my.bcit.ca
+- Gurpreet @ gsingh739@my.bcit.ca
+- Alex @ aingles@my.bcit.ca
